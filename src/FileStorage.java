@@ -16,8 +16,10 @@ public class FileStorage {
 	 * This constructor gets the file storage path at the start of the application
 	 */
 	public FileStorage(){
-		pathDir = System.getProperty("user.home") + "\\VODO_Path";
-		pathName = "\\path.txt";
+		//pathDir = System.getProperty("user.home") + "\\VODO_Path";
+		//pathName = "\\path.txt";
+		pathDir = "";
+		pathName = "path.txt";
 		filePath = currFilePath();
 
 	}
@@ -149,12 +151,12 @@ public class FileStorage {
 	 */
 	private static String currFilePath(){
 		
-		String defaultDataPath = System.getProperty("user.home") + "\\VODO\\data.txt";
-		
+		//String defaultDataPath = System.getProperty("user.home") + "\\VODO\\data.txt";
+		String defaultDataPath = "data.txt";
 		File pathFile = new File(pathDir + pathName);
 		File dataFile = new File(defaultDataPath);
 		String filePath;
-				
+			
 		if(!pathFile.exists()){				
 			createFile(pathFile);
 			createFile(dataFile);
@@ -173,7 +175,7 @@ public class FileStorage {
 	 */
 	private static void createFile(File file){
 		if(!file.exists()){	 
-		     file.getParentFile().mkdirs();
+		     //file.getParentFile().mkdirs();
 		     try {
 				file.createNewFile();			
 		     }catch (IOException e) {
