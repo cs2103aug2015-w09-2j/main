@@ -19,7 +19,6 @@ public class Deadline extends Task{
 	public String toString(){
 		String output = "";
 		output = this.getDescription() + " " + this.getEndDate().toString() + " " + this.getEndTime().toString(); 
-		return output;
-		
+		return output;	
 	}
 }

@@ -285,7 +285,6 @@ public class FileStorage {
 	}
 	
 	
-	@SuppressWarnings("unused")
 	public static ArrayList<Task> readTaskFromFile() throws NoSuchFieldException, ParseException{
 		
 		String line = null;
@@ -303,7 +302,7 @@ public class FileStorage {
 					Event event = new Event(taskLine[1],new DateClass(taskLine[2]),new TimeClass(taskLine[3]) , new DateClass(taskLine[4]) , new TimeClass(taskLine[5]));
 					tasks.add(event);
 					break;
-				case "DeadLine":
+				case "Deadline":
 					Deadline deadline = new Deadline(taskLine[1], new DateClass(taskLine[2]) , new TimeClass(taskLine[3]));
 					tasks.add(deadline);
 					break;
