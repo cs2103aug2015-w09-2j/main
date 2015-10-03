@@ -44,7 +44,7 @@ public class UserInterface {
 
 	public void displayView(ArrayList<Task> tasks) {
 		for (Task t : tasks) {
-			printToUser(t + "\n");
+			printToUser(t.toString() + "\n");
 		}
 	}
 

@@ -31,4 +31,9 @@ public class Event extends Task{
 	public TimeClass getEndTime() {
 		return endTime;
 	}
+	public String toString(){
+		String output = "";
+		output = this.getDescription() + " " + this.getStartDate().toString() + " " + this.getStartTime().toString()+ " "  + this.getEndDate().toString() + " " + this.getEndTime().toString(); 
+		return output;	
+	}
 }
