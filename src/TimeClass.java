@@ -29,4 +29,8 @@ public class TimeClass {
 		return intMin;
 	}
 
+	@Override
+	public String toString(){
+		return intHour + "" + intMin;
+	}
 }
