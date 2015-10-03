@@ -46,11 +46,7 @@ public class Parser {
 		return strText.split(" ").length;
 	}
 	
-<<<<<<< HEAD
 	public  TaskPair parse(String strCommand){
-=======
-	public Task parse(String strCommand){
->>>>>>> origin/master
 		
 		CommandType.Types commandType = getCommandType(strCommand);
 		String strDescription = null;
