@@ -63,8 +63,11 @@ public class Parser {
 				strCommand = removeNWords(getNumberOfWords(strDescription), strCommand);
 				//Get Date
 				endDate = getDate(strCommand);
+				strCommand = removeNWords(1, strCommand);
 				
-				task = new Deadline(strDescription, endDate);
+				endTime = getTime(strCommand);
+				
+				task = new Deadline(strDescription, endDate, endTime);
 				return new TaskPair(task, commandType);
 				
 			case ADD_EVENT:
