@@ -7,12 +7,13 @@ public class Logic {
 	}
 	public Logic(){
 	}	
+	private static Parser parser = new Parser();
 	private static UserInterface UI = new UserInterface();
 	private static FileStorage fileStorage = new FileStorage();
 	private static CommandType.Types command; 
 	
 	public static boolean processCommand(String input) throws NoSuchFieldException, ParseException{
-		command = Parser.parse(input);
+		Task task = parser.parse(input);
 		if(command == CommandType.Types.UNKNOWN){
 			return false;
 		}else{
@@ -30,7 +31,7 @@ public class Logic {
 			success=true;
 			break;
 		case ADD_DEADLINE:
-			DeadLine deadline = createDeadLine(input);
+			Deadline deadline = createDeadLine(input);
 			writeTaskTofile(deadline);
 			success=true;
 			break;
@@ -53,14 +54,14 @@ public class Logic {
 		}
 	return success;	
 	}
-
+/*
 	private static Floating createFloating(String input) {
 		String floatingDescription = Parser.getDescription(input.substring(6));
 		Floating floating = new Floating(floatingDescription);
 		return floating;
 	}
 
-	private static DeadLine createDeadLine(String input) {
+	private static Deadline createDeadLine(String input) {
 		String deadlineDescription = Parser.getDescription(input.substring(6));
 		DateClass endDeadline = Parser.getDate(input.substring(6));
 		DeadLine deadline = new DeadLine(deadlineDescription,endDeadline);
@@ -72,7 +73,7 @@ public class Logic {
 		DateClass endDate = Parser.getDate(input.substring(6));
 		Event event = new Event(eventDescription,endDate);
 		return event;
-	}
+	}*/
 
 	private static void writeTaskTofile(Task task) {
 		String taskType = task.getClass().getName();
@@ -98,7 +99,7 @@ public class Logic {
 
 	private static void writeDeadlineToFile(Task task, String taskType) {
 		String writeToFile;
-		writeToFile = taskType + " " +task.getDescription() + " " +((DeadLine) task).getEndDate().toString();
+		writeToFile = taskType + " " +task.getDescription() + " " +((Deadline) task).getEndDate().toString();
 		fileStorage.write(writeToFile);
 	}
 

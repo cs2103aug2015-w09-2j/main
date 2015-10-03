@@ -298,11 +298,11 @@ public class FileStorage {
 				String taskLine[] = line.split(" ");
 				switch(taskLine[0]){
 				case "Event":
-					Event event = new Event(taskLine[1],new DateClass(taskLine[2]),new DateClass(taskLine[3]));
+					Event event = new Event(taskLine[1],new DateClass(taskLine[2]),new TimeClass(taskLine[3]) , new DateClass(taskLine[4]) , new TimeClass(taskLine[5]));
 					tasks.add(event);
 					break;
 				case "DeadLine":
-					DeadLine deadline = new DeadLine(taskLine[1],new DateClass(taskLine[2]));
+					Deadline deadline = new Deadline(taskLine[1],new DateClass(taskLine[2]));
 					tasks.add(deadline);
 					break;
 				case "Floating":
