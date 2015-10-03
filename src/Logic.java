@@ -13,31 +13,34 @@ public class Logic {
 	private static CommandType.Types command; 
 	
 	public static boolean processCommand(String input) throws NoSuchFieldException, ParseException{
-		Task task = parser.parse(input);
-		if(command == CommandType.Types.UNKNOWN){
+		TaskPair task = parser.parse(input);
+		if(task.getType() == CommandType.Types.UNKNOWN){
 			return false;
 		}else{
-			executeCommand(command,input);
+			//executeCommand(,input);
+			executeCommand(task.getType() , task.getTask());
 		}
 		return true;
 	}
 	
-	private static boolean executeCommand(CommandType.Types command,String input) throws NoSuchFieldException, ParseException{
+	private static boolean executeCommand(CommandType.Types command,Task input) throws NoSuchFieldException, ParseException{
 		boolean success = false;
 		switch(command){
 		case ADD_EVENT :
-			Event event = createEvent(input);
-			writeTaskTofile(event);
+			//Event event = createEvent(input);
+			writeTaskTofile(input);
 			success=true;
 			break;
 		case ADD_DEADLINE:
-			Deadline deadline = createDeadLine(input);
-			writeTaskTofile(deadline);
+			//Deadline deadline = createDeadLine(input);
+			//writeTaskTofile(deadline);
+			writeTaskTofile(input);
 			success=true;
 			break;
 		case ADD_FLOATING:
-			Floating floating = createFloating(input);
-			writeTaskTofile(floating);
+			//Floating floating = createFloating(input);
+			//writeTaskTofile(floating);
+			writeTaskTofile(input);
 			success=true;
 			break;
 		case UPDATE:
