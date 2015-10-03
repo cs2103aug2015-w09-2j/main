@@ -1,5 +1,5 @@
 
-public class Task {
+public abstract class Task {
 	private String strDescription; 
 	
 	public Task(String description){
