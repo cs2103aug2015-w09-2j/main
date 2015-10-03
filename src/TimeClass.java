@@ -14,6 +14,13 @@ public class TimeClass {
 		this(hour, 0);
 	}
 	
+	public TimeClass(String strhhMM){
+		TimeClass time = TimeHandler.parse(strhhMM);
+		intHour = time.intHour;
+		intMin = time.intMin;
+		
+	}
+	
 	public int getHour(){
 		return intHour;
 	}
