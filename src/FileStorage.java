@@ -160,7 +160,7 @@ public class FileStorage {
 		if(!pathFile.exists()){				
 			createFile(pathFile);
 			createFile(dataFile);
-			hideFolder(pathDir);
+			//hideFolder(pathDir);
 			writeFile(defaultDataPath, pathDir + pathName, false, false);				
 		}
 	
