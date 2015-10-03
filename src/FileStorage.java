@@ -302,7 +302,7 @@ public class FileStorage {
 					tasks.add(event);
 					break;
 				case "DeadLine":
-					Deadline deadline = new Deadline(taskLine[1],new DateClass(taskLine[2]));
+					Deadline deadline = new Deadline(taskLine[1], new DateClass(taskLine[2]) , new TimeClass(taskLine[3]));
 					tasks.add(deadline);
 					break;
 				case "Floating":

@@ -80,12 +80,12 @@ public class Logic {
 
 	private static void writeTaskTofile(Task task) {
 		String taskType = task.getClass().getName();
-		String writeToFile;
+		//String writeToFile="";
 		switch(taskType){
 		case "Event":
 			writeEventToFile(task, taskType);
 			break;
-		case "DeadlLine":
+		case "Deadline":
 			writeDeadlineToFile(task, taskType);
 			break;
 		case "Floating":
@@ -102,13 +102,13 @@ public class Logic {
 
 	private static void writeDeadlineToFile(Task task, String taskType) {
 		String writeToFile;
-		writeToFile = taskType + " " +task.getDescription() + " " +((Deadline) task).getEndDate().toString();
+		writeToFile = taskType + " " +task.getDescription() + " " +((Deadline) task).getEndDate().toString() + " " + ((Deadline) task).getEndTime().toString() ;
 		fileStorage.write(writeToFile);
 	}
 
 	private static void writeEventToFile(Task task, String taskType) {
 		String writeToFile;
-		writeToFile = taskType + " " +task.getDescription()+" " + ((Event) task).getStartDate().toString() +" " + ((Event) task).getEndDate().toString();
+		writeToFile = taskType + " " +task.getDescription()+" " + ((Event) task).getStartDate().toString() +" " + ((Event) task).getStartTime().toString() + " " + ((Event) task).getEndDate().toString() + " " + ((Event) task).getEndTime().toString() ;
 		fileStorage.write(writeToFile);
 	}
 }
