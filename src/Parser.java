@@ -201,8 +201,6 @@ public class Parser {
 		
 		strDate = DateHandler.tryParse(strDate);
 		
-		
-		
 		try {
 			return new DateClass(strDate);
 		} catch (NoSuchFieldException | ParseException e) {

@@ -74,6 +74,6 @@ public class DateClass {
 	
 	@Override
 	public String toString(){
-		return intDay + "/" + intMonth + "/" + "intYear";
+		return intDay + "/" + intMonth + "/" + intYear;
 	}
 }
