@@ -1,10 +1,10 @@
 
-public class TaskPairClass {
+public class TaskPair {
 
 	private Task task;
 	private CommandType.Types taskType;
 	
-	public TaskPairClass(Task task, CommandType.Types type){
+	public TaskPair(Task task, CommandType.Types type){
 		this.task = task;
 		this.taskType = type;
 	}

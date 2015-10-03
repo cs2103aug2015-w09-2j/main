@@ -46,7 +46,7 @@ public class Parser {
 		return strText.split(" ").length;
 	}
 	
-	public  Task parse(String strCommand){
+	public  TaskPair parse(String strCommand){
 		
 		CommandType.Types commandType = getCommandType(strCommand);
 		String strDescription = null;
@@ -64,7 +64,8 @@ public class Parser {
 				//Get Date
 				endDate = getDate(strCommand);
 				
-				return new Deadline(strDescription,endDate);
+				task = new Deadline(strDescription, endDate);
+				return new TaskPair(task, commandType);
 				
 			case ADD_EVENT:
 				//Remove "add -e"
@@ -85,28 +86,22 @@ public class Parser {
 				endTime = getTime(strCommand);
 				strCommand = removeNWords(1, strCommand);
 				
-				return new Event(strDescription, startDate, startTime, endDate, endTime);
+				task = new Event(strDescription, startDate, startTime, endDate, endTime);
+				return new TaskPair(task, commandType);
 				
 			case ADD_FLOATING:
 				//Remove "add -f"
 				strCommand = removeNWords(2, strCommand);
 				strDescription = strCommand; //rest of the command string is description
 				
-				return new Floating(strDescription);
+				task = new Floating(strDescription);
+				return new TaskPair(task, commandType);
 				
-			case UPDATE:
-				break;
-			case DELETE:
-				break;
-			case DISPLAY:
-				break;
-			case UNKNOWN:
-				break;
+			
 			default:
-				break;
+				return new TaskPair(null, commandType);
 		}
 		
-		return null;
 	}
 
 //ublic static void main(String[] args){
