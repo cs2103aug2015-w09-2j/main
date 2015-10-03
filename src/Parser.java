@@ -46,7 +46,7 @@ public class Parser {
 		return strText.split(" ").length;
 	}
 	
-	public  Task parse(String strCommand){
+	public Task parse(String strCommand){
 		
 		CommandType.Types commandType = getCommandType(strCommand);
 		String strDescription = null;
