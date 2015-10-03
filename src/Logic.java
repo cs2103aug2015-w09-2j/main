@@ -1,4 +1,5 @@
 import java.text.ParseException;
+import java.util.ArrayList;
 
 public class Logic {
 	public String fileName;
@@ -50,7 +51,8 @@ public class Logic {
 			success=true;
 			break;
 		case DISPLAY:	
-			UI.displayView(FileStorage.readTaskFromFile());
+			//UI.displayView(FileStorage.readTaskFromFile());
+			UI.displayView(stringToTask());
 			success=true;
 		default:
 			break;		
@@ -78,6 +80,20 @@ public class Logic {
 		return event;
 	}*/
 
+	private static ArrayList<Task> stringToTask() {
+		ArrayList<String> data =  new ArrayList<String>();
+		ArrayList<Task> tasks = new ArrayList<Task>();
+		data = FileStorage.readFile();
+		for(String s :data){
+			tasks.add(getTaskFromString(s));
+		}	
+		// TODO Auto-generated method stub
+		return null;
+	}
+	private static Task getTaskFromString(String s) {
+		// TODO Auto-generated method stub
+		return parser.parse(s).getTask();
+	}
 	private static void writeTaskTofile(Task task) {
 		String taskType = task.getClass().getName();
 		//String writeToFile="";
@@ -96,19 +112,19 @@ public class Logic {
 
 	private static void writeFloatingToFile(Task task, String taskType) {
 		String writeToFile;
-		writeToFile = taskType + " " +task.getDescription();
+		writeToFile = "add " + CommandType.TaskTypes.FLOATING + " " +task.getDescription();
 		fileStorage.write(writeToFile);
 	}
 
 	private static void writeDeadlineToFile(Task task, String taskType) {
 		String writeToFile;
-		writeToFile = taskType + " " +task.getDescription() + " " +((Deadline) task).getEndDate().toString() + " " + ((Deadline) task).getEndTime().toString() ;
+		writeToFile ="add " + CommandType.TaskTypes.DEADLINE + " " +task.getDescription() + " " +((Deadline) task).getEndDate().toString() + " " + ((Deadline) task).getEndTime().toString() ;
 		fileStorage.write(writeToFile);
 	}
 
 	private static void writeEventToFile(Task task, String taskType) {
 		String writeToFile;
-		writeToFile = taskType + " " +task.getDescription()+" " + ((Event) task).getStartDate().toString() +" " + ((Event) task).getStartTime().toString() + " " + ((Event) task).getEndDate().toString() + " " + ((Event) task).getEndTime().toString() ;
+		writeToFile = "add "+CommandType.TaskTypes.EVENT + " " +task.getDescription()+" " + ((Event) task).getStartDate().toString() +" " + ((Event) task).getStartTime().toString() + " " + ((Event) task).getEndDate().toString() + " " + ((Event) task).getEndTime().toString() ;
 		fileStorage.write(writeToFile);
 	}
 }

@@ -257,7 +257,7 @@ public class FileStorage {
 	 * The content of the storage file is stored in a ArrayList<String>
 	 * @return the ArrayList<String> which contains the content of the storage file
 	 */
-	private static ArrayList<String> readFile(){
+	public static ArrayList<String> readFile(){
 		
 		String line = null;
         ArrayList<String> list = new ArrayList<String>();
