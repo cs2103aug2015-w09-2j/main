@@ -377,6 +377,9 @@ public class FileStorage {
 		return data;
 	}
 	
+	public void deleteTask(int taskNumber){
+		deleteLine(taskNumber,filePath);
+	}
 		
 	/**
 	 * This methods delete the specific line in the storage file

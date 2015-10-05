@@ -19,12 +19,12 @@ public class Logic {
 			return false;
 		}else{
 			//executeCommand(,input);
-			executeCommand(task.getType() , task.getTask());
+			executeCommand(task.getType() , task.getTask() , input);
 		}
 		return true;
 	}
 	
-	private static boolean executeCommand(CommandType.Types command,Task input) throws NoSuchFieldException, ParseException{
+	private static boolean executeCommand(CommandType.Types command,Task input , String inputString) throws NoSuchFieldException, ParseException{
 		boolean success = false;
 		switch(command){
 		case ADD_EVENT :
@@ -48,7 +48,7 @@ public class Logic {
 			success=true;
 			break;
 		case DELETE:
-			//deleteTask()
+			deleteTask(inputString);
 			success=true;
 			break;
 		case DISPLAY:	
@@ -81,6 +81,12 @@ public class Logic {
 		return event;
 	}*/
 
+	private static void deleteTask(String index) {
+		// TODO Auto-generated method stub
+		String[] arr = index.split(" ");
+		fileStorage.deleteTask(Integer.valueOf(arr[1]));
+		
+	}
 	private static ArrayList<Task> stringToTask() {
 		ArrayList<String> data =  new ArrayList<String>();
 		ArrayList<Task> tasks = new ArrayList<Task>();
