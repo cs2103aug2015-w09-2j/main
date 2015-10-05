@@ -1,1 +1,3 @@
-add -f adfadfad
+add -f Teddy wants the F :P
+add -d Teddy wants the D 23/9/2015 1400
+add -e Teddy wants the E :- 23/9/2015 1200 23/9/2015 1400

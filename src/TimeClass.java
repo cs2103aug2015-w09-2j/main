@@ -4,33 +4,43 @@ public class TimeClass {
 	
 	private int intHour;
 	private int intMin;
+	private String strHour;
+	private String strMin;
 	
-	public TimeClass(int hour, int min){
-		this.intHour = hour;
-		this.intMin = min;
-	}
-	
-	public TimeClass(int hour){
-		this(hour, 0);
+	public TimeClass(String hour, String min){
+		this.strHour = hour;
+		this.strMin = min;
+		
+		this.intHour = Integer.valueOf(hour);
+		this.intMin = Integer.valueOf(min);
 	}
 	
 	public TimeClass(String strhhMM){
 		TimeClass time = TimeHandler.parse(strhhMM);
 		intHour = time.intHour;
 		intMin = time.intMin;
-		
+	
+		this.strHour = time.getStringHour();
+		this.strMin = time.getStringMin();
+	
 	}
 	
-	public int getHour(){
+	public int getIntHour(){
 		return intHour;
 	}
 	
-	public int getMin(){
+	public int getIntMin(){
 		return intMin;
 	}
-
+	public String getStringHour(){
+		return strHour;
+	}
+	public String getStringMin(){
+		return strMin;
+	}
+	
 	@Override
 	public String toString(){
-		return intHour + "" + intMin;
+		return strHour + "" + strMin;
 	}
 }

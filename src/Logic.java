@@ -47,7 +47,8 @@ public class Logic {
 		case UPDATE:
 			success=true;
 			break;
-		case DELETE:	
+		case DELETE:
+			//deleteTask()
 			success=true;
 			break;
 		case DISPLAY:	
@@ -88,7 +89,7 @@ public class Logic {
 			tasks.add(getTaskFromString(s));
 		}	
 		// TODO Auto-generated method stub
-		return null;
+		return tasks;
 	}
 	private static Task getTaskFromString(String s) {
 		// TODO Auto-generated method stub
