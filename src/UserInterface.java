@@ -1,5 +1,6 @@
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -48,15 +49,19 @@ public class UserInterface {
 	}
 
 	public void displayView(ArrayList<Task> tasks) {
-		int count = 1;
+		int size = tasks.size();
 		for (TaskType taskType : TaskType.values()) {
 			printToUser(String.format(HEADER_TASK_TYPE, taskType));
-			for (Task task : tasks) {
+			Iterator<Task> tasksIterator = tasks.iterator();
+			int initialCount = 1;
+			while (tasksIterator.hasNext()) {
+				Task task = tasksIterator.next();
 				if (task.getClass().getName().toUpperCase().equals(taskType.toString())) {
-					printToUser(String.format(ITEM_LISTING, count, task));
-					count++;
+					printToUser(String.format(ITEM_LISTING, initialCount, task));
 				}
+				initialCount++;
 			}
+			printToUser("\n");
 		}
 	}
 

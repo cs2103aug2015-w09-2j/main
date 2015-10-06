@@ -1,5 +1,3 @@
 add -f sfadsfa adfadf adf ad
 add -e meeting 6/10/2015 1600 6/10/2015 1800
-add -f laundry
-add -e meeting again 6/10/2015 1800 6/10/2015 2000
-add -e meeting 6/10/2015 1200 6/10/2015 1400
+add -d study 7/10/2015 2359
