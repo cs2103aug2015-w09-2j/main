@@ -121,7 +121,7 @@ public class Parser {
 
 public static void main(String[] args){
 	Parser p = new Parser();
-	String command = "update -d hello -s 24/9 1200 -e 25/9 2344";
+	String command = "update vishnu -d hello -s 24/9 1200 -e 25/9 2344";
 
 	TaskPair t = p.parse(command);
 
@@ -194,6 +194,20 @@ public static void main(String[] args){
 	}
 	
 	
+	private String getSearchString(String strCommand){
+		StringBuilder sb = new StringBuilder();
+		
+		String word = getWord(0, strCommand);
+		
+		while(!word.equals("-d") && !word.equals("-e") && !word.equals("-s")){
+			sb.append(word);
+			strCommand = removeNWords(1, strCommand);
+			word = getWord(0, strCommand);
+		}
+		
+		return sb.toString();
+	}
+	
 	private  String getDescription(String strCommand){
 		StringBuilder sb = new StringBuilder();
 		int intWordIndex = 0;
@@ -214,11 +228,17 @@ public static void main(String[] args){
 	}
 	
 	private Update parseUpdateCommand(String strCommand){
-		Update update = new Update();
+		
+		String strSearchString = getSearchString(strCommand);
+		
+		Update update = new Update(strSearchString);
+		
+		strCommand = removeNWords(getNumberOfWords(strSearchString), strCommand);
 		
 		/*
 		 * Try to get date followed by time
 		 */
+		
 		
 		while(!strCommand.equals("")){
 			//Get delimiter

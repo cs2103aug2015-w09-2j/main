@@ -10,10 +10,12 @@ public class Update extends Task{
 	private DateClass[] dates;
 	private TimeClass[] time;
 	private String strDescription;
+	private String strSearchString;
 	
-	public Update(){
+	public Update(String searchString){
 		super(null);
 		strDescription = null;
+		strSearchString = searchString;
 		dates = new DateClass[MAX_DATETIME_COUNT];
 		time = new TimeClass[MAX_DATETIME_COUNT];
 	}
@@ -101,6 +103,10 @@ public class Update extends Task{
 	@Override 
 	public String getDescription() {
 		return strDescription;
+	}
+	
+	public String getSearchString(){
+		return strSearchString;
 	}
 	
 }
