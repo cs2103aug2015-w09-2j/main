@@ -1,3 +1,0 @@
-add -f sfadsfa adfadf adf ad
-add -e meeting 6/10/2015 1600 6/10/2015 1800
-add -d study 7/10/2015 2359

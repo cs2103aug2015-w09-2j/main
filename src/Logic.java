@@ -1,5 +1,8 @@
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class Logic {
 	public String fileName;
@@ -45,14 +48,18 @@ public class Logic {
 			success=true;
 			break;
 		case UPDATE:
+			updateTask((Update) input);
 			success=true;
 			break;
 		case DELETE:
 			deleteTask(inputString);
 			success=true;
 			break;
+		case SEARCH:
+			UI.displayView(search(inputString.substring(7)));
+			success=true;
+			break;
 		case DISPLAY:	
-			//UI.displayView(FileStorage.readTaskFromFile());
 			UI.displayView(stringToTask());
 			success=true;
 		default:
@@ -81,12 +88,40 @@ public class Logic {
 		return event;
 	}*/
 
+	private static void updateTask(Update input) {
+		FileData data = fileStorage.search(input.getSearchString());
+		fileStorage.delete("1", data);
+		if(input.hasStartDate()){
+			Event event = new Event(input.getDescription() ,input.getStartDate(),input.getStartTime(),input.getEndDate(),input.getEndTime());
+			writeTaskTofile(event);
+		}else if(input.hasEndDate()){
+			Deadline deadline = new Deadline(input.getDescription() ,input.getEndDate(),input.getEndTime());
+			writeTaskTofile(deadline);
+		}else{
+			Floating floating = new Floating(input.getDescription());
+			writeTaskTofile(floating);
+		}
+	}
+	
+	private static ArrayList<Task> search(String substring) {
+		ArrayList<Task> output = new ArrayList<Task>();
+		FileData data = fileStorage.search(substring);
+		HashMap<Integer, String> displayMap = data.getDisplayMap();
+		Iterator it = displayMap.entrySet().iterator();
+		while(it.hasNext()){
+			Map.Entry pair = (Map.Entry)it.next();
+			output.add(getTaskFromString((String)pair.getValue()));			
+		}
+		return output;
+	}
 	private static void deleteTask(String index) {
 		// TODO Auto-generated method stub
 		String[] arr = index.split(" ");
 		fileStorage.deleteTask(Integer.valueOf(arr[1]));
 		
 	}
+	
+	
 	private static ArrayList<Task> stringToTask() {
 		ArrayList<String> data =  new ArrayList<String>();
 		ArrayList<Task> tasks = new ArrayList<Task>();

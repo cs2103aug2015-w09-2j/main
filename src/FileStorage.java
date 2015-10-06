@@ -350,7 +350,7 @@ public class FileStorage {
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 					
 			while((line = bufferedReader.readLine()) != null) {
-				if(line.contains(keyword)){
+				if(line.substring(7).contains(keyword)){
 					keywordList.add(line);
 				}
 			}			

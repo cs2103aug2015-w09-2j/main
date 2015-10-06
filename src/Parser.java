@@ -23,7 +23,7 @@ public class Parser {
 		String[] words = strText.split(" ");
 		
 		if(intIndex < 0 || intIndex >= words.length)
-			throw new IndexOutOfBoundsException();
+			return null;
 		
 		return words[intIndex];
 	}
@@ -103,6 +103,14 @@ public class Parser {
 			case SEARCH:
 				
 				return new TaskPair(null, commandType);
+				
+			
+			
+			case UPDATE:
+				strCommand = removeNWords(1, strCommand);
+				Update update = parseUpdateCommand(strCommand); 
+				return new TaskPair(update, commandType);
+
 			
 			default:
 				return new TaskPair(null, commandType);
@@ -110,12 +118,16 @@ public class Parser {
 		
 	}
 
-//ublic static void main(String[] args){
-//	String command = "add -f doing parser is shit job";
-//	Task t = parse(command);
-//
 
-	
+public static void main(String[] args){
+	Parser p = new Parser();
+	String command = "update new swimming -d swimming";
+
+	TaskPair t = p.parse(command);
+	System.out.println(((Update)(t.getTask())).getDescription());
+
+}
+
 	/***
 	 * Given the input command, returns you the type of command.
 	 * @param strCommand Input command to parse
@@ -152,6 +164,9 @@ public class Parser {
 			case "update":
 				return CommandType.Types.UPDATE;
 				
+			case "search":
+				return CommandType.Types.SEARCH;
+				
 			default:
 				return CommandType.Types.UNKNOWN;
 			
@@ -180,6 +195,20 @@ public class Parser {
 	}
 	
 	
+	private String getSearchString(String strCommand){
+		StringBuilder sb = new StringBuilder();
+		
+		String word = getWord(0, strCommand);
+		
+		while(!word.equals("-d") && !word.equals("-e") && !word.equals("-s")){
+			sb.append(word + " ");
+			strCommand = removeNWords(1, strCommand);
+			word = getWord(0, strCommand);
+		}
+		
+		return sb.toString().trim();
+	}
+	
 	private  String getDescription(String strCommand){
 		StringBuilder sb = new StringBuilder();
 		int intWordIndex = 0;
@@ -190,6 +219,8 @@ public class Parser {
 			sb.append(strNextWord + " ");
 			intWordIndex++;
 			strNextWord = getWord(intWordIndex, strCommand);
+			if(strNextWord == null)
+				break;
 		}
 		
 		String strDescription = sb.toString().trim();
@@ -197,7 +228,62 @@ public class Parser {
 		return strDescription;
 	}
 	
+	private Update parseUpdateCommand(String strCommand){
+		
+		String strSearchString = getSearchString(strCommand);
+		
+		Update update = new Update(strSearchString);
+		
+		strCommand = removeNWords(getNumberOfWords(strSearchString), strCommand);
+		
+		/*
+		 * Try to get date followed by time
+		 */
+		
+		
+		while(!strCommand.equals("")){
+			//Get delimiter
+			String delimiter = getWord(0, strCommand);
+			strCommand = removeNWords(1, strCommand);
+			
+			switch(delimiter){
+				case "-d":
+					String strDescription = removeDelimiters(getDescription(strCommand));
+					update.setDescription(strDescription);
+					
+					strCommand = removeNWords(strDescription.split(" ").length, strCommand);
+					break;
+				case "-e":
+					DateClass endDate = getDate(strCommand);
+					strCommand = removeNWords(1, strCommand);
+					TimeClass endTime = getTime(strCommand);
+					strCommand = removeNWords(1, strCommand);
+					update.setEndDate(endDate);
+					update.setEndTime(endTime);
+					
+					break;
+				case "-s":
+					DateClass startDate = getDate(strCommand);
+					strCommand = removeNWords(1, strCommand);
+					TimeClass startTime = getTime(strCommand);
+					strCommand = removeNWords(1, strCommand);
+					update.setStartDate(startDate);
+					update.setStartTime(startTime);
+					
+					break;
+			}
+		}
+		
+		return update;
+	}
 	
+	private String removeDelimiters(String strText){
+		strText = strText.replaceAll("-d", "").trim();
+		strText = strText.replaceAll("-e", "").trim();
+		strText = strText.replaceAll("-s", "").trim();
+		
+		return strText;
+	}
 	
 	private  DateClass getDate(String strCommand){
 		String strDate = getWord(0, strCommand);
@@ -205,7 +291,9 @@ public class Parser {
 		strDate = DateHandler.tryParse(strDate);
 		
 		try {
-			return new DateClass(strDate);
+			if(strDate != null){
+				return new DateClass(strDate);
+			}
 		} catch (NoSuchFieldException | ParseException e) {
 			e.printStackTrace();
 		} 
