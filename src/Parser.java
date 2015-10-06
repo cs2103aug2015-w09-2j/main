@@ -121,9 +121,10 @@ public class Parser {
 
 public static void main(String[] args){
 	Parser p = new Parser();
-	String command = "update vishnu -d hello -s 24/9 1200 -e 25/9 2344";
+	String command = "update new swimming -d swimming";
 
 	TaskPair t = p.parse(command);
+	System.out.println(((Update)(t.getTask())).getDescription());
 
 }
 
@@ -200,12 +201,12 @@ public static void main(String[] args){
 		String word = getWord(0, strCommand);
 		
 		while(!word.equals("-d") && !word.equals("-e") && !word.equals("-s")){
-			sb.append(word);
+			sb.append(word + " ");
 			strCommand = removeNWords(1, strCommand);
 			word = getWord(0, strCommand);
 		}
 		
-		return sb.toString();
+		return sb.toString().trim();
 	}
 	
 	private  String getDescription(String strCommand){
