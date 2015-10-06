@@ -4,11 +4,16 @@ import java.util.Scanner;
 
 public class UserInterface {
 
+	enum TaskType {
+		EVENT, DEADLINE, FLOATING
+	}
+
 	private static final String MESSAGE_PROMPT = "Enter command: ";
 	private static final String MESSAGE_WELCOME = "Hi! Welcome to Vodo!\n";
 	private static final String MESSAGE_INVALID_COMMAND = "Sorry we can't recognize that command\n";
 	private static final String MESSAGE_VALID_COMMAND = "Your command is successful!\n";
-
+	private static final String HEADER_TASK_TYPE = "%1$sS:\n";
+	private static final String ITEM_LISTING = "%1$s. %2$s\n";
 
 	private Logic vodoLogic;
 
@@ -43,8 +48,15 @@ public class UserInterface {
 	}
 
 	public void displayView(ArrayList<Task> tasks) {
-		for (Task t : tasks) {
-			printToUser(t.toString() + "\n");
+		int count = 1;
+		for (TaskType taskType : TaskType.values()) {
+			printToUser(String.format(HEADER_TASK_TYPE, taskType));
+			for (Task task : tasks) {
+				if (task.getClass().getName().toUpperCase().equals(taskType.toString())) {
+					printToUser(String.format(ITEM_LISTING, count, task));
+					count++;
+				}
+			}
 		}
 	}
 
