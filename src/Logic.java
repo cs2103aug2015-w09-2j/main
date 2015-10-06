@@ -48,7 +48,6 @@ public class Logic {
 			success=true;
 			break;
 		case UPDATE:
-			
 			success=true;
 			break;
 		case DELETE:
@@ -57,9 +56,9 @@ public class Logic {
 			break;
 		case SEARCH:
 			UI.displayView(search(inputString.substring(7)));
+			success=true;
 			break;
 		case DISPLAY:	
-			//UI.displayView(FileStorage.readTaskFromFile());
 			UI.displayView(stringToTask());
 			success=true;
 		default:

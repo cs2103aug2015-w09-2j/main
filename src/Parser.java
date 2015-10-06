@@ -152,6 +152,9 @@ public class Parser {
 			case "update":
 				return CommandType.Types.UPDATE;
 				
+			case "search":
+				return CommandType.Types.SEARCH;
+				
 			default:
 				return CommandType.Types.UNKNOWN;
 			
