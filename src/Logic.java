@@ -48,6 +48,7 @@ public class Logic {
 			success=true;
 			break;
 		case UPDATE:
+			updateTask((Update) input);
 			success=true;
 			break;
 		case DELETE:
@@ -87,6 +88,21 @@ public class Logic {
 		return event;
 	}*/
 
+	private static void updateTask(Update input) {
+		FileData data = fileStorage.search(input.getSearchString());
+		fileStorage.delete("1", data);
+		if(input.hasStartDate()){
+			Event event = new Event(input.getDescription() ,input.getStartDate(),input.getStartTime(),input.getEndDate(),input.getEndTime());
+			writeTaskTofile(event);
+		}else if(input.hasEndDate()){
+			Deadline deadline = new Deadline(input.getDescription() ,input.getEndDate(),input.getEndTime());
+			writeTaskTofile(deadline);
+		}else{
+			Floating floating = new Floating(input.getDescription());
+			writeTaskTofile(floating);
+		}
+	}
+	
 	private static ArrayList<Task> search(String substring) {
 		ArrayList<Task> output = new ArrayList<Task>();
 		FileData data = fileStorage.search(substring);
