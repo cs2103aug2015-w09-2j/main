@@ -99,7 +99,10 @@ public class Parser {
 				
 				task = new Floating(strDescription);
 				return new TaskPair(task, commandType);
+			
+			case SEARCH:
 				
+				return new TaskPair(null, commandType);
 			
 			default:
 				return new TaskPair(null, commandType);

@@ -9,7 +9,8 @@ public class CommandType {
 	//To be used by parser and logic
 	public static enum Types{
 		ADD_DEADLINE("-d"), ADD_EVENT("-e"), ADD_FLOATING("-f"),
-		UPDATE("update"), DELETE("delete"), DISPLAY("display"), UNKNOWN("");
+		UPDATE("update"), DELETE("delete"), DISPLAY("display"), SEARCH("search"),
+		UNKNOWN("");
 		
 		private String strCommand;
 		
