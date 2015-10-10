@@ -4,68 +4,93 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * @author Ravi
+ *
+ */
 public class Logic {
 	public String fileName;
-	public Logic(String filename){
+
+	public Logic(String filename) {
 		fileName = filename;
 	}
-	public Logic(){
-	}	
+
+	/**
+	 * 
+	 */
+	public Logic() {
+	}
+
 	private static Parser parser = new Parser();
 	private static UserInterface UI = new UserInterface();
 	private static FileStorage fileStorage = new FileStorage();
-	private static CommandType.Types command; 
-	
-	public static boolean processCommand(String input) throws NoSuchFieldException, ParseException{
+	private static CommandType.Types command;
+
+	/**
+	 * @param input
+	 * @return
+	 * @throws NoSuchFieldException
+	 * @throws ParseException
+	 */
+	public static boolean processCommand(String input) throws NoSuchFieldException, ParseException {
 		TaskPair task = parser.parse(input);
-		if(task.getType() == CommandType.Types.UNKNOWN){
+		if (task.getType() == CommandType.Types.UNKNOWN) {
 			return false;
-		}else{
-			//executeCommand(,input);
-			executeCommand(task.getType() , task.getTask() , input);
+		} else {
+			// executeCommand(,input);
+			executeCommand(task.getType(), task.getTask(), input);
 		}
 		return true;
 	}
-	
-	private static boolean executeCommand(CommandType.Types command,Task input , String inputString) throws NoSuchFieldException, ParseException{
+
+	/**
+	 * @param command
+	 * @param input
+	 * @param inputString
+	 * @return
+	 * @throws NoSuchFieldException
+	 * @throws ParseException
+	 */
+	private static boolean executeCommand(CommandType.Types command, Task input, String inputString)
+			throws NoSuchFieldException, ParseException {
 		boolean success = false;
-		switch(command){
-		case ADD_EVENT :
-			//Event event = createEvent(input);
+		switch (command) {
+		case ADD_EVENT:
+			// Event event = createEvent(input);
 			writeTaskTofile(input);
-			success=true;
+			success = true;
 			break;
 		case ADD_DEADLINE:
-			//Deadline deadline = createDeadLine(input);
-			//writeTaskTofile(deadline);
+			// Deadline deadline = createDeadLine(input);
+			// writeTaskTofile(deadline);
 			writeTaskTofile(input);
-			success=true;
+			success = true;
 			break;
 		case ADD_FLOATING:
-			//Floating floating = createFloating(input);
-			//writeTaskTofile(floating);
+			// Floating floating = createFloating(input);
+			// writeTaskTofile(floating);
 			writeTaskTofile(input);
-			success=true;
+			success = true;
 			break;
 		case UPDATE:
 			updateTask((Update) input);
-			success=true;
+			success = true;
 			break;
 		case DELETE:
 			deleteTask(inputString);
-			success=true;
+			success = true;
 			break;
 		case SEARCH:
 			UI.displayView(search(inputString.substring(7)));
-			success=true;
+			success = true;
 			break;
-		case DISPLAY:	
+		case DISPLAY:
 			UI.displayView(stringToTask());
-			success=true;
+			success = true;
 		default:
-			break;		
+			break;
 		}
-	return success;	
+		return success;
 	}
 /*
 	private static Floating createFloating(String input) {
@@ -88,58 +113,80 @@ public class Logic {
 		return event;
 	}*/
 
+	/**
+	 * @param input
+	 */
 	private static void updateTask(Update input) {
 		FileData data = fileStorage.search(input.getSearchString());
 		fileStorage.delete("1", data);
-		if(input.hasStartDate()){
-			Event event = new Event(input.getDescription() ,input.getStartDate(),input.getStartTime(),input.getEndDate(),input.getEndTime());
+		if (input.hasStartDate()) {
+			Event event = new Event(input.getDescription(), input.getStartDate(), input.getStartTime(),
+					input.getEndDate(), input.getEndTime());
 			writeTaskTofile(event);
-		}else if(input.hasEndDate()){
-			Deadline deadline = new Deadline(input.getDescription() ,input.getEndDate(),input.getEndTime());
+		} else if (input.hasEndDate()) {
+			Deadline deadline = new Deadline(input.getDescription(), input.getEndDate(), input.getEndTime());
 			writeTaskTofile(deadline);
-		}else{
+		} else {
 			Floating floating = new Floating(input.getDescription());
 			writeTaskTofile(floating);
 		}
 	}
-	
+
+	/**
+	 * @param substring
+	 * @return
+	 */
 	private static ArrayList<Task> search(String substring) {
 		ArrayList<Task> output = new ArrayList<Task>();
 		FileData data = fileStorage.search(substring);
 		HashMap<Integer, String> displayMap = data.getDisplayMap();
 		Iterator it = displayMap.entrySet().iterator();
-		while(it.hasNext()){
-			Map.Entry pair = (Map.Entry)it.next();
-			output.add(getTaskFromString((String)pair.getValue()));			
+		while (it.hasNext()) {
+			Map.Entry pair = (Map.Entry) it.next();
+			output.add(getTaskFromString((String) pair.getValue()));
 		}
 		return output;
 	}
+
+	/**
+	 * @param index
+	 */
 	private static void deleteTask(String index) {
 		// TODO Auto-generated method stub
 		String[] arr = index.split(" ");
 		fileStorage.deleteTask(Integer.valueOf(arr[1]));
-		
+
 	}
-	
-	
+
+	/**
+	 * @return
+	 */
 	private static ArrayList<Task> stringToTask() {
-		ArrayList<String> data =  new ArrayList<String>();
+		ArrayList<String> data = new ArrayList<String>();
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		data = FileStorage.readFile();
-		for(String s :data){
+		for (String s : data) {
 			tasks.add(getTaskFromString(s));
-		}	
+		}
 		// TODO Auto-generated method stub
 		return tasks;
 	}
+
+	/**
+	 * @param s
+	 * @return
+	 */
 	private static Task getTaskFromString(String s) {
-		// TODO Auto-generated method stub
 		return parser.parse(s).getTask();
 	}
+
+	/**
+	 * @param task
+	 */
 	private static void writeTaskTofile(Task task) {
 		String taskType = task.getClass().getName();
-		//String writeToFile="";
-		switch(taskType){
+		// String writeToFile="";
+		switch (taskType) {
 		case "Event":
 			writeEventToFile(task, taskType);
 			break;
@@ -152,22 +199,36 @@ public class Logic {
 		}
 	}
 
+	/**
+	 * @param task
+	 * @param taskType
+	 */
 	private static void writeFloatingToFile(Task task, String taskType) {
 		String writeToFile;
-		writeToFile = "add " + CommandType.TaskTypes.FLOATING + " " +task.getDescription();
+		writeToFile = "add " + CommandType.TaskTypes.FLOATING + " " + task.getDescription();
 		fileStorage.write(writeToFile);
 	}
 
+	/**
+	 * @param task
+	 * @param taskType
+	 */
 	private static void writeDeadlineToFile(Task task, String taskType) {
 		String writeToFile;
-		writeToFile ="add " + CommandType.TaskTypes.DEADLINE + " " +task.getDescription() + " " +((Deadline) task).getEndDate().toString() + " " + ((Deadline) task).getEndTime().toString() ;
+		writeToFile = "add " + CommandType.TaskTypes.DEADLINE + " " + task.getDescription() + " "
+				+ ((Deadline) task).getEndDate().toString() + " " + ((Deadline) task).getEndTime().toString();
 		fileStorage.write(writeToFile);
 	}
 
+	/**
+	 * @param task
+	 * @param taskType
+	 */
 	private static void writeEventToFile(Task task, String taskType) {
 		String writeToFile;
-		writeToFile = "add "+CommandType.TaskTypes.EVENT + " " +task.getDescription()+" " + ((Event) task).getStartDate().toString() +" " + ((Event) task).getStartTime().toString() + " " + ((Event) task).getEndDate().toString() + " " + ((Event) task).getEndTime().toString() ;
+		writeToFile = "add " + CommandType.TaskTypes.EVENT + " " + task.getDescription() + " "
+				+ ((Event) task).getStartDate().toString() + " " + ((Event) task).getStartTime().toString() + " "
+				+ ((Event) task).getEndDate().toString() + " " + ((Event) task).getEndTime().toString();
 		fileStorage.write(writeToFile);
 	}
 }
-

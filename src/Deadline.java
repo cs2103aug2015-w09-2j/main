@@ -17,7 +17,7 @@ public class Deadline extends Task{
 	}
 	/**
 	 * Description Gets the endDate of the deadline
-	 * @return DateClass
+	 * @return endDate
 	 */
 	public DateClass getEndDate(){
 		return endDate;
@@ -25,7 +25,7 @@ public class Deadline extends Task{
 	
 	/**
 	 * Description Gets the endTime of the deadline
-	 * @return TimeClass
+	 * @return endTime
 	 */
 	public TimeClass getEndTime(){
 		return endTime;
