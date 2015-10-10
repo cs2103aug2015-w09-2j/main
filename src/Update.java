@@ -12,6 +12,9 @@ public class Update extends Task{
 	private String strDescription;
 	private String strSearchString;
 	
+	/**
+	 * @param searchString
+	 */
 	public Update(String searchString){
 		super(null);
 		strDescription = null;
@@ -20,6 +23,9 @@ public class Update extends Task{
 		time = new TimeClass[MAX_DATETIME_COUNT];
 	}
 	
+	/**
+	 * @return
+	 */
 	public int getDateCount(){
 		int intCount = 0;
 		for(int i = 0; i < MAX_DATETIME_COUNT; i++){
@@ -31,6 +37,9 @@ public class Update extends Task{
 		return intCount;
 	}
 	
+	/**
+	 * @return
+	 */
 	public int getTimeCount(){
 		int intCount = 0;
 		for(int i = 0; i < MAX_DATETIME_COUNT; i++){
@@ -42,69 +51,117 @@ public class Update extends Task{
 		return intCount;
 	}
 	
+	/**
+	 * @return
+	 */
 	public boolean hasDescription(){
 		return strDescription != null;
 	}
 	
+	/**
+	 * @return
+	 */
 	public boolean hasStartDate(){
 		return dates[START_DATE] != null;
 	}
 	
+	/**
+	 * @return
+	 */
 	public boolean hasEndDate(){
 		return dates[END_DATE] != null;
 	}
 	
+	/**
+	 * @return
+	 */
 	public boolean hasStartTime(){
 		return time[START_TIME] != null;
 	}
 	
+	/**
+	 * @return
+	 */
 	public boolean hasEndTime(){
 		return time[END_TIME] != null;
 	}
 	
+	/**
+	 * @param startDate
+	 */
 	public void setStartDate(DateClass startDate) {
 		dates[START_DATE] = startDate;
 		
 	}
 	
+	/**
+	 * @param endDate
+	 */
 	public void setEndDate(DateClass endDate) {
 		dates[END_DATE] = endDate;
 	}
 	
+	/**
+	 * @param startTime
+	 */
 	public void setStartTime(TimeClass startTime) {
 		time[START_TIME] = startTime;
 	}
 	
+	/**
+	 * @param endTime
+	 */
 	public void setEndTime(TimeClass endTime) {
 		time[END_TIME] = endTime;
 	}
 
 	
+	/**
+	 * @param strDescription
+	 */
 	public void setDescription(String strDescription) {
 		this.strDescription = strDescription;
 	}
 	
+	/**
+	 * @return
+	 */
 	public DateClass getStartDate() {
 		return dates[START_DATE];
 	}
 	
+	/**
+	 * @return
+	 */
 	public DateClass getEndDate() {
 		return dates[END_DATE];
 	}
 
+	/**
+	 * @return
+	 */
 	public TimeClass getStartTime() {
 		return time[START_TIME];
 	}
 
+	/**
+	 * @return
+	 */
 	public TimeClass getEndTime() {
 		return time[END_TIME];
 	}
 	
+	/* (non-Javadoc)
+	 * @see Task#getDescription()
+	 */
 	@Override 
 	public String getDescription() {
 		return strDescription;
 	}
 	
+	/**
+	 * @return
+	 */
 	public String getSearchString(){
 		return strSearchString;
 	}

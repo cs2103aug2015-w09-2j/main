@@ -11,12 +11,16 @@ import java.util.Map;
 public class Logic {
 	public String fileName;
 
+	/**
+	 * Description Constructor : Creates and instance of the Logic class with the fileName stated
+	 * @param filename
+	 */
 	public Logic(String filename) {
 		fileName = filename;
 	}
 
 	/**
-	 * 
+	 * Description Default Constructor
 	 */
 	public Logic() {
 	}
@@ -27,6 +31,7 @@ public class Logic {
 	private static CommandType.Types command;
 
 	/**
+	 * Description Takes in the command as a string from the user input and processes the command and executes the command if its in the correct format
 	 * @param input
 	 * @return
 	 * @throws NoSuchFieldException
@@ -44,6 +49,7 @@ public class Logic {
 	}
 
 	/**
+	 * Description Executes the command
 	 * @param command
 	 * @param input
 	 * @param inputString
@@ -114,6 +120,7 @@ public class Logic {
 	}*/
 
 	/**
+	 * Description Method used to update the task
 	 * @param input
 	 */
 	private static void updateTask(Update input) {
