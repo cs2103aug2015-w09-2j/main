@@ -12,13 +12,7 @@ public class Parser {
 
 	/*** METHODS ***/
 	
-	/***
-	 * Auxiliary method to get a particular word from a string
-	 * @param intIndex The position of the word, beginning from '0'
-	 * @param strText The string from which to get the word
-	 * @return The word at position intIndex
-	 * @exceptions If intIndex exceeds the bounds, IndexOutOfBoundsException is thrown
-	 */
+	
 	private  String getWord(int intIndex, String strText){
 		String[] words = strText.split(" ");
 		
@@ -46,6 +40,11 @@ public class Parser {
 		return strText.split(" ").length;
 	}
 	
+	/**
+	 * 
+	 * @param strCommand A command to parse to an task
+	 * @return TaskPair o
+	 */
 	public  TaskPair parse(String strCommand){
 		
 		CommandType.Types commandType = getCommandType(strCommand);
@@ -119,14 +118,14 @@ public class Parser {
 	}
 
 
-	public static void main(String[] args){
-		Parser p = new Parser();
-		String command = "update new swimming -d swimming";
-	
-		TaskPair t = p.parse(command);
-		System.out.println(((Update)(t.getTask())).getDescription());
-	
-	}
+	//ublic static void main(String[] args){
+	//	Parser p = new Parser();
+	//	String command = "update new swimming -d swimming";
+	//
+	//	TaskPair t = p.parse(command);
+	//	System.out.println(((Update)(t.getTask())).getDescription());
+	//
+	//
 
 	/***
 	 * Given the input command, returns you the type of command.
