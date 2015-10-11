@@ -6,12 +6,12 @@ import java.util.*;
 /**
  * 
  * @author  Razali
- * Contains functions to handle dates
  */
 public  class DateHandler {
 
-
+	
 	public static final int NOT_FOUND = -1;
+	
 	
 	public static enum Days{
 		SUNDAY("Sunday", 1), MONDAY("Monday", 2), TUESDAY("Tuesday", 3), WEDNESDAY("Wednesday", 4),
@@ -26,10 +26,19 @@ public  class DateHandler {
 			this.strDay = strDay;
 		}
 		
+		/**
+		 * @return The integer representation (1-7) of days
+		 */
 		public int getIntDayOfWeek(){
 			return intDayOfWeek;
 		}
 		
+		/**
+		 * 
+		 * @param strDay String representation of a day. "Monday" to "Sunday"
+		 * @return The integer representation (1-7) of days
+		 * @throws NoSuchFieldException if strDay does not match
+		 */
 		public static int getIntDayOfWeek(String strDay) throws NoSuchFieldException{
 			for(Days day : Days.values()){
 				if(day.getStringDay().equals(strDay)){
@@ -40,10 +49,20 @@ public  class DateHandler {
 			throw new NoSuchFieldException(); 
 		}
 		
+		/**
+		 * 
+		 * @return String representation of enum ranging from "Monday" to "Sunday" 
+		 */
 		public String getStringDay(){
 			return strDay;
 		}
 	    
+		/**
+		 * 
+		 * @param intDayOfWeek Integer ranging from (1-7) where 1 represents "Sunday" and 7 represents "Saturday"
+		 * @return String representation of enum ranging from "Monday" to "Sunday"
+		 * @throws NoSuchFieldException if intDayofWeek is not within (1-7)
+		 */
 		public static String getStringDay(int intDayOfWeek) throws NoSuchFieldException{
 			
 			for(Days day : Days.values()){
@@ -105,7 +124,7 @@ public  class DateHandler {
 	 * 
 	 * @param intDayOfMonth The calendar days usually from 1-30
 	 * @param strMonth The calendar months. Eg January/March
-	 * @param strYearThe calendar year. Eg "2015"
+	 * @param strYear The calendar year. Eg "2015"
 	 * @return The day of the date. Eg "Monday" or "Tuesday"
 	 * @throws ParseException Occurs when a date with "dd/MM/yyyy" cannot be formed
 	 * @throws NoSuchFieldException Occurs when the day supplied could not 
@@ -223,6 +242,7 @@ public  class DateHandler {
 	
 	/**
 	 * Converts the year to an Integer
+	 * @param String representation of year
 	 * @return Integer representation of the year. Eg "2015" to 2015
 	 */
 	public static int getIntYear(String strYear) {
@@ -231,6 +251,7 @@ public  class DateHandler {
 
 	/**
 	 * Converts the year to a String
+	 * @param intYear Integer representation of year
 	 * @return String representation of the year. Eg 2015 to "2015"
 	 */
 	public static String getStringYear(int intYear) {
@@ -279,6 +300,13 @@ public  class DateHandler {
 		return getDate(intDayOfMonth + "", intMonth + "", intYear + "");
 	}
 	
+	
+	/**
+	 * Try to parse a string to an date format of dd/MM/YYYY. If year is not
+	 * specified, the current year is used.
+	 * @param strDate dd/MM or dd/MM/YYYY string format of a date
+	 * @return Null if match not found, else returns dd/MM/YYYY as a string
+	 */
 	public static String tryParse(String strDate){
 		
 		String[] splitDate = strDate.split("/");
@@ -297,6 +325,11 @@ public  class DateHandler {
 		return null;
 	}
 	
+	/**
+	 * Determines if a month is within range
+	 * @param intMonth Integer representation of a month. (1-12)
+	 * @return true if it is within range, false otherwise
+	 */
 	public static boolean isMonthWithinRange(int intMonth){
 		return intMonth >= 1 && intMonth <= 12;
 	}

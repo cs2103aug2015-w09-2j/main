@@ -119,14 +119,14 @@ public class Parser {
 	}
 
 
-public static void main(String[] args){
-	Parser p = new Parser();
-	String command = "update new swimming -d swimming";
-
-	TaskPair t = p.parse(command);
-	System.out.println(((Update)(t.getTask())).getDescription());
-
-}
+	public static void main(String[] args){
+		Parser p = new Parser();
+		String command = "update new swimming -d swimming";
+	
+		TaskPair t = p.parse(command);
+		System.out.println(((Update)(t.getTask())).getDescription());
+	
+	}
 
 	/***
 	 * Given the input command, returns you the type of command.
