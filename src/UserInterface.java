@@ -22,44 +22,14 @@ public class UserInterface {
 		vodoLogic = new Logic(fileName);
 	}
 
-	public UserInterface() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public void promptForCommand() {
-		printToUser(MESSAGE_PROMPT);
-	}
-
-	public String getCommand() {
-		Scanner sc = new Scanner(System.in);
-		return sc.nextLine();
-	}
-
-	public void processCommand(String command) throws NoSuchFieldException, ParseException {
-		boolean isSuccessful = Logic.processCommand(command);
-		if (isSuccessful) {
-			printToUser(MESSAGE_VALID_COMMAND);
-		} else {
-			printToUser(MESSAGE_INVALID_COMMAND);
-		}
-	}
-
-	public void printToUser(String text) {
-		System.out.printf(text);
-	}
-
 	public void displayView(ArrayList<Task> tasks) {
-		int size = tasks.size();
 		for (TaskType taskType : TaskType.values()) {
 			printToUser(String.format(HEADER_TASK_TYPE, taskType));
-			Iterator<Task> tasksIterator = tasks.iterator();
-			int initialCount = 1;
-			while (tasksIterator.hasNext()) {
-				Task task = tasksIterator.next();
+			for (int i = 0; i < tasks.size(); i++) {
+				Task task = tasks.get(i);
 				if (task.getClass().getName().toUpperCase().equals(taskType.toString())) {
-					printToUser(String.format(ITEM_LISTING, initialCount, task));
+					printToUser(String.format(ITEM_LISTING, i+1, task));
 				}
-				initialCount++;
 			}
 			printToUser("\n");
 		}
@@ -74,4 +44,30 @@ public class UserInterface {
 			processCommand(command);
 		}
 	}
+	
+	private void promptForCommand() {
+		printToUser(MESSAGE_PROMPT);
+	}
+
+	private String getCommand() {
+		Scanner sc = new Scanner(System.in);
+		String command = sc.nextLine();
+		sc.close();
+		return command;
+	}
+
+	private void processCommand(String command) throws NoSuchFieldException, ParseException {
+		boolean isSuccessful = Logic.processCommand(command);
+		if (isSuccessful) {
+			printToUser(MESSAGE_VALID_COMMAND);
+		} else {
+			printToUser(MESSAGE_INVALID_COMMAND);
+		}
+	}
+
+	private void printToUser(String text) {
+		System.out.printf(text);
+	}
+
+
 }
