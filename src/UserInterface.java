@@ -22,6 +22,10 @@ public class UserInterface {
 		vodoLogic = new Logic(fileName);
 	}
 
+	public UserInterface() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public void displayView(ArrayList<Task> tasks) {
 		for (TaskType taskType : TaskType.values()) {
 			printToUser(String.format(HEADER_TASK_TYPE, taskType));
