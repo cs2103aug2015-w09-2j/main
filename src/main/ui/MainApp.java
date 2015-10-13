@@ -16,14 +16,14 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import main.ui.view.MainLayoutController;
-// import main.logic.Logic;
+import main.Logic;
 
 public class MainApp extends Application {
 
 	private Stage primaryStage;
 	private GridPane mainLayout;
 	private ObservableList<String> tasks;
-	// private Logic logic;
+	private Logic logic;
 
 	public MainApp() {
 		tasks = FXCollections.observableArrayList();
@@ -67,7 +67,7 @@ public class MainApp extends Application {
 		/*
 		 * This part should call
 		 */
-		// logic = new Logic();
+		logic = new Logic();
 		// logic.setMainApp(this); >> at this point tasks is filled
 	}
 
