@@ -1,3 +1,5 @@
+package main;
+
 import java.text.ParseException;
 
 public class VodoApp {

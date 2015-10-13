@@ -16,6 +16,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import main.ui.view.MainLayoutController;
+// import main.logic.Logic;
 
 public class MainApp extends Application {
 
@@ -26,7 +27,6 @@ public class MainApp extends Application {
 
 	public MainApp() {
 		tasks = FXCollections.observableArrayList();
-
 	}
 
 	/*
@@ -46,14 +46,15 @@ public class MainApp extends Application {
 			loader.setLocation(MainApp.class.getResource("view/MainLayout.fxml"));
 			mainLayout = (GridPane) loader.load();
 
+			// Set up the controller
+			MainLayoutController mainLayoutController = loader.getController();
+			mainLayoutController.setMainApp(this); // pass tasks to controller
+
 			// Show the scene containing the main layout
 			Scene scene = new Scene(mainLayout, 900, 600);
 			primaryStage.setScene(scene);
 			primaryStage.show();
 
-			// Set up the controller
-			MainLayoutController mainLayoutController = loader.getController();
-			mainLayoutController.setMainApp(this);
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -66,6 +67,8 @@ public class MainApp extends Application {
 		/*
 		 * This part should call
 		 */
+		// logic = new Logic();
+		// logic.setMainApp(this); >> at this point tasks is filled
 	}
 
 	@Override
@@ -73,14 +76,6 @@ public class MainApp extends Application {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Vodo");
 
-		// MainApp should check for a config file (need to decide on name) << create a new Configuration class, tell logic to use?
-		// If config file exists
-		//	Get the specified storage location, setup Logic with storage location
-		// Else
-		//  Display a new dialog asking for location to store data
-		//	setup Logic with the storage location
-
-		// pass observable list of tasks to logic
 		showMainLayout();
 	}
 

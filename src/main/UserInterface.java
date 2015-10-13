@@ -1,3 +1,5 @@
+package main;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,7 +50,7 @@ public class UserInterface {
 			processCommand(command);
 		}
 	}
-	
+
 	private void promptForCommand() {
 		printToUser(MESSAGE_PROMPT);
 	}
@@ -56,7 +58,6 @@ public class UserInterface {
 	private String getCommand() {
 		Scanner sc = new Scanner(System.in);
 		String command = sc.nextLine();
-		sc.close();
 		return command;
 	}
 

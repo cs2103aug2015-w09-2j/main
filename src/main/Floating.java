@@ -1,3 +1,4 @@
+package main;
 
 public class Floating extends Task{
 
@@ -13,6 +14,6 @@ public class Floating extends Task{
 	public String toString(){
 		String output = this.getDescription()+" ";
 		return output;
-		
+
 	}
 }

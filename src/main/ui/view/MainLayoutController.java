@@ -1,15 +1,37 @@
 package main.ui.view;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import javafx.fxml.FXML;
+
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+
 import main.ui.MainApp;
 
 public class MainLayoutController {
 
-	/**
-	 * Fields to point to UI components
-	 */
+/*	enum TaskType {
+		EVENT, DEADLINE, FLOATING
+	}*/
+
+	private MainApp mainApp;
+
+/*	private ObservableList<Task> tasks;
+	private ObservableList<Event> events;
+	private ObservableList<Deadline> deadlines;
+	private ObservableList<Floating> floatingTasks;
+
+	// Indices of events, deadlines, and floatingTasks in tasks
+	private int firstEventIndex
+	private int lastEventIndex
+	private int firstDeadlineIndex
+	private int lastDeadlineIndex
+	private int firstFloatingIndex
+	private int lastFloatingIndex*/
+
+	// Fields for binding to UI components
 	@FXML
 	private ListView<String> eventsListView;
 	@FXML
@@ -18,9 +40,6 @@ public class MainLayoutController {
 	private ListView<String> floatingTasksListView;
 	@FXML
 	private TextField commandBox;
-
-	// Reference to Main App
-	private MainApp mainApp;
 
 	public MainLayoutController() {
 	}
@@ -35,6 +54,9 @@ public class MainLayoutController {
 		this.mainApp = mainApp;
 
 		// Add Observable List data to eventsListView
+		// tasks = mainApp.getTasks(); >> after ObservableList<String> change to ObservableList<Task>
+		// categorize(tasks);
+		// sortByDate(
 		eventsListView.setItems(mainApp.getTasks());
 	}
 
@@ -45,4 +67,8 @@ public class MainLayoutController {
 		eventsListView.getItems().add(entry);
 		commandBox.setText("");
 	}
+
+	/*
+	 * Need to register a changeListener to task, and then get the last task
+	 */
 }

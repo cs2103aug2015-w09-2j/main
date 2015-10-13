@@ -1,3 +1,4 @@
+package main;
 
 public class Event extends Task{
 
@@ -6,7 +7,7 @@ public class Event extends Task{
 	private DateClass endDate;
 	private TimeClass startTime;
 	private TimeClass endTime;
-	
+
 	/**
 	 * Description Constructor : Creates a event task, which is a subclass of the Task abstract class.
 	 * @param strDescription
@@ -16,14 +17,14 @@ public class Event extends Task{
 	 * @param endTime
 	 */
 	public Event(String strDescription, DateClass startDate, TimeClass startTime, DateClass  endDate, TimeClass endTime){
-		
+
 		super(strDescription);
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.startTime = startTime;
 		this.endTime = endTime;
 	}
-	
+
 	/**
 	 * Description Gets the startDate of the event
 	 * @return startDate
@@ -31,7 +32,7 @@ public class Event extends Task{
 	public DateClass getStartDate() {
 		return startDate;
 	}
-	
+
 	/**
 	 * Description Gets the endDate of the event
 	 * @return
@@ -39,7 +40,7 @@ public class Event extends Task{
 	public DateClass getEndDate() {
 		return endDate;
 	}
-	
+
 	/**
 	 * Description Gets the startTime of the event
 	 * @return
@@ -47,7 +48,7 @@ public class Event extends Task{
 	public TimeClass getStartTime() {
 		return startTime;
 	}
-	
+
 	/**
 	 * Description Gets the endTime of the event
 	 * @return
@@ -55,13 +56,13 @@ public class Event extends Task{
 	public TimeClass getEndTime() {
 		return endTime;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
 		String output = "";
-		output = this.getDescription() + " " + this.getStartDate().toString() + " " + this.getStartTime().toString()+ " "  + this.getEndDate().toString() + " " + this.getEndTime().toString(); 
-		return output;	
+		output = this.getDescription() + " " + this.getStartDate().toString() + " " + this.getStartTime().toString()+ " "  + this.getEndDate().toString() + " " + this.getEndTime().toString();
+		return output;
 	}
 }

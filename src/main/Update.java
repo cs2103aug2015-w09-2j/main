@@ -1,3 +1,4 @@
+package main;
 
 public class Update extends Task{
 
@@ -6,12 +7,12 @@ public class Update extends Task{
 	private static final int END_DATE = 1;
 	private static final int END_TIME = 1;
 	private static final int MAX_DATETIME_COUNT = 2;
-	
+
 	private DateClass[] dates;
 	private TimeClass[] time;
 	private String strDescription;
 	private String strSearchString;
-	
+
 	/**
 	 * @param searchString
 	 */
@@ -22,7 +23,7 @@ public class Update extends Task{
 		dates = new DateClass[MAX_DATETIME_COUNT];
 		time = new TimeClass[MAX_DATETIME_COUNT];
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -33,10 +34,10 @@ public class Update extends Task{
 				intCount++;
 			}
 		}
-		
+
 		return intCount;
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -47,67 +48,67 @@ public class Update extends Task{
 				intCount++;
 			}
 		}
-		
+
 		return intCount;
 	}
-	
+
 	/**
 	 * @return
 	 */
 	public boolean hasDescription(){
 		return strDescription != null;
 	}
-	
+
 	/**
 	 * @return
 	 */
 	public boolean hasStartDate(){
 		return dates[START_DATE] != null;
 	}
-	
+
 	/**
 	 * @return
 	 */
 	public boolean hasEndDate(){
 		return dates[END_DATE] != null;
 	}
-	
+
 	/**
 	 * @return
 	 */
 	public boolean hasStartTime(){
 		return time[START_TIME] != null;
 	}
-	
+
 	/**
 	 * @return
 	 */
 	public boolean hasEndTime(){
 		return time[END_TIME] != null;
 	}
-	
+
 	/**
 	 * @param startDate
 	 */
 	public void setStartDate(DateClass startDate) {
 		dates[START_DATE] = startDate;
-		
+
 	}
-	
+
 	/**
 	 * @param endDate
 	 */
 	public void setEndDate(DateClass endDate) {
 		dates[END_DATE] = endDate;
 	}
-	
+
 	/**
 	 * @param startTime
 	 */
 	public void setStartTime(TimeClass startTime) {
 		time[START_TIME] = startTime;
 	}
-	
+
 	/**
 	 * @param endTime
 	 */
@@ -115,21 +116,21 @@ public class Update extends Task{
 		time[END_TIME] = endTime;
 	}
 
-	
+
 	/**
 	 * @param strDescription
 	 */
 	public void setDescription(String strDescription) {
 		this.strDescription = strDescription;
 	}
-	
+
 	/**
 	 * @return
 	 */
 	public DateClass getStartDate() {
 		return dates[START_DATE];
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -150,20 +151,20 @@ public class Update extends Task{
 	public TimeClass getEndTime() {
 		return time[END_TIME];
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see Task#getDescription()
 	 */
-	@Override 
+	@Override
 	public String getDescription() {
 		return strDescription;
 	}
-	
+
 	/**
 	 * @return
 	 */
 	public String getSearchString(){
 		return strSearchString;
 	}
-	
+
 }
