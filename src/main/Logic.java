@@ -11,7 +11,7 @@ import java.util.Map;
  *
  */
 public class Logic {
-	public String fileName;
+	private String fileName;
 
 	/**
 	 * Description Constructor : Creates and instance of the Logic class with the fileName stated
@@ -186,6 +186,8 @@ public class Logic {
 	 * @return
 	 */
 	private static Task getTaskFromString(String s) {
+		Task a = parser.parse(s).getTask();
+		//System.out.println(a.toString());
 		return parser.parse(s).getTask();
 	}
 
@@ -193,8 +195,10 @@ public class Logic {
 	 * @param task
 	 */
 	private static void writeTaskTofile(Task task) {
-		String taskType = task.getClass().getName();
+		String taskType = task.getClass().getName().substring(5);
+		//taskType = taskType.
 		// String writeToFile="";
+		//System.out.println(taskType);
 		switch (taskType) {
 		case "Event":
 			writeEventToFile(task, taskType);

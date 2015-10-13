@@ -33,7 +33,7 @@ public class UserInterface {
 			printToUser(String.format(HEADER_TASK_TYPE, taskType));
 			for (int i = 0; i < tasks.size(); i++) {
 				Task task = tasks.get(i);
-				if (task.getClass().getName().toUpperCase().equals(taskType.toString())) {
+				if (task.getClass().getName().substring(5).toUpperCase().equals(taskType.toString())) {
 					printToUser(String.format(ITEM_LISTING, i+1, task));
 				}
 			}
