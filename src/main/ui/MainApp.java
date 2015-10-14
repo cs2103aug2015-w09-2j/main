@@ -73,7 +73,7 @@ public class MainApp extends Application {
 		 * This part should call
 		 */
 		logic = new Logic();
-		logic.setMainApp(this); // >> at this point logic should fill the task
+		logic.setTasks(tasks); // >> at this point logic should fill the task
 	}
 
 	@Override

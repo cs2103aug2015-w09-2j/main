@@ -1,7 +1,5 @@
 package main;
 
-import main.ui.MainApp;
-
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,8 +33,7 @@ public class Logic {
 	private static UserInterface UI = new UserInterface(); // [teddy] this will be deleted once we shift to GUI
 	private static FileStorage fileStorage = new FileStorage();
 	private static CommandType.Types command;
-	private MainApp mainApp; // [teddy] added this
-	private ObservableList<Task> tasks; // [teddy] and this, just fill the tasks in
+	private ObservableList<Task> tasks; // [teddy] just fill the tasks
 
 	/**
 	 * Description Takes in the command as a string from the user input and processes the command and executes the command if its in the correct format
@@ -252,14 +249,12 @@ public class Logic {
 	}
 
 	/**
-	 * Set a reference to MainApp and get the tasks list
-	 * @param mainApp	a reference to the UI
+	 * Initialize the tasks
+	 * @param tasks
 	 *
 	 * Added by teddy
 	 */
-	public void setMainApp(MainApp mainApp) {
-		this.mainApp = mainApp;
-
-		tasks = mainApp.getTasks();
+	public void setTasks(ObservableList<Task> tasks) {
+		this.tasks = tasks;
 	}
 }
