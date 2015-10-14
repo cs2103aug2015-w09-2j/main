@@ -19,9 +19,6 @@ import main.ui.view.MainLayoutController;
 
 import main.Logic;
 import main.Task;
-import main.Event;
-import main.Deadline;
-import main.Floating;
 
 public class MainApp extends Application {
 
@@ -34,9 +31,6 @@ public class MainApp extends Application {
 		tasks = FXCollections.observableArrayList();
 	}
 
-	/*
-	 * Getters
-	 */
 	public ObservableList<Task> getTasks() {
 		return tasks;
 	}
@@ -69,17 +63,15 @@ public class MainApp extends Application {
 
 	@Override
 	public void init() {
-		/*
-		 * This part should call
-		 */
-		logic = new Logic();
-		logic.setTasks(tasks); // >> at this point logic should fill the task
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Vodo");
+
+		logic = new Logic();
+		logic.setTasks(tasks); // >> at this point logic should fill the task
 
 		showMainLayout();
 	}

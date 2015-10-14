@@ -1,6 +1,5 @@
 package main.ui.view;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import javafx.fxml.FXML;
@@ -10,34 +9,25 @@ import javafx.scene.control.TextField;
 
 import main.ui.MainApp;
 
-public class MainLayoutController {
+import main.Task;
+import main.Event;
+import main.Deadline;
+import main.Floating;
 
-/*	enum TaskType {
-		EVENT, DEADLINE, FLOATING
-	}*/
+public class MainLayoutController {
 
 	private MainApp mainApp;
 
-/*	private ObservableList<Task> tasks;
-	private ObservableList<Event> events;
-	private ObservableList<Deadline> deadlines;
-	private ObservableList<Floating> floatingTasks;
+	private ObservableList<Task> tasks;
 
-	// Indices of events, deadlines, and floatingTasks in tasks
-	private int firstEventIndex
-	private int lastEventIndex
-	private int firstDeadlineIndex
-	private int lastDeadlineIndex
-	private int firstFloatingIndex
-	private int lastFloatingIndex*/
 
 	// Fields for binding to UI components
 	@FXML
-	private ListView<String> eventsListView;
+	private ListView<Event> eventsListView;
 	@FXML
-	private ListView<String> deadlinesListView;
+	private ListView<Deadline> deadlinesListView;
 	@FXML
-	private ListView<String> floatingTasksListView;
+	private ListView<Floating> floatingTasksListView;
 	@FXML
 	private TextField commandBox;
 
@@ -50,21 +40,46 @@ public class MainLayoutController {
 		 */
 	}
 
+	/**
+	 * Set the reference to MainApp and setup the view
+	 * @param mainApp
+	 */
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
+		getTasks();
+		setupListView();
 
 		// Add Observable List data to eventsListView
 		// tasks = mainApp.getTasks(); >> after ObservableList<String> change to ObservableList<Task>
 		// categorize(tasks);
 		// sortByDate(
-		eventsListView.setItems(mainApp.getTasks());
+		// eventsListView.setItems(mainApp.getTasks());
+	}
+
+	public void getTasks() {
+		tasks = mainApp.getTasks();
+	}
+
+	public void setupListView() {
+		for (int i = 0; i < tasks.size(); i++) {
+			Task aTask = tasks.get(i);
+			if (aTask instanceof Event) {
+				eventsListView.getItems().add((Event) aTask);
+			}
+			else if (aTask instanceof Deadline) {
+				deadlinesListView.getItems().add((Deadline) aTask);
+			}
+			else {
+				floatingTasksListView.getItems().add((Floating) aTask);
+			}
+		}
 	}
 
 	@FXML
 	public void getCommand() {
 		String entry = commandBox.getText(); // rename to entry
 		// mainApp.processCommand(command); // pass command to logic
-		eventsListView.getItems().add(entry);
+		// eventsListView.getItems().add(entry);
 		commandBox.setText("");
 	}
 
