@@ -1,10 +1,14 @@
 package main;
 
+import main.ui.MainApp;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import javafx.collections.ObservableList;
 
 /**
  * @author Ravi
@@ -28,9 +32,11 @@ public class Logic {
 	}
 
 	private static Parser parser = new Parser();
-	private static UserInterface UI = new UserInterface();
+	private static UserInterface UI = new UserInterface(); // [teddy] this will be deleted once we shift to GUI
 	private static FileStorage fileStorage = new FileStorage();
 	private static CommandType.Types command;
+	private MainApp mainApp; // [teddy] added this
+	private ObservableList<Task> tasks; // [teddy] and this, just fill the tasks in
 
 	/**
 	 * Description Takes in the command as a string from the user input and processes the command and executes the command if its in the correct format
@@ -243,5 +249,17 @@ public class Logic {
 				+ ((Event) task).getStartDate().toString() + " " + ((Event) task).getStartTime().toString() + " "
 				+ ((Event) task).getEndDate().toString() + " " + ((Event) task).getEndTime().toString();
 		fileStorage.write(writeToFile);
+	}
+
+	/**
+	 * Set a reference to MainApp and get the tasks list
+	 * @param mainApp	a reference to the UI
+	 *
+	 * Added by teddy
+	 */
+	public void setMainApp(MainApp mainApp) {
+		this.mainApp = mainApp;
+
+		tasks = mainApp.getTasks();
 	}
 }

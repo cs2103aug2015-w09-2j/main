@@ -61,8 +61,21 @@ public class UserInterface {
 		return command;
 	}
 
-	private void processCommand(String command) throws NoSuchFieldException, ParseException {
-		boolean isSuccessful = Logic.processCommand(command);
+	private void processCommand(String command) {
+		boolean isSuccessful = false;
+
+		try {
+			isSuccessful = Logic.processCommand(command);
+		}
+		catch (Exception exception) {
+			if (exception instanceof NoSuchFieldException) {
+				printToUser("No such field");
+			}
+			if (exception instanceof ParseException) {
+				printToUser(MESSAGE_INVALID_COMMAND);
+			}
+		}
+
 		if (isSuccessful) {
 			printToUser(MESSAGE_VALID_COMMAND);
 		} else {
