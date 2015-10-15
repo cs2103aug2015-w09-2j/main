@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import main.ui.MainApp;
@@ -279,5 +280,6 @@ public class Logic {
 	 */
 	public void setTasks(ObservableList<Task> tasks) {
 		this.tasks = tasks;
+		tasks = FXCollections.observableList(stringToTask());
 	}
 }
