@@ -47,7 +47,7 @@ public class Logic {
 	 * @throws ParseException
 	 */
 	@SuppressWarnings("finally")
-	public static boolean processCommand(String input) throws NoSuchFieldException, ParseException {
+	public boolean processCommand(String input) throws NoSuchFieldException, ParseException {
 		boolean output=false;
 		try{
 		TaskPair task = parser.parse(input);
@@ -76,33 +76,38 @@ public class Logic {
 	 * @throws NoSuchFieldException
 	 * @throws ParseException
 	 */
-	private static boolean executeCommand(CommandType.Types command, Task input, String inputString)
+	private boolean executeCommand(CommandType.Types command, Task input, String inputString)
 			throws NoSuchFieldException, ParseException {
 		boolean success = false;
 		switch (command) {
 		case ADD_EVENT:
 			// Event event = createEvent(input);
 			writeTaskTofile(input);
+			fillTasks(); // [teddy]
 			success = true;
 			break;
 		case ADD_DEADLINE:
 			// Deadline deadline = createDeadLine(input);
 			// writeTaskTofile(deadline);
 			writeTaskTofile(input);
+			fillTasks();
 			success = true;
 			break;
 		case ADD_FLOATING:
 			// Floating floating = createFloating(input);
 			// writeTaskTofile(floating);
 			writeTaskTofile(input);
+			fillTasks();
 			success = true;
 			break;
 		case UPDATE:
 			updateTask((Update) input);
+			fillTasks();
 			success = true;
 			break;
 		case DELETE:
 			deleteTask(inputString);
+			fillTasks();
 			success = true;
 			break;
 		case SEARCH:

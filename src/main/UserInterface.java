@@ -65,7 +65,7 @@ public class UserInterface {
 		boolean isSuccessful = false;
 
 		try {
-			isSuccessful = Logic.processCommand(command);
+			isSuccessful = vodoLogic.processCommand(command);
 		}
 		catch (Exception exception) {
 			if (exception instanceof NoSuchFieldException) {

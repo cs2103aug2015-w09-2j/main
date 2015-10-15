@@ -58,11 +58,11 @@ public class MainLayoutController {
 		// eventsListView.setItems(mainApp.getTasks());
 	}
 
-	public void getTasks() {
+	private void getTasks() {
 		tasks = mainApp.getTasks();
 	}
 
-	public void setupListView() {
+	private void setupListView() {
 		for (int i = 0; i < tasks.size(); i++) {
 			Task aTask = tasks.get(i);
 			if (aTask instanceof Event) {
