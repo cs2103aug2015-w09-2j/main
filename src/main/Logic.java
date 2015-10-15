@@ -35,7 +35,7 @@ public class Logic {
 	private static UserInterface UI = new UserInterface(); // [teddy] this will be deleted once we shift to GUI
 	private static FileStorage fileStorage = new FileStorage();
 	private static CommandType.Types command;
-	private MainApp mainApp;
+	private MainApp mainApp; // [teddy] reference to UI
 	private ObservableList<Task> tasks; // [teddy] just fill the tasks
 
 	/**
