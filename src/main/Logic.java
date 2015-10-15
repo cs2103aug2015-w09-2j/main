@@ -280,6 +280,7 @@ public class Logic {
 	 */
 	public void setTasks(ObservableList<Task> tasks) {
 		this.tasks = tasks;
+		fillTasks();
 	}
 
 	/**
