@@ -280,6 +280,15 @@ public class Logic {
 	 */
 	public void setTasks(ObservableList<Task> tasks) {
 		this.tasks = tasks;
+	}
+
+	/**
+	 * Fill in the ObservableList<Task>
+	 *
+	 * Added by Teddy
+	 * Ravi, you can just call this method every time user add/delete/edit the to-do list
+	 */
+	public void fillTasks() {
 		tasks = FXCollections.observableList(stringToTask());
 	}
 }
