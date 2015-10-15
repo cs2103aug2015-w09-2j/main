@@ -39,15 +39,25 @@ public class Logic {
 	 * @throws NoSuchFieldException
 	 * @throws ParseException
 	 */
+	@SuppressWarnings("finally")
 	public static boolean processCommand(String input) throws NoSuchFieldException, ParseException {
+		boolean output=false;
+		try{
 		TaskPair task = parser.parse(input);
 		if (task.getType() == CommandType.Types.UNKNOWN) {
-			return false;
+			output=false;
 		} else {
 			// executeCommand(,input);
 			executeCommand(task.getType(), task.getTask(), input);
+			output =true;
 		}
-		return true;
+		}catch(NoSuchFieldException e){
+			System.out.println("There is no such field, so the command entered is incorrect" + "  "+e);
+		}catch(ParseException e){
+			System.out.println("There was an exepction which was caused while parsing" + " " + e);
+		}finally{
+			return output;
+		}
 	}
 
 	/**
