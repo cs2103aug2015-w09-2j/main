@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javafx.collections.ObservableList;
 
+import main.ui.MainApp;
+
 /**
  * @author Ravi
  *
@@ -33,6 +35,7 @@ public class Logic {
 	private static UserInterface UI = new UserInterface(); // [teddy] this will be deleted once we shift to GUI
 	private static FileStorage fileStorage = new FileStorage();
 	private static CommandType.Types command;
+	private MainApp mainApp;
 	private ObservableList<Task> tasks; // [teddy] just fill the tasks
 
 	/**
@@ -246,6 +249,16 @@ public class Logic {
 				+ ((Event) task).getStartDate().toString() + " " + ((Event) task).getStartTime().toString() + " "
 				+ ((Event) task).getEndDate().toString() + " " + ((Event) task).getEndTime().toString();
 		fileStorage.write(writeToFile);
+	}
+
+	/**
+	 * Set the reference to MainApp
+	 * @param mainApp
+	 *
+	 * Added by teddy
+	 */
+	public void setMainApp(MainApp mainApp) {
+		this.mainApp = mainApp;
 	}
 
 	/**
