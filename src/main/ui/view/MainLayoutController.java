@@ -1,5 +1,7 @@
 package main.ui.view;
 
+import java.text.ParseException;
+
 import javafx.collections.ObservableList;
 
 import javafx.fxml.FXML;
@@ -76,10 +78,9 @@ public class MainLayoutController {
 	}
 
 	@FXML
-	public void getCommand() {
-		String entry = commandBox.getText(); // rename to entry
-		// mainApp.processCommand(command); // pass command to logic
-		// eventsListView.getItems().add(entry);
+	public void getCommand() throws NoSuchFieldException, ParseException { // exception will be handled by Logic later, remove this later
+		String command = commandBox.getText(); // rename to entry
+		mainApp.processCommand(command);
 		commandBox.setText("");
 	}
 

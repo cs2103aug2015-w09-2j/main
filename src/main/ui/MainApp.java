@@ -1,6 +1,7 @@
 package main.ui;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 import javafx.application.Application;
 
@@ -33,6 +34,11 @@ public class MainApp extends Application {
 
 	public ObservableList<Task> getTasks() {
 		return tasks;
+	}
+
+	public void processCommand(String command) throws NoSuchFieldException, ParseException { // exception will be handled by Logic later, remove this later
+		boolean isSuccessful = Logic.processCommand(command);
+		// response by giving a message to controller to display
 	}
 
 	/**
