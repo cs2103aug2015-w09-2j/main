@@ -16,23 +16,22 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import main.ui.view.MainLayoutController;
+
 import main.Logic;
+import main.Task;
 
 public class MainApp extends Application {
 
 	private Stage primaryStage;
 	private GridPane mainLayout;
-	private ObservableList<String> tasks;
+	private ObservableList<Task> tasks; // previously was <String>
 	private Logic logic;
 
 	public MainApp() {
 		tasks = FXCollections.observableArrayList();
 	}
 
-	/*
-	 * Getters
-	 */
-	public ObservableList<String> getTasks() {
+	public ObservableList<Task> getTasks() {
 		return tasks;
 	}
 
@@ -64,17 +63,15 @@ public class MainApp extends Application {
 
 	@Override
 	public void init() {
-		/*
-		 * This part should call
-		 */
-		logic = new Logic();
-		// logic.setMainApp(this); >> at this point tasks is filled
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Vodo");
+
+		logic = new Logic();
+		logic.setTasks(tasks); // >> at this point logic should fill the task
 
 		showMainLayout();
 	}

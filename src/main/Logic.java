@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javafx.collections.ObservableList;
+
 /**
  * @author Ravi
  *
@@ -28,9 +30,10 @@ public class Logic {
 	}
 
 	private static Parser parser = new Parser();
-	private static UserInterface UI = new UserInterface();
+	private static UserInterface UI = new UserInterface(); // [teddy] this will be deleted once we shift to GUI
 	private static FileStorage fileStorage = new FileStorage();
 	private static CommandType.Types command;
+	private ObservableList<Task> tasks; // [teddy] just fill the tasks
 
 	/**
 	 * Description Takes in the command as a string from the user input and processes the command and executes the command if its in the correct format
@@ -253,5 +256,15 @@ public class Logic {
 				+ ((Event) task).getStartDate().toString() + " " + ((Event) task).getStartTime().toString() + " "
 				+ ((Event) task).getEndDate().toString() + " " + ((Event) task).getEndTime().toString();
 		fileStorage.write(writeToFile);
+	}
+
+	/**
+	 * Initialize the tasks
+	 * @param tasks
+	 *
+	 * Added by teddy
+	 */
+	public void setTasks(ObservableList<Task> tasks) {
+		this.tasks = tasks;
 	}
 }
