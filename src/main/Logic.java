@@ -38,8 +38,8 @@ public class Logic {
 	/**
 	 * Description Default Constructor
 	 */
-	/*public Logic() {
-	}*/
+	private Logic() {
+	}
 
 	private static Parser parser = new Parser();
 	private static UserInterface UI = new UserInterface(); // [teddy] this will be deleted once we shift to GUI
