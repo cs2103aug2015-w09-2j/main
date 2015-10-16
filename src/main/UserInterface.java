@@ -21,7 +21,8 @@ public class UserInterface {
 	private Logic vodoLogic;
 
 	public UserInterface(String fileName) {
-		vodoLogic = new Logic(fileName);
+		//[Ravi] made the use of singleton logic
+		vodoLogic =  Logic.getLogicInstance();
 	}
 
 	public UserInterface() {

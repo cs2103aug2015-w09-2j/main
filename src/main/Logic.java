@@ -17,20 +17,29 @@ import main.ui.MainApp;
  */
 public class Logic {
 	private String fileName;
-
+	private static int numOfLogics = 0;
 	/**
 	 * Description Constructor : Creates and instance of the Logic class with the fileName stated
 	 * @param filename
 	 */
-	public Logic(String filename) {
+	/*public Logic(String filename) {
 		fileName = filename;
+	}*/
+	
+	public static Logic getLogicInstance(){
+		if(numOfLogics==0){
+			numOfLogics++;
+			return new Logic();
+		}else{
+			return null;
+		}
 	}
 
 	/**
 	 * Description Default Constructor
 	 */
-	public Logic() {
-	}
+	/*public Logic() {
+	}*/
 
 	private static Parser parser = new Parser();
 	private static UserInterface UI = new UserInterface(); // [teddy] this will be deleted once we shift to GUI

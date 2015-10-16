@@ -75,8 +75,8 @@ public class MainApp extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Vodo");
-
-		logic = new Logic();
+		//[Ravi] made the use of singleton logic
+		logic = Logic.getLogicInstance();
 		logic.setTasks(tasks); // >> at this point logic should fill the task
 
 		showMainLayout();
