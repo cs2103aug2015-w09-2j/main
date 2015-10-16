@@ -147,7 +147,7 @@ public class Logic {
 	 * Description Method used to update the task
 	 * @param input
 	 */
-	private static void updateTask(Update input) {
+	private void updateTask(Update input) {
 		FileData data = fileStorage.search(input.getSearchString());
 		fileStorage.delete("1", data);
 		if (input.hasStartDate()) {
@@ -167,7 +167,7 @@ public class Logic {
 	 * @param substring
 	 * @return
 	 */
-	private static ArrayList<Task> search(String substring) {
+	private ArrayList<Task> search(String substring) {
 		ArrayList<Task> output = new ArrayList<Task>();
 		FileData data = fileStorage.search(substring);
 		HashMap<Integer, String> displayMap = data.getDisplayMap();
@@ -182,7 +182,7 @@ public class Logic {
 	/**
 	 * @param index
 	 */
-	private static void deleteTask(String index) {
+	private void deleteTask(String index) {
 		// TODO Auto-generated method stub
 		String[] arr = index.split(" ");
 		fileStorage.deleteTask(Integer.valueOf(arr[1]));
@@ -192,7 +192,7 @@ public class Logic {
 	/**
 	 * @return
 	 */
-	private static ArrayList<Task> stringToTask() {
+	private ArrayList<Task> stringToTask() {
 		ArrayList<String> data = new ArrayList<String>();
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		data = FileStorage.readFile();
@@ -207,7 +207,7 @@ public class Logic {
 	 * @param s
 	 * @return
 	 */
-	private static Task getTaskFromString(String s) {
+	private Task getTaskFromString(String s) {
 		Task a = parser.parse(s).getTask();
 		//System.out.println(a.toString());
 		return parser.parse(s).getTask();
@@ -216,7 +216,7 @@ public class Logic {
 	/**
 	 * @param task
 	 */
-	private static void writeTaskTofile(Task task) {
+	private void writeTaskTofile(Task task) {
 		String taskType = task.getClass().getName().substring(5);
 		//taskType = taskType.
 		// String writeToFile="";
@@ -238,7 +238,7 @@ public class Logic {
 	 * @param task
 	 * @param taskType
 	 */
-	private static void writeFloatingToFile(Task task, String taskType) {
+	private void writeFloatingToFile(Task task, String taskType) {
 		String writeToFile;
 		writeToFile = "add " + CommandType.TaskTypes.FLOATING + " " + task.getDescription();
 		fileStorage.write(writeToFile);
@@ -248,7 +248,7 @@ public class Logic {
 	 * @param task
 	 * @param taskType
 	 */
-	private static void writeDeadlineToFile(Task task, String taskType) {
+	private void writeDeadlineToFile(Task task, String taskType) {
 		String writeToFile;
 		writeToFile = "add " + CommandType.TaskTypes.DEADLINE + " " + task.getDescription() + " "
 				+ ((Deadline) task).getEndDate().toString() + " " + ((Deadline) task).getEndTime().toString();
@@ -259,7 +259,7 @@ public class Logic {
 	 * @param task
 	 * @param taskType
 	 */
-	private static void writeEventToFile(Task task, String taskType) {
+	private void writeEventToFile(Task task, String taskType) {
 		String writeToFile;
 		writeToFile = "add " + CommandType.TaskTypes.EVENT + " " + task.getDescription() + " "
 				+ ((Event) task).getStartDate().toString() + " " + ((Event) task).getStartTime().toString() + " "
