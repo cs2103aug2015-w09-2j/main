@@ -6,6 +6,15 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
+import java.io.FileWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Iterator;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 
 
 public class FileStorage {
@@ -146,6 +155,80 @@ public class FileStorage {
 		return data;
 	}
 
+	/**
+	 * Retrieve and return the content of the storage file
+	 * The content of the storage file is stored in a ArrayList<String>
+	 * @return the ArrayList<String> which contains the content of the storage file
+	 */
+	public static ArrayList<String> readFile(){
+
+		String line = null;
+        ArrayList<String> list = new ArrayList<String>();
+        try {
+
+            FileReader fileReader = new FileReader(filePath);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+
+			while((line = bufferedReader.readLine()) != null) {
+				list.add(line);
+			}
+            bufferedReader.close();
+
+
+        }catch(FileNotFoundException ex) {
+            System.out.println("Unable to open file '" + filePath + "'");
+        }catch(IOException ex) {
+            System.out.println("Error reading file '" + filePath + "'");
+        }finally{
+
+        }
+
+        return list;
+	}
+
+
+	public static ArrayList<Task> readTaskFromFile() throws NoSuchFieldException, ParseException{
+
+		String line = null;
+        ArrayList<Task> tasks = new ArrayList<Task>();
+        try {
+
+            FileReader fileReader = new FileReader(filePath);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+
+			while((line = bufferedReader.readLine()) != null) {
+				String taskLine[] = line.split(" ");
+				switch(taskLine[0]){
+				case "Event":
+					Event event = new Event(taskLine[1],new DateClass(taskLine[2]),new TimeClass(taskLine[3]) , new DateClass(taskLine[4]) , new TimeClass(taskLine[5]));
+					tasks.add(event);
+					break;
+				case "Deadline":
+					Deadline deadline = new Deadline(taskLine[1], new DateClass(taskLine[2]) , new TimeClass(taskLine[3]));
+					tasks.add(deadline);
+					break;
+				case "Floating":
+					Floating floating = new Floating(taskLine[1]);
+					tasks.add(floating);
+					break;
+				}
+			}
+            bufferedReader.close();
+
+
+        }catch(FileNotFoundException ex) {
+            System.out.println("Unable to open file '" + filePath + "'");
+        }catch(IOException ex) {
+            System.out.println("Error reading file '" + filePath + "'");
+        }finally{
+
+        }
+
+        return tasks;
+	}
+
 
 	/**
 	 * This method retrieves and return the current directory of the storage file
@@ -254,80 +337,7 @@ public class FileStorage {
         return path;
 	}
 
-	/**
-	 * Retrieve and return the content of the storage file
-	 * The content of the storage file is stored in a ArrayList<String>
-	 * @return the ArrayList<String> which contains the content of the storage file
-	 */
-	public static ArrayList<String> readFile(){
-
-		String line = null;
-        ArrayList<String> list = new ArrayList<String>();
-        try {
-
-            FileReader fileReader = new FileReader(filePath);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-
-			while((line = bufferedReader.readLine()) != null) {
-				list.add(line);
-			}
-            bufferedReader.close();
-
-
-        }catch(FileNotFoundException ex) {
-            System.out.println("Unable to open file '" + filePath + "'");
-        }catch(IOException ex) {
-            System.out.println("Error reading file '" + filePath + "'");
-        }finally{
-
-        }
-
-        return list;
-	}
-
-
-	public static ArrayList<Task> readTaskFromFile() throws NoSuchFieldException, ParseException{
-
-		String line = null;
-        ArrayList<Task> tasks = new ArrayList<Task>();
-        try {
-
-            FileReader fileReader = new FileReader(filePath);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-
-			while((line = bufferedReader.readLine()) != null) {
-				String taskLine[] = line.split(" ");
-				switch(taskLine[0]){
-				case "Event":
-					Event event = new Event(taskLine[1],new DateClass(taskLine[2]),new TimeClass(taskLine[3]) , new DateClass(taskLine[4]) , new TimeClass(taskLine[5]));
-					tasks.add(event);
-					break;
-				case "Deadline":
-					Deadline deadline = new Deadline(taskLine[1], new DateClass(taskLine[2]) , new TimeClass(taskLine[3]));
-					tasks.add(deadline);
-					break;
-				case "Floating":
-					Floating floating = new Floating(taskLine[1]);
-					tasks.add(floating);
-					break;
-				}
-			}
-            bufferedReader.close();
-
-
-        }catch(FileNotFoundException ex) {
-            System.out.println("Unable to open file '" + filePath + "'");
-        }catch(IOException ex) {
-            System.out.println("Error reading file '" + filePath + "'");
-        }finally{
-
-        }
-
-        return tasks;
-	}
-
+	
 
 
 	/**
