@@ -36,6 +36,8 @@ public class FileStorage {
 		pathName = "path.txt";
 		filePath = currFilePath();
 		json = new JsonFile(filePath);
+		File dataFile = new File(filePath);
+		json.createJsonFile(dataFile);
 	}
 
 	/**
@@ -256,7 +258,7 @@ public class FileStorage {
 		if(!pathFile.exists()){
 			createFile(pathFile);
 			createFile(dataFile);
-			json.createJsonFile(dataFile);
+			//json.createJsonFile(dataFile);
 			//hideFolder(pathDir);
 			writeFile(defaultDataPath, pathDir + pathName, false, false);
 		}

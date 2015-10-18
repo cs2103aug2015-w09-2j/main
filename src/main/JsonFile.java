@@ -45,7 +45,7 @@ public class JsonFile {
 			contentList.add((JSONArray) jsonObject.get("DEADLINE"));
 			contentList.add((JSONArray) jsonObject.get("FLOATING"));
 			
-			
+			reader.close();
 			
 		}catch (FileNotFoundException ex) {
 			ex.printStackTrace();
@@ -191,7 +191,7 @@ public class JsonFile {
 		eventMap.put("start-time", arr[2]);
 		eventMap.put("end-date", arr[3]);
 		eventMap.put("end-time", arr[4]);
-				
+		
 		return eventMap;
 	}
 	
@@ -202,6 +202,7 @@ public class JsonFile {
 		deadlineMap.put("task", arr[0]);
 		deadlineMap.put("deadline", arr[1]);
 		deadlineMap.put("end-time", arr[2]);
+		
 		
 		return deadlineMap;
 	}
@@ -222,8 +223,12 @@ public class JsonFile {
 	 */
 	private static String[] getContentArray(String text){	
 		String arr[] = text.split("\\s+");
-		
+		/*
+		for(int i=0; i<arr.length; i++)
+			System.out.println(arr[i]);
+		*/
 		return arr;
+		
 	}
 	
 	/**
