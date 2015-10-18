@@ -261,6 +261,7 @@ public class Logic {
 		String writeToFile;
 		writeToFile = "add " + CommandType.TaskTypes.DEADLINE + " " + task.getDescription() + " "
 				+ ((Deadline) task).getEndDate().toString() + " " + ((Deadline) task).getEndTime().toString();
+	
 		fileStorage.write(writeToFile);
 	}
 

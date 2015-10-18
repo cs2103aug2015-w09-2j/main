@@ -57,8 +57,9 @@ public class Parser {
 		
 		switch(commandType){
 			case ADD_DEADLINE:
-				//Remove "add -d"
+				//Remove "add -d" 
 				strCommand = removeNWords(2, strCommand);
+
 				strDescription = getDescription(strCommand);
 				//Remove description
 				strCommand = removeNWords(getNumberOfWords(strDescription), strCommand);

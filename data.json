@@ -1,0 +1,18 @@
+{
+	"EVENT":[{
+		"task":"Meeting",
+		"start-date":"10/11",
+		"start-time":"1300",
+		"end-date":"10/11",
+		"end-time":"1500"
+		}],
+	"DEADLINE":[{
+		"task":"Homework",
+		"deadline":"12/10",
+		"end-time":"1030"
+		}],
+	"FLOATING":[{
+		"task":"sleeping"
+		}]
+}
+

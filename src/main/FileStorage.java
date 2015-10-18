@@ -6,15 +6,18 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Iterator;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+import org.json.simple.parser.ContainerFactory;
 import org.json.simple.parser.JSONParser;
-
 
 
 public class FileStorage {
@@ -22,7 +25,7 @@ public class FileStorage {
 	private static String filePath;
 	private static String pathDir;
 	private static String pathName;
-
+	private static JsonFile json;
 	/**
 	 * This constructor gets the file storage path at the start of the application
 	 */
@@ -32,7 +35,7 @@ public class FileStorage {
 		pathDir = "";
 		pathName = "path.txt";
 		filePath = currFilePath();
-
+		json = new JsonFile(filePath);
 	}
 
 	/**
@@ -40,9 +43,17 @@ public class FileStorage {
 	 * @param text data to be written into file
 	 */
 	public void write(String text){
-		writeFile(text, filePath, true, true);
+		
+		//writeFile(text, filePath, true, true);
+		File file = new File(filePath);
+		if(!file.exists()){
+			createFile(file);
+			json.createJsonFile(file);
+		}
+		json.writeJson(text);
+		
 	}
-
+	
 	/**
 	 * This methods updates and set the new storage file path
 	 * @param newPath the new storage location which the user wants to store his data
@@ -187,7 +198,7 @@ public class FileStorage {
         return list;
 	}
 
-
+	/*
 	public static ArrayList<Task> readTaskFromFile() throws NoSuchFieldException, ParseException{
 
 		String line = null;
@@ -229,7 +240,7 @@ public class FileStorage {
         return tasks;
 	}
 
-
+	*/
 	/**
 	 * This method retrieves and return the current directory of the storage file
 	 * @return the current directory of the storage file
@@ -237,7 +248,7 @@ public class FileStorage {
 	private static String currFilePath(){
 
 		//String defaultDataPath = System.getProperty("user.home") + "\\VODO\\data.txt";
-		String defaultDataPath = "data.txt";
+		String defaultDataPath = "data.txt";//"data.txt";
 		File pathFile = new File(pathDir + pathName);
 		File dataFile = new File(defaultDataPath);
 		String filePath;
@@ -245,6 +256,7 @@ public class FileStorage {
 		if(!pathFile.exists()){
 			createFile(pathFile);
 			createFile(dataFile);
+			json.createJsonFile(dataFile);
 			//hideFolder(pathDir);
 			writeFile(defaultDataPath, pathDir + pathName, false, false);
 		}
@@ -439,6 +451,10 @@ public class FileStorage {
         }
 
 	}
+	
+	
+	
+	
 
 }
 
