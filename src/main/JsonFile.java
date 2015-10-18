@@ -25,10 +25,44 @@ public class JsonFile {
 		JsonFile.filePath = filePath;
 	}
 	
+	/**
+	 * This method return the JSONArray of EVENT, DEADLINE, FLOATING
+	 * @return ArrayList of JSONArray containing EVENT, DEADLINE, FLOATING
+	 */
+	public static ArrayList<JSONArray> getJsonFileContent(){
+		ArrayList<JSONArray> contentList = new ArrayList<JSONArray>();
+		
+		try{
+			FileReader reader = new FileReader(filePath);
+
+			JSONParser jsonParser = new JSONParser();
+			JSONObject jsonObject = (JSONObject) jsonParser.parse(reader);
+			
+			
+
+			// get an array from the JSON object
+			contentList.add((JSONArray) jsonObject.get("EVENT"));
+			contentList.add((JSONArray) jsonObject.get("DEADLINE"));
+			contentList.add((JSONArray) jsonObject.get("FLOATING"));
+			
+			
+			
+		}catch (FileNotFoundException ex) {
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} catch (NullPointerException ex) {
+			ex.printStackTrace();
+		} catch (org.json.simple.parser.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return contentList;
+	}
+	
 	public void writeJson(String text){
-		
-		
-		
+				
 		String arr[] = getContentArray(text);
 			
 		switch(arr[1]){
@@ -225,41 +259,6 @@ public class JsonFile {
 		return newArr;
 	}
 	
-	/**
-	 * This method return the JSONArray of EVENT, DEADLINE, FLOATING
-	 * @return ArrayList of JSONArray containing EVENT, DEADLINE, FLOATING
-	 */
-	private static ArrayList<JSONArray> getJsonFileContent(){
-		ArrayList<JSONArray> contentList = new ArrayList<JSONArray>();
-		
-		try{
-			FileReader reader = new FileReader(filePath);
-
-			JSONParser jsonParser = new JSONParser();
-			JSONObject jsonObject = (JSONObject) jsonParser.parse(reader);
-			
-			
-
-			// get an array from the JSON object
-			contentList.add((JSONArray) jsonObject.get("EVENT"));
-			contentList.add((JSONArray) jsonObject.get("DEADLINE"));
-			contentList.add((JSONArray) jsonObject.get("FLOATING"));
-			
-			
-			
-		}catch (FileNotFoundException ex) {
-			ex.printStackTrace();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		} catch (NullPointerException ex) {
-			ex.printStackTrace();
-		} catch (org.json.simple.parser.ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return contentList;
-	}
 	
 	
 	

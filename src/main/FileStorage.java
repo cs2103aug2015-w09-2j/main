@@ -51,7 +51,7 @@ public class FileStorage {
 			json.createJsonFile(file);
 		}
 		json.writeJson(text);
-		
+	
 	}
 	
 	/**
