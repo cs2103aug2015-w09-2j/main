@@ -21,6 +21,9 @@ public class JsonFile {
 	
 	private static String filePath;
 	
+	public JsonFile(){
+		JsonFile.filePath = null;
+	}
 	public JsonFile(String filePath){
 		JsonFile.filePath = filePath;
 	}
@@ -81,40 +84,7 @@ public class JsonFile {
 		
 	}
 	
-	public void createJsonFile(File file){
-		
-		//createFile(file);
-		
-		String open = "{";
-		String event = "\"EVENT\":[],";
-    	String deadline = "\"DEADLINE\":[],";
-    	String floating = "\"FLOATING\":[]"; 
-    	String close = "}";
-    			
-		FileWriter fileWriter;
-		
-		try {
-			fileWriter = new FileWriter(file, false);
-			BufferedWriter bufferedWriter =new BufferedWriter(fileWriter);
-
-			bufferedWriter.write(open);
-			bufferedWriter.newLine();
-			bufferedWriter.write(event);
-			bufferedWriter.newLine();
-			bufferedWriter.write(deadline);
-			bufferedWriter.newLine();
-			bufferedWriter.write(floating);
-			bufferedWriter.newLine();
-			bufferedWriter.write(close);
-			bufferedWriter.newLine();
-			
-			bufferedWriter.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println("Error writing to Jsonfile");
-		}
-		
-	}
+	
 	
 	private static void writeEvent(String[] arr){
 		
@@ -239,16 +209,23 @@ public class JsonFile {
 	private static String[] newContentArray(String[] arr, int num){
 		String newArr[] = new String[num];
 		int index = 0;
-		
-		
-		for(int i=2; i<=arr.length-num; i++){
-			if(i==2){
-				newArr[index] = arr[i]+  " ";
-			}else if(i != arr.length-num){
-				newArr[index] += arr[i] + " ";
-			}else{
-				newArr[index++] += arr[i];
+		/*
+		System.out.println(arr.length-num);
+		System.out.println(arr[2]);
+		*/
+		if(arr.length-num != 2)
+		{
+			for(int i=2; i<=arr.length-num; i++){
+				if(i==2){	
+					newArr[index] = arr[i]+  " ";
+				}else if(i != arr.length-num){
+					newArr[index] += arr[i] + " ";
+				}else{
+					newArr[index++] += arr[i];
+				}
 			}
+		}else{
+			newArr[index++] = arr[2];
 		}
 		for(int j=arr.length-num+1; j<arr.length; j++){
 			newArr[index++] = arr[j];

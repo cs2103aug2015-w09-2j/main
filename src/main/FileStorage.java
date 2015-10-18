@@ -26,18 +26,19 @@ public class FileStorage {
 	private static String pathDir;
 	private static String pathName;
 	private static JsonFile json;
+	private static JsonFileContent jsonContent;
 	/**
 	 * This constructor gets the file storage path at the start of the application
 	 */
 	public FileStorage(){
 		//pathDir = System.getProperty("user.home") + "\\VODO_Path";
 		//pathName = "\\path.txt";
+		jsonContent = new JsonFileContent();
 		pathDir = "";
 		pathName = "path.txt";
 		filePath = currFilePath();
 		json = new JsonFile(filePath);
-		File dataFile = new File(filePath);
-		json.createJsonFile(dataFile);
+	
 	}
 
 	/**
@@ -50,7 +51,7 @@ public class FileStorage {
 		File file = new File(filePath);
 		if(!file.exists()){
 			createFile(file);
-			json.createJsonFile(file);
+			jsonContent.createJsonFile(file);
 		}
 		json.writeJson(text);
 	
@@ -258,7 +259,7 @@ public class FileStorage {
 		if(!pathFile.exists()){
 			createFile(pathFile);
 			createFile(dataFile);
-			//json.createJsonFile(dataFile);
+			jsonContent.createJsonFile(dataFile);
 			//hideFolder(pathDir);
 			writeFile(defaultDataPath, pathDir + pathName, false, false);
 		}
