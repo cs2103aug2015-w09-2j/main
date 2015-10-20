@@ -3,6 +3,10 @@
 	<classpathentry excluding="/" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
-	<classpathentry kind="lib" path="C:\Users\user\Documents\GitHub\CS2103T\main\json-simple-1.1.1.jar"/>
+	<classpathentry kind="lib" path="json-simple-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/Users/Ravi/Desktop/cs2103/main/lib/prettytime-4.0.0.Final-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/Ravi/Desktop/cs2103/main/lib/prettytime-4.0.0.Final.jar"/>
+	<classpathentry kind="lib" path="/Users/Ravi/Desktop/cs2103/main/lib/prettytime-nlp-4.0.0.Final-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/Ravi/Desktop/cs2103/main/lib/prettytime-nlp-4.0.0.Final.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
