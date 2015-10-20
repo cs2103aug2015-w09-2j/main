@@ -47,7 +47,6 @@ public class TimeHandler {
 ///
 	public static TimeClass parse(String strTime){
 
-		int[] intHourAndMin = new int[2];
 		String[] strHourAndMin = new String[2];
 
 		if(strTime.matches(PATTERN_24_HOUR)){
@@ -55,9 +54,7 @@ public class TimeHandler {
 			strTime = strTime.replace("h", "");
 			strHourAndMin[0] = "" + strTime.charAt(0) + strTime.charAt(1);
 			strHourAndMin[1] = "" + strTime.charAt(2) + strTime.charAt(3);
-			intHourAndMin = parseHourAndMin(strTime);
-			int intHour = intHourAndMin[0];
-			int intMin = intHourAndMin[1];
+			
 
 			TimeClass time = new TimeClass(strHourAndMin[0], strHourAndMin[1]);
 
