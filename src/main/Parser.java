@@ -1,6 +1,8 @@
 package main;
 
 import java.text.ParseException;
+import java.util.*;
+
 
 /***
  * 
@@ -46,6 +48,8 @@ public class Parser {
 	 * 
 	 * @param strCommand A command to parse to an task
 	 * @return TaskPair o
+	 * @throws ParseException 
+	 * @throws NoSuchFieldException 
 	 */
 	public  TaskPair parse(String strCommand){
 		
@@ -60,14 +64,29 @@ public class Parser {
 				//Remove "add -d" 
 				strCommand = removeNWords(2, strCommand);
 
+				//Get Date
+				endDate = getDate(strCommand);
+				
+				if(endDate != null){
+					//Get Time
+					endTime = getTime(strCommand);
+				} else { 
+					//use natural language to try get DateClass
+					PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strCommand);
+					endDate = prettyTime.getDate();
+					endTime = prettyTime.getTime();
+					List<String> dateGroups =  prettyTime.getParsedDateGroup();
+					
+					for(String text : dateGroups){
+						strCommand = strCommand.replace(text, "");
+					}
+					
+				}
+				
 				strDescription = getDescription(strCommand);
 				//Remove description
 				strCommand = removeNWords(getNumberOfWords(strDescription), strCommand);
-				//Get Date
-				endDate = getDate(strCommand);
-				strCommand = removeNWords(1, strCommand);
 				
-				endTime = getTime(strCommand);
 				
 				task = new Deadline(strDescription, endDate, endTime);
 				return new TaskPair(task, commandType);
@@ -75,21 +94,52 @@ public class Parser {
 			case ADD_EVENT:
 				//Remove "add -e"
 				strCommand = removeNWords(2, strCommand);
+
+				//try get start date
+				startDate = getDate(strCommand);
+				
+				if(startDate != null){
+					strCommand = removeDate(strCommand);
+					//Get Time
+					startTime = getTime(strCommand);
+					
+					strCommand = removeTime(strCommand);
+				} else{
+					//use natural language to try get DateClass
+					PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strCommand);
+					startDate = prettyTime.getDate();
+					startTime = prettyTime.getTime();
+					List<String> dateGroups =  prettyTime.getParsedDateGroup();
+					
+					for(String text : dateGroups){
+						strCommand = strCommand.replaceFirst(text, "");
+					}
+				}
+				
+				//try get end date
+				endDate = getDate(strCommand);
+				
+				if(endDate != null){
+					strCommand = removeDate(strCommand);
+					//Get Time
+					endTime = getTime(strCommand);
+					
+					strCommand = removeTime(strCommand);
+				}else{
+					//use natural language to try get DateClass
+					PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strCommand);
+					endDate = prettyTime.getDate();
+					endTime = prettyTime.getTime();
+					List<String> dateGroups =  prettyTime.getParsedDateGroup();
+					
+					for(String text : dateGroups){
+						strCommand = strCommand.replaceFirst(text, "");
+					}
+				}
+				
 				strDescription = getDescription(strCommand);
 				//Remove description
 				strCommand = removeNWords(getNumberOfWords(strDescription), strCommand);
-
-				startDate = getDate(strCommand);
-				strCommand = removeNWords(1, strCommand);
-				
-				startTime = getTime(strCommand);
-				strCommand = removeNWords(1, strCommand);
-				
-				endDate = getDate(strCommand);
-				strCommand = removeNWords(1, strCommand);
-				
-				endTime = getTime(strCommand);
-				strCommand = removeNWords(1, strCommand);
 				
 				task = new Event(strDescription, startDate, startTime, endDate, endTime);
 				return new TaskPair(task, commandType);
@@ -121,14 +171,15 @@ public class Parser {
 	}
 
 
-	//ublic static void main(String[] args){
-	//	Parser p = new Parser();
-	//	String command = "update new swimming -d swimming";
-	//
-	//	TaskPair t = p.parse(command);
-	//	System.out.println(((Update)(t.getTask())).getDescription());
-	//
-	//
+	public static void main(String[] args) throws NoSuchFieldException, ParseException{
+		Parser p = new Parser();
+		//String command = "update new swimming -d swimming";
+		String command = "add -e hello 22/10 2359 next week 12:00";
+	
+		TaskPair t = p.parse(command);
+		
+	
+	}
 
 	/***
 	 * Given the input command, returns you the type of command.
@@ -288,20 +339,41 @@ public class Parser {
 	}
 	
 	private  DateClass getDate(String strCommand){
-		String strDate = getWord(0, strCommand);
+		String parsedDate;
 		
-		strDate = DateHandler.tryParse(strDate);
+		String[] strSplitWords = strCommand.split(" ");
 		
-		try {
-			if(strDate != null){
-				return new DateClass(strDate);
+		for(String word : strSplitWords){
+			parsedDate = DateHandler.tryParse(word);
+			if(parsedDate != null){
+				try {
+					return new DateClass(parsedDate);
+				} catch (NoSuchFieldException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-		} catch (NoSuchFieldException | ParseException e) {
-			e.printStackTrace();
-		} 
+		}
 		
 		return null;
+	}
+	
+	private  String removeDate(String strCommand){
+		String parsedDate;
 		
+		String[] strSplitWords = strCommand.split(" ");
+		
+		for(String word : strSplitWords){
+			parsedDate = DateHandler.tryParse(word);
+			if(parsedDate != null){
+				return strCommand.replace(word, "");
+			}
+		}
+		
+		return strCommand;
 	}
 	
 	private  TimeClass getTime(String strCommand){
@@ -317,6 +389,18 @@ public class Parser {
 		return time;
 	}
 
+	private String removeTime(String strCommand){
+		String[] strSplitWords = strCommand.split(" ");
+		TimeClass time;
+		
+		for(String word : strSplitWords){
+			if((time = TimeHandler.parse(word)) != null){
+				return strCommand.replace(word, "");
+			}
+		}
+		
+		return strCommand;
+	}
 	
 	
 }
