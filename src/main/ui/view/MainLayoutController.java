@@ -2,6 +2,7 @@ package main.ui.view;
 
 import java.text.ParseException;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import javafx.fxml.FXML;
@@ -20,7 +21,10 @@ public class MainLayoutController {
 
 	private MainApp mainApp;
 
-	private ObservableList<Task> tasks;
+	private ObservableList<Task> tasks; // task is retrieved from MainApp; events, deadlines, and floatings are use to separate tasks
+	private ObservableList<Event> events;
+	private ObservableList<Deadline> deadlines;
+	private ObservableList<Floating> floatingTasks;
 
 
 	// Fields for binding to UI components
@@ -34,6 +38,9 @@ public class MainLayoutController {
 	private TextField commandBox;
 
 	public MainLayoutController() {
+		events = FXCollections.observableArrayList();
+		deadlines = FXCollections.observableArrayList();
+		floatingTasks = FXCollections.observableArrayList();
 	}
 
 	public void initialize() {
@@ -49,30 +56,32 @@ public class MainLayoutController {
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
 		getTasks();
-		setupListView();
-
-		// Add Observable List data to eventsListView
-		// tasks = mainApp.getTasks(); >> after ObservableList<String> change to ObservableList<Task>
-		// categorize(tasks);
-		// sortByDate(
-		// eventsListView.setItems(mainApp.getTasks());
+		separateTasks();
+		setupListViews();
 	}
 
 	private void getTasks() {
 		tasks = mainApp.getTasks();
+		System.out.println(tasks.size());
 	}
 
-	private void setupListView() {
+	private void setupListViews() {
+		eventsListView.setItems(events);
+		deadlinesListView.setItems(deadlines);
+		floatingTasksListView.setItems(floatingTasks);
+	}
+
+	private void separateTasks() {
 		for (int i = 0; i < tasks.size(); i++) {
 			Task aTask = tasks.get(i);
 			if (aTask instanceof Event) {
-				eventsListView.getItems().add((Event) aTask);
+				events.add((Event) aTask);
 			}
 			else if (aTask instanceof Deadline) {
-				deadlinesListView.getItems().add((Deadline) aTask);
+				deadlines.add((Deadline) aTask);
 			}
 			else {
-				floatingTasksListView.getItems().add((Floating) aTask);
+				floatingTasks.add((Floating) aTask);
 			}
 		}
 	}
@@ -80,7 +89,8 @@ public class MainLayoutController {
 	@FXML
 	public void getCommand() throws NoSuchFieldException, ParseException { // exception will be handled by Logic later, remove this later
 		String command = commandBox.getText(); // rename to entry
-		mainApp.processCommand(command);
+
+		// mainApp.processCommand(command);
 		commandBox.setText("");
 	}
 

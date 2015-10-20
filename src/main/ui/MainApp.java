@@ -2,6 +2,7 @@ package main.ui;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList; // remove later
 
 import javafx.application.Application;
 
@@ -17,7 +18,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import main.ui.view.MainLayoutController;
-
+import main.*; // remove later
 import main.Logic;
 import main.Task;
 
@@ -26,14 +27,21 @@ public class MainApp extends Application {
 	private Stage primaryStage;
 	private GridPane mainLayout;
 	private ObservableList<Task> tasks; // previously was <String>
+	private ObservableList<Task> dummyTasks; // for testing because the app doesn't work
 	private Logic logic;
 
-	public MainApp() {
+	public MainApp() throws NoSuchFieldException, ParseException { // remove throws later
 		tasks = FXCollections.observableArrayList();
+		ArrayList<Task> dummyArr = new ArrayList<Task>();
+		dummyArr.add(new Floating("Laundry"));
+		dummyArr.add(new Deadline("Do homework", new DateClass(20,10), new TimeClass("23","59")));
+		dummyArr.add(new Event("Meet someone", new DateClass(21,10), new TimeClass("16","00"), new DateClass(21,10), new TimeClass("18","00")));
+		dummyTasks = FXCollections.observableList(dummyArr);
 	}
 
 	public ObservableList<Task> getTasks() {
-		return tasks;
+		// return tasks;
+		return dummyTasks;
 	}
 
 	public void processCommand(String command) throws NoSuchFieldException, ParseException { // exception will be handled by Logic later, remove this later
