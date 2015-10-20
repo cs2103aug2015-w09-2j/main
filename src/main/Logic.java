@@ -123,6 +123,8 @@ public class Logic {
 			UI.displayView(search(inputString.substring(7)));
 			success = true;
 			break;
+		case UNDO:
+			success = undo();
 		case DISPLAY:
 			UI.displayView(stringToTask());
 			success = true;
@@ -151,6 +153,11 @@ public class Logic {
 		Event event = new Event(eventDescription,endDate);
 		return event;
 	}*/
+
+	private boolean undo() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 	/**
 	 * Description Method used to update the task
