@@ -168,6 +168,12 @@ public class Parser {
 				
 			case "search":
 				return CommandType.Types.SEARCH;
+			
+			case "undo":
+				return CommandType.Types.UNDO;
+			
+			case "redo":
+				return CommandType.Types.REDO;
 				
 			default:
 				return CommandType.Types.UNKNOWN;
