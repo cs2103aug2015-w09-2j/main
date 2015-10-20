@@ -136,6 +136,8 @@ public class Logic {
 			break;
 		case UNDO:
 			success = undo();
+			success=true;
+			break;
 		case DISPLAY:
 			UI.displayView(stringToTask());
 			success = true;
@@ -167,7 +169,23 @@ public class Logic {
 
 	private boolean undo() {
 		// TODO Auto-generated method stub
-		return false;
+		boolean isUndoSuccessful = false;
+		switch(undoCommand){
+		case ADD_EVENT:
+		case ADD_DEADLINE:
+		case ADD_FLOATING:
+			//FileData searchTask = fileStorage.search(undoTaskObject.getDescription());
+			fileStorage.delete("1",fileStorage.search(undoTaskObject.getDescription()));
+			isUndoSuccessful =true;
+			break;
+		case DELETE:
+			
+			break;
+		case UPDATE:
+			updateTask((Update) undoTaskObject);
+			break;
+		}
+		return isUndoSuccessful;
 	}
 
 	/**

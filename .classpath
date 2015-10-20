@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="/Users/Ravi/Desktop/cs2103/main/lib/prettytime-4.0.0.Final.jar"/>
 	<classpathentry kind="lib" path="/Users/Ravi/Desktop/cs2103/main/lib/prettytime-nlp-4.0.0.Final-sources.jar"/>
 	<classpathentry kind="lib" path="/Users/Ravi/Desktop/cs2103/main/lib/prettytime-nlp-4.0.0.Final.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
