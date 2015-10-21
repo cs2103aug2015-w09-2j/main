@@ -51,9 +51,10 @@ public class FileStorage {
 		File file = new File(filePath);
 		if(!file.exists()){
 			createFile(file);
-			jsonContent.createJsonFile(file);
+			//jsonContent.createJsonFile(file);
 		}
-		json.writeJson(text);
+		//json.writeJson(text);
+		writeFile(text, filePath, true, true);
 	
 	}
 	
@@ -259,7 +260,7 @@ public class FileStorage {
 		if(!pathFile.exists()){
 			createFile(pathFile);
 			createFile(dataFile);
-			jsonContent.createJsonFile(dataFile);
+			//jsonContent.createJsonFile(dataFile);
 			//hideFolder(pathDir);
 			writeFile(defaultDataPath, pathDir + pathName, false, false);
 		}
