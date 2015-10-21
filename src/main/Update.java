@@ -1,6 +1,6 @@
 package main;
 
-public class Update extends Task{
+public class Update extends Command{
 
 	private static final int START_DATE = 0;
 	private static final int START_TIME = 0;
@@ -152,10 +152,7 @@ public class Update extends Task{
 		return time[END_TIME];
 	}
 
-	/* (non-Javadoc)
-	 * @see Task#getDescription()
-	 */
-	@Override
+	
 	public String getDescription() {
 		return strDescription;
 	}

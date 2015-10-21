@@ -1,21 +1,23 @@
 package main;
 
-public class Deadline extends Task{
+public class Deadline extends Command{
 
 	private DateClass endDate;
 	private TimeClass endTime;
-
+	private String strDescription;
 	/**
-	 * Description Constructor : Creates a deadline task, which is a subclass of the Task abstract class.
+	 * Description Constructor : Creates a deadline task, which is a subclass of the Deadline abstract class.
 	 * @param description
 	 * @param endDate
 	 * @param endTime
 	 */
 	public Deadline(String description, DateClass endDate, TimeClass endTime){
-		super(description);
+		super(Command.CommandType.ADD_DEADLINE);
 		this.endDate = endDate;
 		this.endTime = endTime;
+		this.strDescription = description;
 	}
+	
 	/**
 	 * Description Gets the endDate of the deadline
 	 * @return endDate
@@ -31,7 +33,10 @@ public class Deadline extends Task{
 	public TimeClass getEndTime(){
 		return endTime;
 	}
-
+	
+	public String getDescription(){
+		return strDescription;
+	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
