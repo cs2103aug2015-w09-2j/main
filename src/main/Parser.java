@@ -67,6 +67,7 @@ public class Parser {
 		String strDescription;
 		TimeClass startTime, endTime;
 		DateClass startDate, endDate;
+		Command command;
 		
 		//1. Remove "add" from command
 		strCommand = removeNWords(1, strCommand);
@@ -110,40 +111,49 @@ public class Parser {
 			strCommand = strCommand.replace(strStartDateAndStartTime, "");
 			
 			strDescription = strCommand;
+		
+			command = new Command(CommandType.ADD_EVENT);
 			
-			return new Event(strDescription,startDate, startTime, endDate, endTime);
+			command.setTask(new Event(strDescription, startDate, startTime, endDate, endTime));
 			
+			return command;
 		} else if(isADeadlineCommand(strCommand) == true){
 			/*
 			 * Required Event Syntax for successful parsing:
-			 * Description by startdate starttime
+			 * Description by enddate endtime
 			 */
 			//<-----------------Handling Start Date and Time--------->
-			String strStartDateAndStartTime = strCommand.substring(strCommand.lastIndexOf("by"));
+			String strEndDateAndEndTime = strCommand.substring(strCommand.lastIndexOf("by"));
 			
-			startDate = getDate(strStartDateAndStartTime);
-			if(startDate != null){
-				startTime = getTime(strStartDateAndStartTime);
+			endDate = getDate(strEndDateAndEndTime);
+			if(endDate != null){
+				endTime = getTime(strEndDateAndEndTime);
 				
 			} else {
 				//use natural language to try get DateClass
-				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strStartDateAndStartTime);
-				startDate = prettyTime.getDate();
-				startTime = prettyTime.getTime();
+				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strEndDateAndEndTime);
+				endDate = prettyTime.getDate();
+				endTime = prettyTime.getTime();
 			}
-			strCommand = strCommand.replace(strStartDateAndStartTime, "");
+			strCommand = strCommand.replace(strEndDateAndEndTime, "");
 			
 			strDescription = strCommand;
+
+			command = new Command(CommandType.ADD_DEADLINE);
 			
-			return new Deadline(strDescription, startDate, startTime);
+			command.setTask(new Deadline(strDescription, endDate, endTime));
+			return command;
 		} else {//Floating task
 			/*
 			 * Required Event Syntax for successful parsing:
 			 * Description
 			 */
 			strDescription = strCommand;
+
+			command = new Command(CommandType.ADD_FLOATING);
 			
-			return new Floating(strDescription);
+			command.setTask(new Floating(strDescription));
+			return command;
 		}
 		
 		

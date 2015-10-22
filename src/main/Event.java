@@ -1,13 +1,12 @@
 package main;
 
-public class Event extends Command{
+public class Event extends Task{
 
 
 	private DateClass startDate;
 	private DateClass endDate;
 	private TimeClass startTime;
 	private TimeClass endTime;
-	private String strDescription;
 
 	/**
 	 * Description Constructor : Creates a event task, which is a subclass of the Command abstract class.
@@ -19,18 +18,13 @@ public class Event extends Command{
 	 */
 	public Event(String strDescription, DateClass startDate, TimeClass startTime, DateClass  endDate, TimeClass endTime){
 
-		super(Command.CommandType.ADD_EVENT);
-		this.strDescription = strDescription;
+		super(strDescription);
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.startTime = startTime;
 		this.endTime = endTime;
 	}
 	
-	public String getDescription(){
-		return strDescription;
-	}
-
 	/**
 	 * Description Gets the startDate of the event
 	 * @return startDate

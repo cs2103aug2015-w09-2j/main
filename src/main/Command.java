@@ -1,6 +1,6 @@
 package main;
 
-public abstract class Command {
+public class Command {
 	//To be used by parser and logic
 	public static enum CommandType{
 		ADD_DEADLINE("deadline"), ADD_FLOATING("floating"),ADD_EVENT("event"),
@@ -24,6 +24,7 @@ public abstract class Command {
 	
 	
 	private CommandType commandType;
+	private Task task;
 	
 	/**
 	 * Description Superclass method to set the description of the Task.
@@ -31,8 +32,17 @@ public abstract class Command {
 	 */
 	public Command(Command.CommandType commandType){
 		this.commandType = commandType;
+		task = null;
 	}
 
+	public Task getTask(){
+		return task;
+	}
+
+
+	public void setTask(Task task){
+		this.task = task;
+	}
 
 	/**
 	 * Description Superclass method to obtain the description of any of the task objects.

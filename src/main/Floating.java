@@ -1,20 +1,15 @@
 package main;
 
-public class Floating extends Command{
+public class Floating extends Task{
 
 	/**Description Constructor : Creates a floating task, which is a subclass of the Command abstract class.
 	 * @param strDescription
 	 */
-	private String strDescription;
 	
 	public Floating (String strDescription){
-		super(Command.CommandType.ADD_FLOATING);
-		this.strDescription = strDescription; 
+		super(strDescription); 
 	}
 	
-	public String getDescription(){
-		return strDescription;
-	}
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
