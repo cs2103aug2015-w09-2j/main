@@ -13,7 +13,7 @@ import java.text.ParseException;
  *  Dependencies: DateHandler
  */
 
-public class DateClass {
+public class DateClass implements Comparable<DateClass> {
 
 	private int intDay;
 	private int intMonth;
@@ -36,14 +36,14 @@ public class DateClass {
 		strDay = DateHandler.getStringDay(day, month, year);
 		strMonth = DateHandler.getStringMonth(month);
 		strYear = DateHandler.getStringYear(year);
-		
+
 	}
-	
+
 	public DateClass(String day, String month, String year) throws NoSuchFieldException, ParseException{
-		
+
 		this(DateHandler.getDate(Integer.valueOf(day), DateHandler.getIntMonth(month), DateHandler.getIntYear(year)));
 	}
-	
+
 
 	public DateClass(String strFullDate) throws NoSuchFieldException, ParseException{
 		String[] ddmmyy = strFullDate.split("/");
@@ -84,5 +84,18 @@ public class DateClass {
 	@Override
 	public String toString(){
 		return intDay + "/" + intMonth + "/" + intYear;
+	}
+
+	@Override
+	public int compareTo(DateClass date) {
+		if (this.getIntYear() == date.getIntYear()) {
+			if (this.getIntMonth() == date.getIntMonth()) {
+				return this.getIntDay() - date.getIntDay();
+			} else {
+				return this.getIntMonth() - date.getIntMonth();
+			}
+		} else {
+			return this.getIntYear() - date.getIntYear();
+		}
 	}
 }
