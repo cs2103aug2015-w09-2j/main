@@ -22,7 +22,7 @@ public class UserInterface {
 
 	public UserInterface(String fileName) {
 		//[Ravi] made the use of singleton logic
-		vodoLogic =  Logic.getLogicInstance();
+		vodoLogic =  Logic.getInstance();
 	}
 
 	public UserInterface() {

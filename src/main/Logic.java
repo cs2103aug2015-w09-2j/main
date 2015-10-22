@@ -26,7 +26,7 @@ public class Logic {
 		fileName = filename;
 	}*/
 	
-	public static Logic getLogicInstance(){
+	public static Logic getInstance(){
 		if(numOfLogics==0){
 			numOfLogics++;
 			return new Logic();
@@ -47,7 +47,8 @@ public class Logic {
 	private static CommandType.Types command;
 	private MainApp mainApp; // [teddy] reference to UI
 	private ObservableList<Task> tasks; // [teddy] just fill the tasks
-
+	private static CommandType.Types undoCommand = CommandType.Types.UNKNOWN;
+	private static Task undoTaskObject;
 	/**
 	 * Description Takes in the command as a string from the user input and processes the command and executes the command if its in the correct format
 	 * @param input
@@ -92,6 +93,8 @@ public class Logic {
 		case ADD_EVENT:
 			// Event event = createEvent(input);
 			writeTaskTofile(input);
+			undoCommand = command ; 
+			undoTaskObject = input;
 			fillTasks(); // [teddy]
 			success = true;
 			break;
@@ -99,6 +102,8 @@ public class Logic {
 			// Deadline deadline = createDeadLine(input);
 			// writeTaskTofile(deadline);
 			writeTaskTofile(input);
+			undoCommand = command ; 
+			undoTaskObject = input;
 			fillTasks();
 			success = true;
 			break;
@@ -106,16 +111,22 @@ public class Logic {
 			// Floating floating = createFloating(input);
 			// writeTaskTofile(floating);
 			writeTaskTofile(input);
+			undoCommand = command ; 
+			undoTaskObject = input;
 			fillTasks();
 			success = true;
 			break;
 		case UPDATE:
 			updateTask((Update) input);
+			undoCommand = command ; 
+			undoTaskObject = null; // need to search for the Task object with the updated object description
 			fillTasks();
 			success = true;
 			break;
 		case DELETE:
 			deleteTask(inputString);
+			undoCommand = command ; 
+			undoTaskObject = null ; // need to search for the Task object with the updated object description 
 			fillTasks();
 			success = true;
 			break;
@@ -125,6 +136,8 @@ public class Logic {
 			break;
 		case UNDO:
 			success = undo();
+			success=true;
+			break;
 		case DISPLAY:
 			UI.displayView(stringToTask());
 			success = true;
@@ -156,7 +169,23 @@ public class Logic {
 
 	private boolean undo() {
 		// TODO Auto-generated method stub
-		return false;
+		boolean isUndoSuccessful = false;
+		switch(undoCommand){
+		case ADD_EVENT:
+		case ADD_DEADLINE:
+		case ADD_FLOATING:
+			//FileData searchTask = fileStorage.search(undoTaskObject.getDescription());
+			fileStorage.delete("1",fileStorage.search(undoTaskObject.getDescription()));
+			isUndoSuccessful =true;
+			break;
+		case DELETE:
+			
+			break;
+		case UPDATE:
+			updateTask((Update) undoTaskObject);
+			break;
+		}
+		return isUndoSuccessful;
 	}
 
 	/**
