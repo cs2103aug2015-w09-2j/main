@@ -301,7 +301,7 @@ private Command parseRedoCommand(String strCommand){
 		
 		String strSearchString = getSearchString(strCommand);
 		
-		Update update = new Update(strSearchString);
+		UpdateTask updateTask = new UpdateTask(strSearchString);
 		
 		strCommand = removeNWords(getNumberOfWords(strSearchString), strCommand);
 		
@@ -318,7 +318,7 @@ private Command parseRedoCommand(String strCommand){
 			switch(delimiter){
 				case "-d":
 					String strDescription = removeDelimiters(getDescription(strCommand));
-					update.setDescription(strDescription);
+					updateTask.setDescription(strDescription);
 					
 					strCommand = removeNWords(strDescription.split(" ").length, strCommand);
 					break;
@@ -327,8 +327,8 @@ private Command parseRedoCommand(String strCommand){
 					strCommand = removeNWords(1, strCommand);
 					TimeClass endTime = getTime(strCommand);
 					strCommand = removeNWords(1, strCommand);
-					update.setEndDate(endDate);
-					update.setEndTime(endTime);
+					updateTask.setEndDate(endDate);
+					updateTask.setEndTime(endTime);
 					
 					break;
 				case "-s":
@@ -336,14 +336,14 @@ private Command parseRedoCommand(String strCommand){
 					strCommand = removeNWords(1, strCommand);
 					TimeClass startTime = getTime(strCommand);
 					strCommand = removeNWords(1, strCommand);
-					update.setStartDate(startDate);
-					update.setStartTime(startTime);
+					updateTask.setStartDate(startDate);
+					updateTask.setStartTime(startTime);
 					
 					break;
 			}
 		}
 		
-		return update;
+		return new Update(updateTask);
 	}
 	
 	private String removeDelimiters(String strText){
