@@ -47,7 +47,7 @@ public class Logic {
 	private static CommandType.Types command;
 	private MainApp mainApp; // [teddy] reference to UI
 	private ObservableList<Task> tasks; // [teddy] just fill the tasks
-	private static CommandType.Types undoCommand = CommandType.Types.UNKNOWN;
+	private static Command.CommandType undoCommand = Command.CommandType.UNKNOWN;
 	private static Task undoTaskObject;
 	/**
 	 * Description Takes in the command as a string from the user input and processes the command and executes the command if its in the correct format
@@ -60,12 +60,12 @@ public class Logic {
 	public boolean processCommand(String input) throws NoSuchFieldException, ParseException {
 		boolean output=false;
 		try{
-		TaskPair task = parser.parse(input);
-		if (task.getType() == CommandType.Types.UNKNOWN) {
+		Command task = parser.parse(input);
+		if (task.getCommandType() == Command.CommandType.UNKNOWN) {
 			output=false;
 		} else {
 			// executeCommand(,input);
-			executeCommand(task.getType(), task.getTask(), input);
+			executeCommand(task.getCommandType(), task.getTask(), input);
 			output =true;
 		}
 		}catch(NoSuchFieldException e){
@@ -86,7 +86,7 @@ public class Logic {
 	 * @throws NoSuchFieldException
 	 * @throws ParseException
 	 */
-	private boolean executeCommand(CommandType.Types command, Task input, String inputString)
+	private boolean executeCommand(Command.CommandType command, Task input, String inputString)
 			throws NoSuchFieldException, ParseException {
 		boolean success = false;
 		switch (command) {
@@ -117,7 +117,7 @@ public class Logic {
 			success = true;
 			break;
 		case UPDATE:
-			updateTask((Update) input);
+			updateTask((UpdateTask) input);
 			undoCommand = command ;
 			undoTaskObject = null; // need to search for the Task object with the updated object description
 			fillTasks();
@@ -182,7 +182,7 @@ public class Logic {
 
 			break;
 		case UPDATE:
-			updateTask((Update) undoTaskObject);
+			updateTask((UpdateTask) undoTaskObject);
 			break;
 		}
 		return isUndoSuccessful;
@@ -192,7 +192,7 @@ public class Logic {
 	 * Description Method used to update the task
 	 * @param input
 	 */
-	private void updateTask(Update input) {
+	private void updateTask(UpdateTask input) {
 		FileData data = fileStorage.search(input.getSearchString());
 		fileStorage.delete("1", data);
 		if (input.hasStartDate()) {
