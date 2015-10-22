@@ -25,7 +25,7 @@ public class Logic {
 	/*public Logic(String filename) {
 		fileName = filename;
 	}*/
-	
+
 	public static Logic getInstance(){
 		if(numOfLogics==0){
 			numOfLogics++;
@@ -47,7 +47,7 @@ public class Logic {
 	private static CommandType.Types command;
 	private MainApp mainApp; // [teddy] reference to UI
 	private ObservableList<Task> tasks; // [teddy] just fill the tasks
-	private static Command.CommandType undoCommand = Command.CommandType.UNKNOWN;
+	private static CommandType.Types undoCommand = CommandType.Types.UNKNOWN;
 	private static Task undoTaskObject;
 	/**
 	 * Description Takes in the command as a string from the user input and processes the command and executes the command if its in the correct format
@@ -60,12 +60,12 @@ public class Logic {
 	public boolean processCommand(String input) throws NoSuchFieldException, ParseException {
 		boolean output=false;
 		try{
-		Command task = parser.parse(input);
-		if (task.getCommandType().equals(Command.CommandType.UNKNOWN)) {
+		TaskPair task = parser.parse(input);
+		if (task.getType() == CommandType.Types.UNKNOWN) {
 			output=false;
 		} else {
 			// executeCommand(,input);
-			executeCommand(task.getCommandType(), task.getTask(), input);
+			executeCommand(task.getType(), task.getTask(), input);
 			output =true;
 		}
 		}catch(NoSuchFieldException e){
@@ -79,21 +79,21 @@ public class Logic {
 
 	/**
 	 * Description Executes the command
-	 * @param commandType
+	 * @param command
 	 * @param input
 	 * @param inputString
 	 * @return
 	 * @throws NoSuchFieldException
 	 * @throws ParseException
 	 */
-	private boolean executeCommand(Command.CommandType commandType, Task input, String inputString)
+	private boolean executeCommand(CommandType.Types command, Task input, String inputString)
 			throws NoSuchFieldException, ParseException {
 		boolean success = false;
-		switch (commandType) {
+		switch (command) {
 		case ADD_EVENT:
 			// Event event = createEvent(input);
 			writeTaskTofile(input);
-			undoCommand = commandType ; 
+			undoCommand = command ;
 			undoTaskObject = input;
 			fillTasks(); // [teddy]
 			success = true;
@@ -102,7 +102,7 @@ public class Logic {
 			// Deadline deadline = createDeadLine(input);
 			// writeTaskTofile(deadline);
 			writeTaskTofile(input);
-			undoCommand = commandType ; 
+			undoCommand = command ;
 			undoTaskObject = input;
 			fillTasks();
 			success = true;
@@ -111,22 +111,22 @@ public class Logic {
 			// Floating floating = createFloating(input);
 			// writeTaskTofile(floating);
 			writeTaskTofile(input);
-			undoCommand = commandType ; 
+			undoCommand = command ;
 			undoTaskObject = input;
 			fillTasks();
 			success = true;
 			break;
 		case UPDATE:
-			updateTask((UpdateTask) input);
-			undoCommand = commandType ; 
+			updateTask((Update) input);
+			undoCommand = command ;
 			undoTaskObject = null; // need to search for the Task object with the updated object description
 			fillTasks();
 			success = true;
 			break;
 		case DELETE:
 			deleteTask(inputString);
-			undoCommand = commandType ; 
-			undoTaskObject = null ; // need to search for the Task object with the updated object description 
+			undoCommand = command ;
+			undoTaskObject = null ; // need to search for the Task object with the updated object description
 			fillTasks();
 			success = true;
 			break;
@@ -179,10 +179,10 @@ public class Logic {
 			isUndoSuccessful =true;
 			break;
 		case DELETE:
-			
+
 			break;
 		case UPDATE:
-			updateTask((UpdateTask) undoTaskObject);
+			updateTask((Update) undoTaskObject);
 			break;
 		}
 		return isUndoSuccessful;
@@ -192,7 +192,7 @@ public class Logic {
 	 * Description Method used to update the task
 	 * @param input
 	 */
-	private void updateTask(UpdateTask input) {
+	private void updateTask(Update input) {
 		FileData data = fileStorage.search(input.getSearchString());
 		fileStorage.delete("1", data);
 		if (input.hasStartDate()) {
@@ -297,7 +297,7 @@ public class Logic {
 		String writeToFile;
 		writeToFile = "add " + CommandType.TaskTypes.DEADLINE + " " + task.getDescription() + " "
 				+ ((Deadline) task).getEndDate().toString() + " " + ((Deadline) task).getEndTime().toString();
-	
+
 		fileStorage.write(writeToFile);
 	}
 

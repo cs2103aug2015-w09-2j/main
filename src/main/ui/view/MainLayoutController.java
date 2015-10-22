@@ -3,6 +3,8 @@ package main.ui.view;
 import java.text.ParseException;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 
 import javafx.fxml.FXML;
@@ -66,6 +68,19 @@ public class MainLayoutController {
 	}
 
 	private void setupListViews() {
+
+		tasks.addListener(new ListChangeListener<Task>() {
+			@Override
+			public void onChanged(Change<? extends Task> aChange) {
+				while (aChange.next()) {
+					if (aChange.wasAdded()) {
+						System.out.println("from: " + aChange.getFrom());
+						System.out.println("to: " + aChange.getTo());
+					}
+				}
+			}
+		});
+
 		eventsListView.setItems(events);
 		deadlinesListView.setItems(deadlines);
 		floatingTasksListView.setItems(floatingTasks);
@@ -91,6 +106,7 @@ public class MainLayoutController {
 		String command = commandBox.getText(); // rename to entry
 
 		// mainApp.processCommand(command);
+		tasks.add(new Floating(command));
 		commandBox.setText("");
 	}
 
