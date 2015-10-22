@@ -46,9 +46,9 @@ public class Logic {
 	private static FileStorage fileStorage = new FileStorage();
 	private static CommandType.Types command;
 	private MainApp mainApp; // [teddy] reference to UI
-	private ObservableList<Command> tasks; // [teddy] just fill the tasks
-	private static CommandType.Types undoCommand = CommandType.Type.UNKNOWN;
-	private static Command undoTaskObject;
+	private ObservableList<Task> tasks; // [teddy] just fill the tasks
+	private static Command.CommandType undoCommand = Command.CommandType.UNKNOWN;
+	private static Task undoTaskObject;
 	/**
 	 * Description Takes in the command as a string from the user input and processes the command and executes the command if its in the correct format
 	 * @param input
@@ -61,11 +61,11 @@ public class Logic {
 		boolean output=false;
 		try{
 		Command task = parser.parse(input);
-		if (task.getCommandType().equals(CommandType.Types.UNKNOWN)) {
+		if (task.getCommandType().equals(Command.CommandType.UNKNOWN)) {
 			output=false;
 		} else {
 			// executeCommand(,input);
-			executeCommand(task.getCommandType(), task, input);
+			executeCommand(task.getCommandType(), task.getTask(), input);
 			output =true;
 		}
 		}catch(NoSuchFieldException e){
@@ -86,7 +86,7 @@ public class Logic {
 	 * @throws NoSuchFieldException
 	 * @throws ParseException
 	 */
-	private boolean executeCommand(Command.CommandType commandType, Command input, String inputString)
+	private boolean executeCommand(Command.CommandType commandType, Task input, String inputString)
 			throws NoSuchFieldException, ParseException {
 		boolean success = false;
 		switch (commandType) {
@@ -117,7 +117,7 @@ public class Logic {
 			success = true;
 			break;
 		case UPDATE:
-			updateTask((Update) input);
+			updateTask((UpdateTask) input);
 			undoCommand = commandType ; 
 			undoTaskObject = null; // need to search for the Task object with the updated object description
 			fillTasks();
@@ -182,7 +182,7 @@ public class Logic {
 			
 			break;
 		case UPDATE:
-			updateTask((Update) undoTaskObject);
+			updateTask((UpdateTask) undoTaskObject);
 			break;
 		}
 		return isUndoSuccessful;
@@ -192,7 +192,7 @@ public class Logic {
 	 * Description Method used to update the task
 	 * @param input
 	 */
-	private void updateTask(Update input) {
+	private void updateTask(UpdateTask input) {
 		FileData data = fileStorage.search(input.getSearchString());
 		fileStorage.delete("1", data);
 		if (input.hasStartDate()) {
@@ -212,8 +212,8 @@ public class Logic {
 	 * @param substring
 	 * @return
 	 */
-	private ArrayList<Command> search(String substring) {
-		ArrayList<Command> output = new ArrayList<Command>();
+	private ArrayList<Task> search(String substring) {
+		ArrayList<Task> output = new ArrayList<Task>();
 		FileData data = fileStorage.search(substring);
 		HashMap<Integer, String> displayMap = data.getDisplayMap();
 		Iterator it = displayMap.entrySet().iterator();
@@ -237,9 +237,9 @@ public class Logic {
 	/**
 	 * @return
 	 */
-	private ArrayList<Command> stringToTask() {
+	private ArrayList<Task> stringToTask() {
 		ArrayList<String> data = new ArrayList<String>();
-		ArrayList<Command> tasks = new ArrayList<Command>();
+		ArrayList<Task> tasks = new ArrayList<Task>();
 		data = FileStorage.readFile();
 		for (String s : data) {
 			tasks.add(getTaskFromString(s));
@@ -252,8 +252,8 @@ public class Logic {
 	 * @param s
 	 * @return
 	 */
-	private Command getTaskFromString(String s) {
-		Command a = parser.parse(s).getTask();
+	private Task getTaskFromString(String s) {
+		Task a = parser.parse(s).getTask();
 		//System.out.println(a.toString());
 		return parser.parse(s).getTask();
 	}
@@ -261,7 +261,7 @@ public class Logic {
 	/**
 	 * @param task
 	 */
-	private void writeTaskTofile(Command task) {
+	private void writeTaskTofile(Task task) {
 		String taskType = task.getClass().getName().substring(5);
 		//taskType = taskType.
 		// String writeToFile="";
@@ -283,7 +283,7 @@ public class Logic {
 	 * @param task
 	 * @param taskType
 	 */
-	private void writeFloatingToFile(Command task, String taskType) {
+	private void writeFloatingToFile(Task task, String taskType) {
 		String writeToFile;
 		writeToFile = "add " + CommandType.TaskTypes.FLOATING + " " + task.getDescription();
 		fileStorage.write(writeToFile);
@@ -293,7 +293,7 @@ public class Logic {
 	 * @param task
 	 * @param taskType
 	 */
-	private void writeDeadlineToFile(Command task, String taskType) {
+	private void writeDeadlineToFile(Task task, String taskType) {
 		String writeToFile;
 		writeToFile = "add " + CommandType.TaskTypes.DEADLINE + " " + task.getDescription() + " "
 				+ ((Deadline) task).getEndDate().toString() + " " + ((Deadline) task).getEndTime().toString();
@@ -305,7 +305,7 @@ public class Logic {
 	 * @param task
 	 * @param taskType
 	 */
-	private void writeEventToFile(Command task, String taskType) {
+	private void writeEventToFile(Task task, String taskType) {
 		String writeToFile;
 		writeToFile = "add " + CommandType.TaskTypes.EVENT + " " + task.getDescription() + " "
 				+ ((Event) task).getStartDate().toString() + " " + ((Event) task).getStartTime().toString() + " "
