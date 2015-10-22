@@ -223,8 +223,22 @@ public class Parser {
 		return false;
 	}
 	
-private Command parseRedoCommand(String strCommand){
+	private Command parseRedoCommand(String strCommand){
 		return new Redo();
+	}
+	
+	private boolean isADisplayCommand(String strCommand){
+		//If the first word is update
+		String strFirstWord = getWord(0, strCommand);
+		if(strFirstWord.equals("display")){
+			return true;
+		}
+		return false;
+	}
+	
+	private Command parseDisplayCommand(String strCommand){
+		String displayString = removeNWords(1, strCommand);
+		return new Display(displayString);
 	}
 	
 	public  Command parse(String strCommand){
@@ -241,6 +255,8 @@ private Command parseRedoCommand(String strCommand){
 			parsedCommand = parseUndoCommand(strCommand);
 		} else if(isARedoCommand(strCommand)){
 			parsedCommand = parseRedoCommand(strCommand);
+		} else if(isADisplayCommand(strCommand)){
+			parsedCommand = parseDisplayCommand(strCommand);
 		} else{
 			parsedCommand = null;
 		}
@@ -252,7 +268,7 @@ private Command parseRedoCommand(String strCommand){
 	public static void main(String[] args) throws NoSuchFieldException, ParseException{
 		Parser p = new Parser();
 		//String command = "update new swimming -d swimming";
-		String command = "add help vishnu from tonight to tomorrow";
+		String command = "display";
 	
 		Command t = p.parse(command);
 		
