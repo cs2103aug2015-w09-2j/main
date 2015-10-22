@@ -1,6 +1,6 @@
 package main;
 
-public class TimeClass {
+public class TimeClass implements Comparable<TimeClass>{
 
 	private int intHour;
 	private int intMin;
@@ -42,5 +42,19 @@ public class TimeClass {
 	@Override
 	public String toString(){
 		return strHour + "" + strMin;
+	}
+
+	/*
+	 * Added for easier comparison [Teddy]
+	 * Razali, later on make sure that you check the boundary of intHour and intMin
+	 * By the way, why do we need intHour and stringHour, intMin and stringMin?
+	 */
+	@Override
+	public int compareTo(TimeClass time) {
+		if (this.getIntMin() == time.getIntMin()) {
+			return this.getIntMin() - time.getIntMin();
+		} else {
+			return this.getIntHour() - time.getIntHour();
+		}
 	}
 }
