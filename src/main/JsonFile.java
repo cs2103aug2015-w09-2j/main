@@ -28,78 +28,48 @@ public class JsonFile {
 		JsonFile.filePath = filePath;
 	}
 	
-	/**
-	 * This method return the JSONArray of EVENT, DEADLINE, FLOATING
-	 * @return ArrayList of JSONArray containing EVENT, DEADLINE, FLOATING
-	 */
-	public static ArrayList<JSONArray> getJsonFileContent(){
-		ArrayList<JSONArray> contentList = new ArrayList<JSONArray>();
+	
+	
+	public void jsonWriteTask(Task task){
+		String description,startDate, startTime, endDate, endTime;
+		String taskType = task.getClass().getName();
+		taskType = taskType.toUpperCase();
+		description = task.getDescription();
 		
-		try{
-			FileReader reader = new FileReader(filePath);
-
-			JSONParser jsonParser = new JSONParser();
-			JSONObject jsonObject = (JSONObject) jsonParser.parse(reader);
-			
-			
-
-			// get an array from the JSON object
-			contentList.add((JSONArray) jsonObject.get("EVENT"));
-			contentList.add((JSONArray) jsonObject.get("DEADLINE"));
-			contentList.add((JSONArray) jsonObject.get("FLOATING"));
-			
-			reader.close();
-			
-		}catch (FileNotFoundException ex) {
-			ex.printStackTrace();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		} catch (NullPointerException ex) {
-			ex.printStackTrace();
-		} catch (org.json.simple.parser.ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		switch(taskType){
+			case "EVENT":		
+				startDate = ((Event)task).getStartDate().toString();
+				startTime = ((Event)task).getStartTime().toString();
+				endDate = ((Event)task).getEndDate().toString();
+				endTime = ((Event)task).getEndTime().toString();
+				writeEventTask(description, startDate, startTime, endDate, endTime);
+				break;
+			case "DEADLINE":
+				endDate = ((Deadline)task).getEndDate().toString();
+				endTime = ((Deadline)task).getEndTime().toString();
+				writeDeadlineTask(description, endDate ,endTime);
+				break;
+			case "FLOATING":
+				writeFloatingTask(description);
+				break;
 		}
-		
-		return contentList;
 	}
 	
-	public void writeJson(String text){
-				
-		String arr[] = getContentArray(text);
-			
-		switch(arr[1]){
-			case "-e":
-				writeEvent(newContentArray(arr, 5));				
-				break;
-			case "-d":
-				writeDeadline(newContentArray(arr, 3));		
-				break;
-			case "-f":
-				writeFloating(newContentArray(arr, 1));		
-				break;
-			default:
-				System.out.println("Error");
-		}
-		
-	}
-	
-	
-	
-	private static void writeEvent(String[] arr){
-		
+	public void writeEventTask(String description, String startDate, String startTime, String endDate, String endTime){
+		String arr[] = {description, startDate, startTime, endDate, endTime};
 		writeToJsonFile("EVENT", arr);
 	}
 	
-	private static void writeDeadline(String[] arr){
+	public void writeDeadlineTask(String description, String endDate ,String endTime){
+		String arr[] = {description, endDate, endTime};
 		writeToJsonFile("DEADLINE", arr);
 	}
 	
-	private static void writeFloating(String[] arr){
+	public void writeFloatingTask(String description){
+		String arr[] = {description};
 		writeToJsonFile("FLOATING", arr);
+		
 	}
-	
-	
 	
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -152,6 +122,42 @@ public class JsonFile {
 		
 	}
 	
+	/**
+	 * This method return the JSONArray of EVENT, DEADLINE, FLOATING
+	 * @return ArrayList of JSONArray containing EVENT, DEADLINE, FLOATING
+	 */
+	public static ArrayList<JSONArray> getJsonFileContent(){
+		ArrayList<JSONArray> contentList = new ArrayList<JSONArray>();
+		
+		try{
+			FileReader reader = new FileReader(filePath);
+
+			JSONParser jsonParser = new JSONParser();
+			JSONObject jsonObject = (JSONObject) jsonParser.parse(reader);
+			
+			
+
+			// get an array from the JSON object
+			contentList.add((JSONArray) jsonObject.get("EVENT"));
+			contentList.add((JSONArray) jsonObject.get("DEADLINE"));
+			contentList.add((JSONArray) jsonObject.get("FLOATING"));
+			
+			reader.close();
+			
+		}catch (FileNotFoundException ex) {
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} catch (NullPointerException ex) {
+			ex.printStackTrace();
+		} catch (org.json.simple.parser.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return contentList;
+	}
+	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static Map newEvent(String arr[]){
 		Map eventMap = new LinkedHashMap();
@@ -186,63 +192,6 @@ public class JsonFile {
 		return floatingMap;
 	}
 
-	/**
-	 * This method split the string at each blank space and store it into an array
-	 * @param text string to be splitted
-	 * @return the array of string which had been splitted
-	 */
-	private static String[] getContentArray(String text){	
-		String arr[] = text.split("\\s+");
-		/*
-		for(int i=0; i<arr.length; i++)
-			System.out.println(arr[i]);
-		*/
-		return arr;
-		
-	}
-	
-	/**
-	 * This method remove the first two elements of the old array
-	 * @param arr[] old array
-	 * @return newArr the new array without the first two elements of the old array
-	 */
-	private static String[] newContentArray(String[] arr, int num){
-		String newArr[] = new String[num];
-		int index = 0;
-		/*
-		System.out.println(arr.length-num);
-		System.out.println(arr[2]);
-		*/
-		if(arr.length-num != 2)
-		{
-			for(int i=2; i<=arr.length-num; i++){
-				if(i==2){	
-					newArr[index] = arr[i]+  " ";
-				}else if(i != arr.length-num){
-					newArr[index] += arr[i] + " ";
-				}else{
-					newArr[index++] += arr[i];
-				}
-			}
-		}else{
-			newArr[index++] = arr[2];
-		}
-		for(int j=arr.length-num+1; j<arr.length; j++){
-			newArr[index++] = arr[j];
-		}
-		
-		/*
-		for(int i=0; i<newArr.length; i++){
-			System.out.println(newArr[i]);
-		}
-		*/
-		
-		
-		return newArr;
-	}
-	
-	
-	
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static JSONArray eventJsonArray(JSONArray event){
@@ -333,6 +282,106 @@ public class JsonFile {
 		
 		return floatingArray;
 	}
+	
+	
+	/*
+	public void writeJson(String text){
+				
+		String arr[] = getContentArray(text);
+			
+		switch(arr[1]){
+			case "-e":
+				writeEvent(newContentArray(arr, 5));				
+				break;
+			case "-d":
+				writeDeadline(newContentArray(arr, 3));		
+				break;
+			case "-f":
+				writeFloating(newContentArray(arr, 1));		
+				break;
+			default:
+				System.out.println("Error");
+		}
+		
+	}
+	*/
+	/*
+	
+	private static void writeEvent(String[] arr){
+		
+		writeToJsonFile("EVENT", arr);
+	}
+	
+	private static void writeDeadline(String[] arr){
+		writeToJsonFile("DEADLINE", arr);
+	}
+	
+	private static void writeFloating(String[] arr){
+		writeToJsonFile("FLOATING", arr);
+	}
+	*/
+	
+	
+	/**
+	 * This method split the string at each blank space and store it into an array
+	 * @param text string to be splitted
+	 * @return the array of string which had been splitted
+	 */
+	/*
+	private static String[] getContentArray(String text){	
+		String arr[] = text.split("\\s+");
+		
+		//for(int i=0; i<arr.length; i++)
+		//	System.out.println(arr[i]);
+		
+		return arr;
+		
+	}
+	*/
+	/**
+	 * This method remove the first two elements of the old array
+	 * @param arr[] old array
+	 * @return newArr the new array without the first two elements of the old array
+	 */
+	/*
+	private static String[] newContentArray(String[] arr, int num){
+		String newArr[] = new String[num];
+		int index = 0;
+		
+		//System.out.println(arr.length-num);
+		//System.out.println(arr[2]);
+		
+		if(arr.length-num != 2)
+		{
+			for(int i=2; i<=arr.length-num; i++){
+				if(i==2){	
+					newArr[index] = arr[i]+  " ";
+				}else if(i != arr.length-num){
+					newArr[index] += arr[i] + " ";
+				}else{
+					newArr[index++] += arr[i];
+				}
+			}
+		}else{
+			newArr[index++] = arr[2];
+		}
+		for(int j=arr.length-num+1; j<arr.length; j++){
+			newArr[index++] = arr[j];
+		}
+		
+		
+		//for(int i=0; i<newArr.length; i++){
+		//	System.out.println(newArr[i]);
+		//}
+		
+		
+		
+		return newArr;
+	}
+	
+	*/
+	
+	
 	
 	
 	

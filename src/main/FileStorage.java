@@ -58,6 +58,34 @@ public class FileStorage {
 	
 	}
 	
+	public void writeTask(Task task){
+		File file = new File(filePath);
+		if(!file.exists()){
+			createFile(file);
+			jsonContent.createJsonFile(file);
+		}
+		json.jsonWriteTask(task);
+	}
+	/*
+	public ArrayList<Task> readEventTask(){
+		
+	}
+	
+	public ArrayList<Task> readDeadlineTask(){
+		
+	}
+	public ArrayList<Task> readFloatingTask(){
+		
+	}
+	
+	public ArrayList<Task> readAllTask(){
+	
+	}
+	
+	public String deleteTask(String line){
+		
+	}
+	*/
 	/**
 	 * This methods updates and set the new storage file path
 	 * @param newPath the new storage location which the user wants to store his data
