@@ -16,7 +16,7 @@ public class Parser {
 	
 	
 
-	/*** METHODS ***/
+	/*** Util METHODS ***/
 	
 	
 	private  String getWord(int intIndex, String strText){
@@ -42,9 +42,92 @@ public class Parser {
 		return strText;
 	}
 	
+	private String getSearchString(String strCommand){
+		StringBuilder sb = new StringBuilder();
+		
+		String word = getWord(0, strCommand);
+		
+		while(!word.equals("-d") && !word.equals("-e") && !word.equals("-s")){
+			sb.append(word + " ");
+			strCommand = removeNWords(1, strCommand);
+			word = getWord(0, strCommand);
+		}
+		
+		return sb.toString().trim();
+	}
+	
+	private  String getDescription(String strCommand){
+		StringBuilder sb = new StringBuilder();
+		int intWordIndex = 0;
+		
+		String strNextWord = getWord(intWordIndex, strCommand);
+		
+		while(DateHandler.tryParse(strNextWord) == null){
+			sb.append(strNextWord + " ");
+			intWordIndex++;
+			strNextWord = getWord(intWordIndex, strCommand);
+			if(strNextWord == null)
+				break;
+		}
+		
+		String strDescription = sb.toString().trim();
+		
+		return strDescription;
+	}
+	
+	
 	private  int getNumberOfWords(String strText){
 		return strText.split(" ").length;
 	}
+	
+	private String removeDelimiters(String strText){
+		strText = strText.replaceAll("-d", "").trim();
+		strText = strText.replaceAll("-e", "").trim();
+		strText = strText.replaceAll("-s", "").trim();
+		
+		return strText;
+	}
+	
+	private  DateClass getDate(String strCommand){
+		String parsedDate;
+		
+		String[] strSplitWords = strCommand.split(" ");
+		
+		for(String word : strSplitWords){
+			parsedDate = DateHandler.tryParse(word);
+			if(parsedDate != null){
+				try {
+					return new DateClass(parsedDate);
+				} catch (NoSuchFieldException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+
+	private  TimeClass getTime(String strCommand){
+		String[] strSplitWords = strCommand.split(" ");
+		TimeClass time = null;
+		
+		for(String word : strSplitWords){
+			if((time = TimeHandler.parse(word)) != null){
+				return time;
+			}
+		}
+		
+		return time;
+	}
+
+	
+	
+	/* Command verifying methods */
 	
 	/**
 	 * 
@@ -62,6 +145,122 @@ public class Parser {
 		return false;
 	}
 	
+
+	private boolean isAnEventCommand(String strCommand){
+		//If strCommand has "from" and "to", its an event!
+		if(strCommand.contains("from") && strCommand.contains("to")){
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private boolean isADeadlineCommand(String strCommand){
+		//If strCommand has "by", its a deadline!
+		if(strCommand.contains("by")){
+			return true;
+		}
+		return false;
+	}
+	
+
+	private boolean isAnUpdateCommand(String strCommand){
+		//If the first word is update
+		String strFirstWord = getWord(0, strCommand);
+		if(strFirstWord.equals("update")){
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean isASearchCommand(String strCommand){
+		//If the first word is update
+		String strFirstWord = getWord(0, strCommand);
+		if(strFirstWord.equals("search")){
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean isAnUndoCommand(String strCommand){
+		//If the first word is update
+		String strFirstWord = getWord(0, strCommand);
+		if(strFirstWord.equals("undo")){
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean isARedoCommand(String strCommand){
+		//If the first word is update
+		String strFirstWord = getWord(0, strCommand);
+		if(strFirstWord.equals("redo")){
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean isADisplayCommand(String strCommand){
+		//If the first word is update
+		String strFirstWord = getWord(0, strCommand);
+		if(strFirstWord.equals("display") || strFirstWord.equals("show")){
+			return true;
+		}
+		return false;
+	}
+	
+	
+	/* Parsing Methods */
+	
+private Update parseUpdateCommand(String strCommand){
+		
+		String strSearchString = getSearchString(strCommand);
+		
+		UpdateTask updateTask = new UpdateTask(strSearchString);
+		
+		strCommand = removeNWords(getNumberOfWords(strSearchString), strCommand);
+		
+		/*
+		 * Try to get date followed by time
+		 */
+		
+		
+		while(!strCommand.equals("")){
+			//Get delimiter
+			String delimiter = getWord(0, strCommand);
+			strCommand = removeNWords(1, strCommand);
+			
+			switch(delimiter){
+				case "-d":
+					String strDescription = removeDelimiters(getDescription(strCommand));
+					updateTask.setDescription(strDescription);
+					
+					strCommand = removeNWords(strDescription.split(" ").length, strCommand);
+					break;
+				case "-e":
+					DateClass endDate = getDate(strCommand);
+					strCommand = removeNWords(1, strCommand);
+					TimeClass endTime = getTime(strCommand);
+					strCommand = removeNWords(1, strCommand);
+					updateTask.setEndDate(endDate);
+					updateTask.setEndTime(endTime);
+					
+					break;
+				case "-s":
+					DateClass startDate = getDate(strCommand);
+					strCommand = removeNWords(1, strCommand);
+					TimeClass startTime = getTime(strCommand);
+					strCommand = removeNWords(1, strCommand);
+					updateTask.setStartDate(startDate);
+					updateTask.setStartTime(startTime);
+					
+					break;
+			}
+		}
+		
+		return new Update(updateTask);
+	}
+
 	private Command parseAddCommand(String strCommand){
 		
 		String strDescription;
@@ -159,41 +358,6 @@ public class Parser {
 		
 	}
 	
-	private boolean isAnEventCommand(String strCommand){
-		//If strCommand has "from" and "to", its an event!
-		if(strCommand.contains("from") && strCommand.contains("to")){
-			return true;
-		}
-		
-		return false;
-	}
-	
-	private boolean isADeadlineCommand(String strCommand){
-		//If strCommand has "by", its a deadline!
-		if(strCommand.contains("by")){
-			return true;
-		}
-		return false;
-	}
-	
-
-	private boolean isAnUpdateCommand(String strCommand){
-		//If the first word is update
-		String strFirstWord = getWord(0, strCommand);
-		if(strFirstWord.equals("update")){
-			return true;
-		}
-		return false;
-	}
-	
-	private boolean isASearchCommand(String strCommand){
-		//If the first word is update
-		String strFirstWord = getWord(0, strCommand);
-		if(strFirstWord.equals("search")){
-			return true;
-		}
-		return false;
-}
 	
 	private Command parseSearchCommand(String strCommand){
 		//remove "search" word
@@ -202,40 +366,16 @@ public class Parser {
 		return new Search(strSearchString);
 	}
 	
-	private boolean isAnUndoCommand(String strCommand){
-		//If the first word is update
-		String strFirstWord = getWord(0, strCommand);
-		if(strFirstWord.equals("undo")){
-			return true;
-		}
-		return false;
-	}
-	
 	private Command parseUndoCommand(String strCommand){
 		return new Undo();
 	}
-	private boolean isARedoCommand(String strCommand){
-		//If the first word is update
-		String strFirstWord = getWord(0, strCommand);
-		if(strFirstWord.equals("redo")){
-			return true;
-		}
-		return false;
-	}
+	
 	
 	private Command parseRedoCommand(String strCommand){
 		return new Redo();
 	}
 	
-	private boolean isADisplayCommand(String strCommand){
-		//If the first word is update
-		String strFirstWord = getWord(0, strCommand);
-		if(strFirstWord.equals("display")){
-			return true;
-		}
-		return false;
-	}
-	
+
 	private Command parseDisplayCommand(String strCommand){
 		String displayString = removeNWords(1, strCommand);
 		return new Display(displayString);
@@ -279,134 +419,6 @@ public class Parser {
 	
 	
 	
-	
-	private String getSearchString(String strCommand){
-		StringBuilder sb = new StringBuilder();
-		
-		String word = getWord(0, strCommand);
-		
-		while(!word.equals("-d") && !word.equals("-e") && !word.equals("-s")){
-			sb.append(word + " ");
-			strCommand = removeNWords(1, strCommand);
-			word = getWord(0, strCommand);
-		}
-		
-		return sb.toString().trim();
-	}
-	
-	private  String getDescription(String strCommand){
-		StringBuilder sb = new StringBuilder();
-		int intWordIndex = 0;
-		
-		String strNextWord = getWord(intWordIndex, strCommand);
-		
-		while(DateHandler.tryParse(strNextWord) == null){
-			sb.append(strNextWord + " ");
-			intWordIndex++;
-			strNextWord = getWord(intWordIndex, strCommand);
-			if(strNextWord == null)
-				break;
-		}
-		
-		String strDescription = sb.toString().trim();
-		
-		return strDescription;
-	}
-	
-	private Update parseUpdateCommand(String strCommand){
-		
-		String strSearchString = getSearchString(strCommand);
-		
-		UpdateTask updateTask = new UpdateTask(strSearchString);
-		
-		strCommand = removeNWords(getNumberOfWords(strSearchString), strCommand);
-		
-		/*
-		 * Try to get date followed by time
-		 */
-		
-		
-		while(!strCommand.equals("")){
-			//Get delimiter
-			String delimiter = getWord(0, strCommand);
-			strCommand = removeNWords(1, strCommand);
-			
-			switch(delimiter){
-				case "-d":
-					String strDescription = removeDelimiters(getDescription(strCommand));
-					updateTask.setDescription(strDescription);
-					
-					strCommand = removeNWords(strDescription.split(" ").length, strCommand);
-					break;
-				case "-e":
-					DateClass endDate = getDate(strCommand);
-					strCommand = removeNWords(1, strCommand);
-					TimeClass endTime = getTime(strCommand);
-					strCommand = removeNWords(1, strCommand);
-					updateTask.setEndDate(endDate);
-					updateTask.setEndTime(endTime);
-					
-					break;
-				case "-s":
-					DateClass startDate = getDate(strCommand);
-					strCommand = removeNWords(1, strCommand);
-					TimeClass startTime = getTime(strCommand);
-					strCommand = removeNWords(1, strCommand);
-					updateTask.setStartDate(startDate);
-					updateTask.setStartTime(startTime);
-					
-					break;
-			}
-		}
-		
-		return new Update(updateTask);
-	}
-	
-	private String removeDelimiters(String strText){
-		strText = strText.replaceAll("-d", "").trim();
-		strText = strText.replaceAll("-e", "").trim();
-		strText = strText.replaceAll("-s", "").trim();
-		
-		return strText;
-	}
-	
-	private  DateClass getDate(String strCommand){
-		String parsedDate;
-		
-		String[] strSplitWords = strCommand.split(" ");
-		
-		for(String word : strSplitWords){
-			parsedDate = DateHandler.tryParse(word);
-			if(parsedDate != null){
-				try {
-					return new DateClass(parsedDate);
-				} catch (NoSuchFieldException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		return null;
-	}
-	
-
-	
-	private  TimeClass getTime(String strCommand){
-		String[] strSplitWords = strCommand.split(" ");
-		TimeClass time = null;
-		
-		for(String word : strSplitWords){
-			if((time = TimeHandler.parse(word)) != null){
-				return time;
-			}
-		}
-		
-		return time;
-	}
 
 	
 	
