@@ -1,18 +1,1 @@
-{
-	"EVENT":[{
-		"task":"Meeting",
-		"start-date":"10/11",
-		"start-time":"1300",
-		"end-date":"10/11",
-		"end-time":"1500"
-		}],
-	"DEADLINE":[{
-		"task":"Homework",
-		"deadline":"12/10",
-		"end-time":"1030"
-		}],
-	"FLOATING":[{
-		"task":"sleeping"
-		}]
-}
-
+{"EVENT":[{"task":"pidsfg","start-date":"11/11/2015","start-time":"1121","end-date":"12/11/2015","end-time":"2212"},{"task":"pig","start-date":"2/5/2015","start-time":"1121","end-date":"12/11/2015","end-time":"2212"},{"task":"pig hala port","start-date":"11/11/2015","start-time":"1121","end-date":"12/11/2015","end-time":"2212"}],"DEADLINE":[],"FLOATING":[{"task":"herrllo"},{"task":"hele4lo"}]}

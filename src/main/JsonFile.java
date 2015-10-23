@@ -16,6 +16,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class JsonFile {
 	
@@ -31,13 +32,17 @@ public class JsonFile {
 	
 	
 	public void jsonWriteTask(Task task){
+		
 		String description,startDate, startTime, endDate, endTime;
 		String taskType = task.getClass().getName();
-		taskType = taskType.toUpperCase();
+		taskType = taskType.substring(5).toUpperCase();
+		//System.out.println(taskType);
 		description = task.getDescription();
+		
 		
 		switch(taskType){
 			case "EVENT":		
+				
 				startDate = ((Event)task).getStartDate().toString();
 				startTime = ((Event)task).getStartTime().toString();
 				endDate = ((Event)task).getEndDate().toString();
@@ -55,17 +60,192 @@ public class JsonFile {
 		}
 	}
 	
-	public void writeEventTask(String description, String startDate, String startTime, String endDate, String endTime){
+	public ArrayList<Task> getEventTask(){
+		ArrayList<Task> eventTask = new ArrayList<Task>();
+		eventTask = readTask("EVENT");
+		return eventTask;
+	}
+	
+	public ArrayList<Task> getDeadlineTask(){
+		ArrayList<Task> deadlineTask = new ArrayList<Task>();
+		deadlineTask = readTask("DEADLINE");
+		return deadlineTask;
+	}
+	
+	public ArrayList<Task> getFloatingTask(){
+		ArrayList<Task> floatingTask = new ArrayList<Task>();
+		floatingTask = readTask("FLOATING");
+		return floatingTask;
+	}
+	
+	public ArrayList<Task> getAllTask(){
+		ArrayList<Task> allTask = new ArrayList<Task>();
+		allTask = readTask("ALL");
+		return allTask;
+	}
+	
+	private ArrayList<Task> readTask(String taskType){
+		ArrayList<JSONArray> content = getJsonFileContent();
+		ArrayList<Task> task = new ArrayList<Task>();
+		
+		
+		switch(taskType){
+			case "EVENT":
+				task = eventTaskArray(content.get(0));
+				break;
+			case "DEADLINE":
+				task = deadlineTaskArray(content.get(1));
+				break;
+			case "FLOATING":
+				task = floatingTaskArray(content.get(2));
+				break;
+			case "ALL":
+				task = allTaskArray(content);
+				break;
+			default:
+				System.out.println("JsonFile.java ArrayList<Task> readTask error");
+		}
+		
+		return task;
+	}
+	
+	private ArrayList<Task> eventTaskArray(JSONArray event){
+		
+		ArrayList<Task> eventTaskList = new ArrayList<Task>();
+		JSONParser jsonParser = new JSONParser();
+		
+		for(int i=0; i<event.size(); i++){
+			
+			try{
+				JSONObject obj = (JSONObject) jsonParser.parse(event.get(i).toString().replace("\\", ""));
+			
+				String strStartDate = obj.get("start-date").toString();
+				String strEndDate = obj.get("end-date").toString();
+				String strStartTime = obj.get("start-time").toString();
+				String strEndTime = obj.get("end-time").toString();
+			
+				String task = obj.get("task").toString();
+				DateClass startDate = new DateClass(strStartDate);
+				DateClass endDate = new DateClass(strEndDate);
+				TimeClass startTime = new TimeClass(strStartTime);
+				TimeClass endTime = new TimeClass(strEndTime);
+						
+				Event eventTask = new Event(task, startDate, startTime, endDate, endTime);
+			
+				eventTaskList.add(eventTask);
+		
+			}catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (NoSuchFieldException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (java.text.ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
+		return eventTaskList;
+	}
+	
+	private ArrayList<Task> deadlineTaskArray(JSONArray event){
+		
+		ArrayList<Task> deadlineTaskList = new ArrayList<Task>();
+		JSONParser jsonParser = new JSONParser();
+		
+		for(int i=0; i<event.size(); i++){
+			
+			try{
+				JSONObject obj = (JSONObject) jsonParser.parse(event.get(i).toString().replace("\\", ""));
+			
+				
+				String strEndDate = obj.get("end-date").toString();
+				String strEndTime = obj.get("end-time").toString();
+				
+				String task = obj.get("task").toString();
+				DateClass endDate = new DateClass(strEndDate);
+				TimeClass endTime = new TimeClass(strEndTime);
+						
+				Deadline deadlineTask = new Deadline(task,endDate, endTime);
+			
+				deadlineTaskList.add(deadlineTask);
+		
+			}catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (NoSuchFieldException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (java.text.ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
+		return deadlineTaskList;
+	}
+	
+	private ArrayList<Task> floatingTaskArray(JSONArray event){
+		ArrayList<Task> floatingTaskList = new ArrayList<Task>();
+		JSONParser jsonParser = new JSONParser();
+		
+		for(int i=0; i<event.size(); i++){
+			
+			try{
+				JSONObject obj = (JSONObject) jsonParser.parse(event.get(i).toString().replace("\\", ""));
+						
+				String task = obj.get("task").toString();
+							
+				Floating floatingTask = new Floating(task);
+			
+				floatingTaskList.add(floatingTask);
+		
+			}catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
+		return floatingTaskList;
+		
+	}
+	
+	private ArrayList<Task> allTaskArray(ArrayList<JSONArray> content){
+		
+		ArrayList<Task> event = eventTaskArray(content.get(0));
+		ArrayList<Task> deadline = deadlineTaskArray(content.get(1));
+		ArrayList<Task> floating = floatingTaskArray(content.get(2));
+		
+		ArrayList<Task> allTask = new ArrayList<Task>();
+		
+		for(int i=0; i<event.size(); i++)
+		{
+			allTask.add(event.get(i));
+		}
+		for(int i=0; i<deadline.size(); i++)
+		{
+			allTask.add(deadline.get(i));
+		}
+		for(int i=0; i<floating.size(); i++)
+		{
+			allTask.add(floating.get(i));
+		}
+		
+		return allTask;
+	}
+	
+	private void writeEventTask(String description, String startDate, String startTime, String endDate, String endTime){
 		String arr[] = {description, startDate, startTime, endDate, endTime};
 		writeToJsonFile("EVENT", arr);
 	}
 	
-	public void writeDeadlineTask(String description, String endDate ,String endTime){
+	private void writeDeadlineTask(String description, String endDate ,String endTime){
 		String arr[] = {description, endDate, endTime};
 		writeToJsonFile("DEADLINE", arr);
 	}
 	
-	public void writeFloatingTask(String description){
+	private void writeFloatingTask(String description){
 		String arr[] = {description};
 		writeToJsonFile("FLOATING", arr);
 		
@@ -240,7 +420,7 @@ public class JsonFile {
 				
 			
 				deadlineMap.put("task", jsonObject.get("task"));
-				deadlineMap.put("deadline", jsonObject.get("deadline"));
+				deadlineMap.put("end-date", jsonObject.get("end-date"));
 				deadlineMap.put("end-time", jsonObject.get("end-time"));
 			
 				deadlineArray.add(deadlineMap);
