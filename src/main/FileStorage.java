@@ -38,6 +38,7 @@ public class FileStorage {
 		pathName = "path.txt";
 		filePath = currFilePath();
 		json = new JsonFile(filePath);
+		
 	
 	}
 
@@ -45,6 +46,7 @@ public class FileStorage {
 	 * This method writes the user's input text data into the storage file
 	 * @param text data to be written into file
 	 */
+	/*
 	public void write(String text){
 		
 		//writeFile(text, filePath, true, true);
@@ -57,7 +59,7 @@ public class FileStorage {
 		writeFile(text, filePath, true, true);
 	
 	}
-	
+	*/
 	public void writeTask(Task task){
 		File file = new File(filePath);
 		if(!file.exists()){
@@ -66,26 +68,26 @@ public class FileStorage {
 		}
 		json.jsonWriteTask(task);
 	}
-	/*
+	
 	public ArrayList<Task> readEventTask(){
-		
+		return json.getEventTask();
 	}
 	
 	public ArrayList<Task> readDeadlineTask(){
-		
+		return json.getDeadlineTask();
 	}
 	public ArrayList<Task> readFloatingTask(){
-		
+		return json.getFloatingTask();
 	}
 	
 	public ArrayList<Task> readAllTask(){
-	
+		return json.getAllTask();
 	}
 	
 	public String deleteTask(String line){
-		
+		return "The whole line info";
 	}
-	*/
+	
 	/**
 	 * This methods updates and set the new storage file path
 	 * @param newPath the new storage location which the user wants to store his data
@@ -280,7 +282,7 @@ public class FileStorage {
 	private static String currFilePath(){
 
 		//String defaultDataPath = System.getProperty("user.home") + "\\VODO\\data.txt";
-		String defaultDataPath = "data.txt";//"data.txt";
+		String defaultDataPath = "data.json";//"data.txt";
 		File pathFile = new File(pathDir + pathName);
 		File dataFile = new File(defaultDataPath);
 		String filePath;
@@ -288,7 +290,7 @@ public class FileStorage {
 		if(!pathFile.exists()){
 			createFile(pathFile);
 			createFile(dataFile);
-			//jsonContent.createJsonFile(dataFile);
+			jsonContent.createJsonFile(dataFile);
 			//hideFolder(pathDir);
 			writeFile(defaultDataPath, pathDir + pathName, false, false);
 		}
