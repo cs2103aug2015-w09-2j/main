@@ -111,7 +111,21 @@ public class Parser {
 		return null;
 	}
 	
-
+	private String removeDate(String strCommand){
+		String parsedDate;
+		Stack<String> dateBuffer = new Stack<String>();
+			
+		String[] strSplitWords = strCommand.split(" ");
+		
+		for(String word : strSplitWords){
+			parsedDate = DateHandler.tryParse(word);
+			if(parsedDate != null){
+				dateBuffer.push(word);
+			}
+		}
+			
+		return strCommand.replace(dateBuffer.pop(), "");
+	}
 	private  TimeClass getTime(String strCommand){
 		String[] strSplitWords = strCommand.split(" ");
 		TimeClass time = null;
@@ -125,6 +139,19 @@ public class Parser {
 		return time;
 	}
 
+	private  String removeTime(String strCommand){
+		String[] strSplitWords = strCommand.split(" ");
+		TimeClass time = null;
+		Stack<String> timeBuffer = new Stack<String>();
+		
+		for(String word : strSplitWords){
+			if((time = TimeHandler.parse(word)) != null){
+				timeBuffer.push(word);
+			}
+		}
+		
+		return strCommand.replace(timeBuffer.pop(), "");
+	}
 	
 	
 	/* Command verifying methods */
@@ -283,14 +310,25 @@ private Update parseUpdateCommand(String strCommand){
 			String strEndDateAndEndTime = strCommand.substring(strCommand.lastIndexOf("to"));
 			
 			endDate = getDate(strEndDateAndEndTime);
-			if(endDate != null){
-				endTime = getTime(strEndDateAndEndTime);
-				
-			} else {
+			endTime = getTime(strEndDateAndEndTime);
+			
+			if(endDate == null && endTime == null){
 				//use natural language to try get DateClass
 				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strEndDateAndEndTime);
 				endDate = prettyTime.getDate();
 				endTime = prettyTime.getTime();
+			}
+			else if(endDate != null && endTime == null){
+				String strWithoutDate = removeDate(strEndDateAndEndTime);
+				//use natural language to try get DateClass
+				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutDate);
+				endTime = prettyTime.getTime();
+				
+			} else if(endDate == null && endTime != null){
+				String strWithoutTime = removeTime(strEndDateAndEndTime);
+				//use natural language to try get DateClass
+				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutTime);
+				endDate = prettyTime.getDate();
 			}
 			strCommand = strCommand.replace(strEndDateAndEndTime, "");
 			
@@ -298,14 +336,25 @@ private Update parseUpdateCommand(String strCommand){
 			String strStartDateAndStartTime = strCommand.substring(strCommand.lastIndexOf("from"));
 			
 			startDate = getDate(strStartDateAndStartTime);
-			if(startDate != null){
-				startTime = getTime(strStartDateAndStartTime);
-				
-			} else {
+			startTime = getTime(strStartDateAndStartTime);
+			
+			if(startDate == null && startTime == null){
 				//use natural language to try get DateClass
 				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strStartDateAndStartTime);
 				startDate = prettyTime.getDate();
 				startTime = prettyTime.getTime();
+			}
+			else if(startDate != null && startTime == null){
+				String strWithoutDate = removeDate(strStartDateAndStartTime);
+				//use natural language to try get DateClass
+				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutDate);
+				startTime = prettyTime.getTime();
+				
+			} else if(startDate == null && startTime != null){
+				String strWithoutTime = removeTime(strCommand);
+				//use natural language to try get DateClass
+				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutTime);
+				startDate = prettyTime.getDate();
 			}
 			strCommand = strCommand.replace(strStartDateAndStartTime, "");
 			
@@ -321,18 +370,29 @@ private Update parseUpdateCommand(String strCommand){
 			 * Required Event Syntax for successful parsing:
 			 * Description by enddate endtime
 			 */
-			//<-----------------Handling Start Date and Time--------->
+			//<------------------Handling End Date and Time---------->
 			String strEndDateAndEndTime = strCommand.substring(strCommand.lastIndexOf("by"));
 			
 			endDate = getDate(strEndDateAndEndTime);
-			if(endDate != null){
-				endTime = getTime(strEndDateAndEndTime);
-				
-			} else {
+			endTime = getTime(strEndDateAndEndTime);
+			
+			if(endDate == null && endTime == null){
 				//use natural language to try get DateClass
 				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strEndDateAndEndTime);
 				endDate = prettyTime.getDate();
 				endTime = prettyTime.getTime();
+			}
+			else if(endDate != null && endTime == null){
+				String strWithoutDate = removeDate(strEndDateAndEndTime);
+				//use natural language to try get DateClass
+				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutDate);
+				endTime = prettyTime.getTime();
+				
+			} else if(endDate == null && endTime != null){
+				String strWithoutTime = removeTime(strEndDateAndEndTime);
+				//use natural language to try get DateClass
+				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutTime);
+				endDate = prettyTime.getDate();
 			}
 			strCommand = strCommand.replace(strEndDateAndEndTime, "");
 			
@@ -408,7 +468,7 @@ private Update parseUpdateCommand(String strCommand){
 	public static void main(String[] args) throws NoSuchFieldException, ParseException{
 		Parser p = new Parser();
 		//String command = "update new swimming -d swimming";
-		String command = "display";
+		String command = "add lol from 23/10 3am to next week 0733";
 	
 		Command t = p.parse(command);
 		
