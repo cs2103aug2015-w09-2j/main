@@ -111,7 +111,22 @@ public class Parser {
 		return null;
 	}
 	
-
+	private String removeDate(String strCommand){
+		String parsedDate;
+		Stack<String> dateBuffer = new Stack<String>();
+			
+		String[] strSplitWords = strCommand.split(" ");
+		
+		for(String word : strSplitWords){
+			parsedDate = DateHandler.tryParse(word);
+			if(parsedDate != null){
+				dateBuffer.push(word);
+			}
+		}
+			
+		return strCommand.replace(dateBuffer.pop(), "");
+	}
+	
 	private  TimeClass getTime(String strCommand){
 		String[] strSplitWords = strCommand.split(" ");
 		TimeClass time = null;
@@ -125,6 +140,19 @@ public class Parser {
 		return time;
 	}
 
+	private  String removeTime(String strCommand){
+		String[] strSplitWords = strCommand.split(" ");
+		TimeClass time = null;
+		Stack<String> timeBuffer = new Stack<String>();
+		
+		for(String word : strSplitWords){
+			if((time = TimeHandler.parse(word)) != null){
+				timeBuffer.push(word);
+			}
+		}
+		
+		return strCommand.replace(timeBuffer.pop(), "");
+	}
 	
 	
 	/* Command verifying methods */
@@ -212,7 +240,7 @@ public class Parser {
 	
 	/* Parsing Methods */
 	
-private Update parseUpdateCommand(String strCommand){
+	private Update parseUpdateCommand(String strCommand){
 		
 		String strSearchString = getSearchString(strCommand);
 		
@@ -283,14 +311,25 @@ private Update parseUpdateCommand(String strCommand){
 			String strEndDateAndEndTime = strCommand.substring(strCommand.lastIndexOf("to"));
 			
 			endDate = getDate(strEndDateAndEndTime);
-			if(endDate != null){
-				endTime = getTime(strEndDateAndEndTime);
-				
-			} else {
+			endTime = getTime(strEndDateAndEndTime);
+			
+			if(endDate == null && endTime == null){
 				//use natural language to try get DateClass
 				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strEndDateAndEndTime);
 				endDate = prettyTime.getDate();
 				endTime = prettyTime.getTime();
+			}
+			else if(endDate != null && endTime == null){
+				String strWithoutDate = removeDate(strEndDateAndEndTime);
+				//use natural language to try get DateClass
+				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutDate);
+				endTime = prettyTime.getTime();
+				
+			} else if(endDate == null && endTime != null){
+				String strWithoutTime = removeTime(strEndDateAndEndTime);
+				//use natural language to try get DateClass
+				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutTime);
+				endDate = prettyTime.getDate();
 			}
 			strCommand = strCommand.replace(strEndDateAndEndTime, "");
 			
@@ -298,19 +337,64 @@ private Update parseUpdateCommand(String strCommand){
 			String strStartDateAndStartTime = strCommand.substring(strCommand.lastIndexOf("from"));
 			
 			startDate = getDate(strStartDateAndStartTime);
-			if(startDate != null){
-				startTime = getTime(strStartDateAndStartTime);
-				
-			} else {
+			startTime = getTime(strStartDateAndStartTime);
+			
+			if(startDate == null && startTime == null){
 				//use natural language to try get DateClass
 				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strStartDateAndStartTime);
 				startDate = prettyTime.getDate();
 				startTime = prettyTime.getTime();
 			}
+			else if(startDate != null && startTime == null){
+				String strWithoutDate = removeDate(strStartDateAndStartTime);
+				//use natural language to try get DateClass
+				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutDate);
+				startTime = prettyTime.getTime();
+				
+			} else if(startDate == null && startTime != null){
+				String strWithoutTime = removeTime(strCommand);
+				//use natural language to try get DateClass
+				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutTime);
+				startDate = prettyTime.getDate();
+			}
 			strCommand = strCommand.replace(strStartDateAndStartTime, "");
 			
 			strDescription = strCommand;
+			
+			//NO description found!
+			if(strDescription.replaceAll(" ", "") == "" )
+				return null;
 		
+			//No startdatetime or enddatetime
+			if(startDate == null && startTime == null || endDate==null && endTime == null)
+				return null;
+			
+			if(startDate == null){
+				try {
+					startDate = new DateClass(DateHandler.getDateNow());
+				} catch (NoSuchFieldException | ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			if(endDate == null){
+				try {
+					endDate = new DateClass(DateHandler.getDateNow());
+				} catch (NoSuchFieldException | ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			if(startTime == null){
+				startTime = new TimeClass(TimeHandler.getHourNow() + "", TimeHandler.getMinuteNow() + "");
+			}
+			
+			if(endTime == null){
+				endTime = new TimeClass(TimeHandler.getHourNow() + "", TimeHandler.getMinuteNow() + "");
+			}
+			
 			command = new Command(CommandType.ADD_EVENT);
 			
 			command.setTask(new Event(strDescription, startDate, startTime, endDate, endTime));
@@ -321,23 +405,56 @@ private Update parseUpdateCommand(String strCommand){
 			 * Required Event Syntax for successful parsing:
 			 * Description by enddate endtime
 			 */
-			//<-----------------Handling Start Date and Time--------->
+			//<------------------Handling End Date and Time---------->
 			String strEndDateAndEndTime = strCommand.substring(strCommand.lastIndexOf("by"));
 			
 			endDate = getDate(strEndDateAndEndTime);
-			if(endDate != null){
-				endTime = getTime(strEndDateAndEndTime);
-				
-			} else {
+			endTime = getTime(strEndDateAndEndTime);
+			
+			if(endDate == null && endTime == null){
 				//use natural language to try get DateClass
 				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strEndDateAndEndTime);
 				endDate = prettyTime.getDate();
 				endTime = prettyTime.getTime();
 			}
+			else if(endDate != null && endTime == null){
+				String strWithoutDate = removeDate(strEndDateAndEndTime);
+				//use natural language to try get DateClass
+				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutDate);
+				endTime = prettyTime.getTime();
+				
+			} else if(endDate == null && endTime != null){
+				String strWithoutTime = removeTime(strEndDateAndEndTime);
+				//use natural language to try get DateClass
+				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutTime);
+				endDate = prettyTime.getDate();
+			}
 			strCommand = strCommand.replace(strEndDateAndEndTime, "");
 			
 			strDescription = strCommand;
 
+			//NO description found!
+			if(strDescription.replaceAll(" ", "") == "" )
+				return null;
+		
+			//No enddatetime
+			if(endDate==null && endTime == null)
+				return null;
+			
+		
+			if(endDate == null){
+				try {
+					endDate = new DateClass(DateHandler.getDateNow());
+				} catch (NoSuchFieldException | ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			if(endTime == null){
+				endTime = new TimeClass(TimeHandler.getHourNow() + "", TimeHandler.getMinuteNow() + "");
+			}
+			
 			command = new Command(CommandType.ADD_DEADLINE);
 			
 			command.setTask(new Deadline(strDescription, endDate, endTime));
@@ -358,7 +475,6 @@ private Update parseUpdateCommand(String strCommand){
 		
 	}
 	
-	
 	private Command parseSearchCommand(String strCommand){
 		//remove "search" word
 		String strSearchString = removeNWords(1, strCommand);
@@ -369,13 +485,11 @@ private Update parseUpdateCommand(String strCommand){
 	private Command parseUndoCommand(String strCommand){
 		return new Undo();
 	}
-	
-	
+
 	private Command parseRedoCommand(String strCommand){
 		return new Redo();
 	}
 	
-
 	private Command parseDisplayCommand(String strCommand){
 		String displayString = removeNWords(1, strCommand);
 		return new Display(displayString);
@@ -408,10 +522,10 @@ private Update parseUpdateCommand(String strCommand){
 	public static void main(String[] args) throws NoSuchFieldException, ParseException{
 		Parser p = new Parser();
 		//String command = "update new swimming -d swimming";
-		String command = "display";
+		String command = "add lol from  3pm to 5pm";
 	
 		Command t = p.parse(command);
-		
+		System.out.println(((Event)t.getTask()).getEndTime().to12HourFormat());
 	
 	}
 

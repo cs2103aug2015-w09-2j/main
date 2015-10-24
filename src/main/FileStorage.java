@@ -89,6 +89,16 @@ public class FileStorage {
 	}
 	
 	/**
+	 * ArrayList.get(0) --> ArrayList<Task> [Events]
+	 * ArrayList.get(1) --> ArrayList<Task> [Deadline]
+	 * ArrayList.get(2) --> ArrayList<Task> [Floating]
+	 * @param newPath the new storage location which the user wants to store his data
+	 */
+	public ArrayList<ArrayList<Task>> search(String keyword){
+		return json.search(keyword);
+	}
+	
+	/**
 	 * This methods updates and set the new storage file path
 	 * @param newPath the new storage location which the user wants to store his data
 	 */
@@ -143,12 +153,14 @@ public class FileStorage {
 	 * @param keyword the key word to find a specific content in the storage file
 	 * @return the content of the storage file which contains only the key word
 	 */
+	
+	/*
 	public FileData search(String keyword){
 		FileData list = searchFile(keyword);
 
 		return list;
 	}
-
+	*/
 	/**
 	 * This methods delete a specific line of the content in the storage file
 	 * @param line the line number of the line which is to be deleted

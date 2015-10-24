@@ -8,7 +8,8 @@ import java.util.Date;
 public class TimeHandler {
 
 	public static final String PATTERN_24_HOUR = "([01][0-9]|2[0-3]):?[0-5][0-9][h]?";
-
+	public static final String PATTERN_12_HOUR = "^(0?[1-9]|1[012])(:?[0-5]\\d)?[AaPp][Mm]";
+	
 	public static int getHourNow(){
 		DateFormat dateFormat = new SimpleDateFormat("HH");
 		Date date = new Date();
@@ -38,17 +39,17 @@ public class TimeHandler {
 		return intHourAndMin;
 	}
 
-///public static void main(String[] args){
-///	String time = "2344h";
-///	int[] t = parse(time);
-///
-///	System.out.println(String.format("%d %d", t[0], t[1]));
-///}
-///
+public static void main(String[] args){
+	String time = "2344h";
+	TimeClass t = TimeHandler.parse(time);
+
+	
+}
+
 	public static TimeClass parse(String strTime){
 
 		String[] strHourAndMin = new String[2];
-
+		
 		if(strTime.matches(PATTERN_24_HOUR)){
 			strTime = strTime.replace(":", "");
 			strTime = strTime.replace("h", "");
@@ -60,7 +61,7 @@ public class TimeHandler {
 
 			return time;
 
-		}
+		} 
 		else
 			return null;
 

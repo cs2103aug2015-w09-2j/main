@@ -60,28 +60,99 @@ public class JsonFile {
 		}
 	}
 	
-	public ArrayList<Task> getEventTask(){
-		ArrayList<Task> eventTask = new ArrayList<Task>();
-		eventTask = readTask("EVENT");
-		return eventTask;
+	public ArrayList<Task> getEventTask(){		
+		return readTask("EVENT");
 	}
 	
 	public ArrayList<Task> getDeadlineTask(){
-		ArrayList<Task> deadlineTask = new ArrayList<Task>();
-		deadlineTask = readTask("DEADLINE");
-		return deadlineTask;
+		return readTask("DEADLINE");
 	}
 	
 	public ArrayList<Task> getFloatingTask(){
-		ArrayList<Task> floatingTask = new ArrayList<Task>();
-		floatingTask = readTask("FLOATING");
-		return floatingTask;
+		return readTask("FLOATING");
 	}
 	
 	public ArrayList<Task> getAllTask(){
-		ArrayList<Task> allTask = new ArrayList<Task>();
-		allTask = readTask("ALL");
-		return allTask;
+		return readTask("ALL");
+	}
+	
+	public ArrayList<ArrayList<Task>> search(String keyword){
+		ArrayList<ArrayList<Task>> searchResult = new ArrayList<ArrayList<Task>>();
+		ArrayList<JSONArray> content = getJsonFileContent();
+		
+		ArrayList<Task> event = searchEvent(keyword, content.get(0));
+		ArrayList<Task> deadline = searchDeadline(keyword, content.get(1));
+		ArrayList<Task> floating = searchFloating(keyword, content.get(2));
+		
+		searchResult.add(event);
+		searchResult.add(deadline);
+		searchResult.add(floating);
+		
+		return searchResult;
+	}
+	
+	private ArrayList<Task> searchEvent(String keyword, JSONArray event){
+		
+		String description,startDate, startTime, endDate, endTime;
+		ArrayList<Task> eventList = eventTaskArray(event);
+		ArrayList<Task> searchList = new ArrayList<Task>();
+		
+		for(int i=0; i<eventList.size(); i++){
+			Task task = eventList.get(i);
+			description = task.getDescription();
+			startDate = ((Event)task).getStartDate().toString();
+			startTime = ((Event)task).getStartTime().toString();
+			endDate = ((Event)task).getEndDate().toString();
+			endTime = ((Event)task).getEndTime().toString();
+			
+			String strTask = description + " " + startDate + " " + startTime + " " + endDate + " " + endTime;
+			
+			if(strTask.contains(keyword)){
+				searchList.add(task);
+			}
+		}
+		
+		return searchList;
+	}
+  	
+	private ArrayList<Task> searchDeadline(String keyword, JSONArray event){
+		String description,endDate, endTime;
+		ArrayList<Task> deadlineList = deadlineTaskArray(event);
+		ArrayList<Task> searchList = new ArrayList<Task>();
+		
+		for(int i=0; i<deadlineList.size(); i++){
+			Task task = deadlineList.get(i);
+			description = task.getDescription();
+			endDate = ((Deadline)task).getEndDate().toString();
+			endTime = ((Deadline)task).getEndTime().toString();
+			
+			String strTask = description  + " " + endDate + " " + endTime;
+			
+			if(strTask.contains(keyword)){
+				searchList.add(task);
+			}
+		}
+		
+		return searchList;
+	}
+	
+	private ArrayList<Task> searchFloating(String keyword, JSONArray event){
+		String description;
+		ArrayList<Task> floatingList = floatingTaskArray(event);
+		ArrayList<Task> searchList = new ArrayList<Task>();
+		
+		for(int i=0; i<floatingList.size(); i++){
+			Task task = floatingList.get(i);
+			description = task.getDescription();
+			
+			String strTask = description;
+			
+			if(strTask.contains(keyword)){
+				searchList.add(task);
+			}
+		}
+		
+		return searchList;
 	}
 	
 	private ArrayList<Task> readTask(String taskType){
@@ -235,6 +306,9 @@ public class JsonFile {
 		return allTask;
 	}
 	
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	private void writeEventTask(String description, String startDate, String startTime, String endDate, String endTime){
 		String arr[] = {description, startDate, startTime, endDate, endTime};
 		writeToJsonFile("EVENT", arr);
@@ -262,6 +336,8 @@ public class JsonFile {
 		JSONArray deadlineArray =  deadlineJsonArray(contentList.get(1));
 		JSONArray floatingArray =  floatingJsonArray(contentList.get(2));
 		
+		
+		
 		switch(taskType){
 			case "EVENT":
 				eventArray.add(newEvent(arr));		
@@ -279,6 +355,9 @@ public class JsonFile {
 		obj.put("EVENT", eventArray);
 		obj.put("DEADLINE", deadlineArray);
 		obj.put("FLOATING", floatingArray);
+		
+		
+		
 		
 		 StringWriter out = new StringWriter();
 		   try {
@@ -322,6 +401,8 @@ public class JsonFile {
 			contentList.add((JSONArray) jsonObject.get("DEADLINE"));
 			contentList.add((JSONArray) jsonObject.get("FLOATING"));
 			
+			
+			
 			reader.close();
 			
 		}catch (FileNotFoundException ex) {
@@ -334,6 +415,8 @@ public class JsonFile {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
 		
 		return contentList;
 	}
@@ -356,7 +439,7 @@ public class JsonFile {
 		Map deadlineMap = new LinkedHashMap();
 		
 		deadlineMap.put("task", arr[0]);
-		deadlineMap.put("deadline", arr[1]);
+		deadlineMap.put("end-date", arr[1]);
 		deadlineMap.put("end-time", arr[2]);
 		
 		
@@ -376,7 +459,7 @@ public class JsonFile {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static JSONArray eventJsonArray(JSONArray event){
 		
-		Map eventMap =new LinkedHashMap();
+		
 		JSONArray eventArray = new JSONArray();
 			
 		try{	
@@ -384,8 +467,10 @@ public class JsonFile {
 			
 			for(int i=0; i<event.size(); i++){
 				JSONObject jsonObject = (JSONObject) jsonParser.parse(event.get(i).toString().replace("\\", ""));
-				//System.out.println("Event: " + event.get(i).toString().replace("\\", ""));
+				
 			
+				//Solved
+				Map eventMap =new LinkedHashMap();
 				eventMap.put("task", jsonObject.get("task"));
 				eventMap.put("start-date", jsonObject.get("start-date"));
 				eventMap.put("start-time", jsonObject.get("start-time"));
@@ -395,6 +480,7 @@ public class JsonFile {
 				
 			
 				eventArray.add(eventMap);
+				
 			}
 			
 		}catch (NullPointerException ex) {
@@ -409,7 +495,7 @@ public class JsonFile {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static JSONArray deadlineJsonArray(JSONArray deadline){
-		Map deadlineMap =new LinkedHashMap();
+		
 		JSONArray deadlineArray = new JSONArray();
 			
 		try{	
@@ -418,7 +504,7 @@ public class JsonFile {
 			for(int i=0; i<deadline.size(); i++){
 				JSONObject jsonObject = (JSONObject) jsonParser.parse(deadline.get(i).toString().replace("\\", ""));
 				
-			
+				Map deadlineMap =new LinkedHashMap();
 				deadlineMap.put("task", jsonObject.get("task"));
 				deadlineMap.put("end-date", jsonObject.get("end-date"));
 				deadlineMap.put("end-time", jsonObject.get("end-time"));
@@ -438,7 +524,7 @@ public class JsonFile {
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static JSONArray floatingJsonArray(JSONArray floating){
-		Map floatingMap =new LinkedHashMap();
+		
 		JSONArray floatingArray = new JSONArray();
 			
 		try{	
@@ -447,7 +533,7 @@ public class JsonFile {
 			for(int i=0; i<floating.size(); i++){
 				JSONObject jsonObject = (JSONObject) jsonParser.parse(floating.get(i).toString().replace("\\", ""));
 				
-				
+				Map floatingMap =new LinkedHashMap();
 				floatingMap.put("task", jsonObject.get("task"));				
 			
 				floatingArray.add(floatingMap);
