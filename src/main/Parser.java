@@ -124,7 +124,7 @@ public class Parser {
 			}
 		}
 			
-		return strCommand.replace(dateBuffer.pop(), "");
+		return strCommand.replace(dateBuffer.pop(), "").trim();
 	}
 	
 	private  TimeClass getTime(String strCommand){
@@ -151,7 +151,7 @@ public class Parser {
 			}
 		}
 		
-		return strCommand.replace(timeBuffer.pop(), "");
+		return strCommand.replace(timeBuffer.pop(), "").trim();
 	}
 	
 	
@@ -486,8 +486,30 @@ public class Parser {
 	private Command parseSearchCommand(String strCommand){
 		//remove "search" word
 		String strSearchString = removeNWords(1, strCommand);
+		Search searchObj = new Search();
 		
-		return new Search(strSearchString);
+		//Get all dates
+		while(strSearchString != null || strSearchString != ""){
+			DateClass date = getDate(strSearchString);
+			
+			if(date!= null){
+				searchObj.addSearchString(date.toString());
+				strSearchString = removeDate(strSearchString);
+			}else{
+				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strSearchString);
+				date = prettyTime.getDate();
+				
+				if(date == null){
+					break;
+				} else{
+					searchObj.addSearchString(date.toString());
+					strSearchString =  strSearchString.replace(prettyTime.getParsedDateGroup().get(0), "");
+				}
+			}
+		}
+		
+		searchObj.addSearchString(strSearchString);
+		return searchObj;
 	}
 	
 	private Command parseUndoCommand(String strCommand){
@@ -536,8 +558,9 @@ public class Parser {
 
 	public static void main(String[] args) throws NoSuchFieldException, ParseException{
 		Parser p = new Parser();
+		
 		//String command = "update new swimming -d swimming";
-		String command = "add lol from  3pm to 5pm";
+		String command = "search 25/10 everything";
 	
 		Command t = p.parse(command);
 		System.out.println(((Event)t.getTask()).getEndTime().to12HourFormat());
