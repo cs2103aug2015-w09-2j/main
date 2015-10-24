@@ -8,8 +8,12 @@ public class tangwr {
 	public static void main(String[] args) throws NoSuchFieldException, ParseException
 	{
 		FileStorage fs = new FileStorage();
-		//JsonFile js = new JsonFile("data.json");
+		//fs.setFilePath("pikachu.txt");
+		//System.out.println("Hello world");
 		
+		
+		//JsonFile js = new JsonFile("data.json");
+		/*
 		DateClass date1 = new DateClass(3, 1);
 		DateClass date2 = new DateClass(4, 1);
 		TimeClass time1 = new TimeClass("1500");
@@ -23,6 +27,10 @@ public class tangwr {
 		fs.writeTask(d);
 		fs.writeTask(f);
 		fs.writeTask(e);
+		
+		
+		
+		*/
 		
 		ArrayList<ArrayList<Task>> tk = fs.search("4/1");
 		
@@ -50,7 +58,7 @@ public class tangwr {
 			System.out.println(k.getDescription());
 		}
 		
-		System.out.println("Hello");
+		//System.out.println("Hello");
 		//js.search("he");
 		//js.jsonWriteTask(event);
 		//js.jsonWriteTask(f);
@@ -58,6 +66,7 @@ public class tangwr {
 		//js.jsonWriteTask(d);
 		
 		//js.getEventTask();
+		
 		/*
 		ArrayList<Task> t = fs.readEventTask();
 		
@@ -79,8 +88,8 @@ public class tangwr {
 			Task k = ff.get(i);
 			System.out.println(k.getDescription());
 		}
-		
 		*/
+		
 		
 		
 	}
