@@ -22,7 +22,7 @@ public class Logic {
 	/**
 	 * Description Constructor : Creates and instance of the Logic class with
 	 * the fileName stated
-	 * 
+	 *
 	 * @param filename
 	 */
 	/*
@@ -50,16 +50,20 @@ public class Logic {
 															// we shift to GUI
 	private FileStorage fileStorage = new FileStorage();
 	private static Command.CommandType command;
-	private MainApp mainApp; // [teddy] reference to UI
-	private ObservableList<Task> tasks; // [teddy] just fill the tasks
 	private static Command.CommandType undoCommand = Command.CommandType.UNKNOWN;
 	private static Task undoTaskObject;
+
+	private MainApp mainApp; // [teddy] reference to UI
+	// private ObservableList<Task> tasks; // [teddy] just fill the tasks
+	private ObservableList<Task> events;
+	private ObservableList<Task> deadlines;
+	private ObservableList<Task> floatings;
 
 	/**
 	 * Description Takes in the command as a string from the user input and
 	 * processes the command and executes the command if its in the correct
 	 * format
-	 * 
+	 *
 	 * @param input
 	 * @return
 	 * @throws NoSuchFieldException
@@ -94,7 +98,7 @@ public class Logic {
 
 	/**
 	 * Description Executes the command
-	 * 
+	 *
 	 * @param command
 	 * @param input
 	 * @param inputString
@@ -109,21 +113,24 @@ public class Logic {
 			fileStorage.writeTask(input);
 			undoCommand = command;
 			undoTaskObject = input;
-			fillTasks(); // [teddy]
+			// fillTasks(); // [teddy]
+			fillEvents();
 			success = true;
 			break;
 		case ADD_DEADLINE:
 			fileStorage.writeTask(input);
 			undoCommand = command;
 			undoTaskObject = input;
-			fillTasks();
+			// fillTasks();
+			fillDeadlines();
 			success = true;
 			break;
 		case ADD_FLOATING:
 			fileStorage.writeTask(input);
 			undoCommand = command;
 			undoTaskObject = input;
-			fillTasks();
+			// fillTasks();
+			fillFloatings();
 			success = true;
 			break;
 		case UPDATE:
@@ -131,7 +138,7 @@ public class Logic {
 			undoCommand = command;
 			undoTaskObject = null; // need to search for the Task object with
 									// the updated object description
-			fillTasks();
+			// fillTasks();
 			success = true;
 			break;
 		case DELETE:
@@ -139,7 +146,7 @@ public class Logic {
 			undoCommand = command;
 			undoTaskObject = null; // need to search for the Task object with
 									// the updated object description
-			fillTasks();
+			// fillTasks();
 			success = true;
 			break;
 		case SEARCH:
@@ -181,7 +188,7 @@ public class Logic {
 
 	/**
 	 * Description Method used to update the task
-	 * 
+	 *
 	 * @param input
 	 */
 	/*private void updateTask(UpdateTask input) {
@@ -251,7 +258,7 @@ public class Logic {
 
 	/**
 	 * Set the reference to MainApp
-	 * 
+	 *
 	 * @param mainApp
 	 *
 	 *            Added by teddy
@@ -262,14 +269,26 @@ public class Logic {
 
 	/**
 	 * Initialize the tasks
-	 * 
+	 *
 	 * @param tasks
 	 *
 	 *            Added by teddy
 	 */
-	public void setTasks(ObservableList<Task> tasks) {
+/*	public void setTasks(ObservableList<Task> tasks) {
 		this.tasks = tasks;
 		fillTasks();
+	}*/
+
+	public void setTasks(ObservableList<Task> events, ObservableList<Task> deadlines,
+			ObservableList<Task> floatings) {
+		this.events = events;
+		this.deadlines = deadlines;
+		this.floatings = floatings;
+
+		fillEvents();
+		fillDeadlines();
+		fillFloatings();
+
 	}
 
 	/**
@@ -278,7 +297,20 @@ public class Logic {
 	 * Added by Teddy Ravi, you can just call this method every time user
 	 * add/delete/edit the to-do list
 	 */
-	public void fillTasks() {
-		tasks = FXCollections.observableList(fileStorage.readAllTask());
+/*	public void fillTasks() {
+		tasks.setAll(fileStorage.readAllTask());
+	}*/
+
+	public void fillEvents() {
+		events.setAll(fileStorage.readEventTask());
+	}
+
+	public void fillDeadlines() {
+		deadlines.setAll(fileStorage.readDeadlineTask());
+	}
+
+	public void fillFloatings() {
+		floatings.setAll(fileStorage.readFloatingTask());
+		System.out.println(floatings.size());
 	}
 }

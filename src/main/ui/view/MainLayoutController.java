@@ -23,26 +23,26 @@ public class MainLayoutController {
 
 	private MainApp mainApp;
 
-	private ObservableList<Task> tasks; // task is retrieved from MainApp; events, deadlines, and floatings are use to separate tasks
-	private ObservableList<Event> events;
-	private ObservableList<Deadline> deadlines;
-	private ObservableList<Floating> floatingTasks;
+	// private ObservableList<Task> tasks; // task is retrieved from MainApp; events, deadlines, and floatings are use to separate tasks
+	private ObservableList<Task> events;    // previously the ObservableList was type-aware (Event, Deadline, Floating)
+	private ObservableList<Task> deadlines;
+	private ObservableList<Task> floatings;
 
 
 	// Fields for binding to UI components
 	@FXML
-	private ListView<Event> eventsListView;
+	private ListView<Task> eventsListView; // previously the ListView was type-aware (Event, Deadline, Floating)
 	@FXML
-	private ListView<Deadline> deadlinesListView;
+	private ListView<Task> deadlinesListView;
 	@FXML
-	private ListView<Floating> floatingTasksListView;
+	private ListView<Task> floatingTasksListView;
 	@FXML
 	private TextField commandBox;
 
 	public MainLayoutController() {
-		events = FXCollections.observableArrayList();
+/*		events = FXCollections.observableArrayList();
 		deadlines = FXCollections.observableArrayList();
-		floatingTasks = FXCollections.observableArrayList();
+		floatingTasks = FXCollections.observableArrayList();*/
 	}
 
 	public void initialize() {
@@ -58,18 +58,22 @@ public class MainLayoutController {
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
 		getTasks();
-		separateTasks();
+		// separateTasks();
 		setupListViews();
 	}
 
 	private void getTasks() {
-		tasks = mainApp.getTasks();
-		System.out.println(tasks.size());
+//		tasks = mainApp.getTasks();
+		events = mainApp.getEvents();
+		deadlines = mainApp.getDeadlines();
+		floatings = mainApp.getFloatings();
+
+		// System.out.println(tasks.size());
 	}
 
 	private void setupListViews() {
 
-		tasks.addListener(new ListChangeListener<Task>() {
+/*		tasks.addListener(new ListChangeListener<Task>() {
 			@Override
 			public void onChanged(Change<? extends Task> aChange) {
 				while (aChange.next()) {
@@ -79,14 +83,14 @@ public class MainLayoutController {
 					}
 				}
 			}
-		});
+		});*/
 
 		eventsListView.setItems(events);
 		deadlinesListView.setItems(deadlines);
-		floatingTasksListView.setItems(floatingTasks);
+		floatingTasksListView.setItems(floatings);
 	}
 
-	private void separateTasks() {
+/*	private void separateTasks() {
 		for (int i = 0; i < tasks.size(); i++) {
 			Task aTask = tasks.get(i);
 			if (aTask instanceof Event) {
@@ -96,10 +100,10 @@ public class MainLayoutController {
 				deadlines.add((Deadline) aTask);
 			}
 			else {
-				floatingTasks.add((Floating) aTask);
+				floatings.add((Floating) aTask);
 			}
 		}
-	}
+	}*/
 
 	@FXML
 	public void getCommand() throws NoSuchFieldException, ParseException { // exception will be handled by Logic later, remove this later
