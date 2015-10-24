@@ -64,11 +64,14 @@ public class FileStorage {
 		File file = new File(filePath);
 		if(!file.exists()){
 			createFile(file);
+			//Check file if it is in the json empty format
+			jsonContent.isJsonFileEmpty(file);
 			jsonContent.createJsonFile(file);
 		}
 		json.jsonWriteTask(task);
 	}
 	
+	//Ensure read that the file is not empty should be in json at the back
 	public ArrayList<Task> readEventTask(){
 		return json.getEventTask();
 	}
@@ -84,8 +87,8 @@ public class FileStorage {
 		return json.getAllTask();
 	}
 	
-	public String deleteTask(String line){
-		return "The whole line info";
+	public Task deleteTask(Task task){
+		return json.delete(task);
 	}
 	
 	/**
@@ -97,6 +100,51 @@ public class FileStorage {
 	public ArrayList<ArrayList<Task>> search(String keyword){
 		return json.search(keyword);
 	}
+	
+	/**
+	 * This methods retrieve and returns the content of the storage file
+	 * which contains a particular key word
+	 * @param keyword the key word to find a specific content in the storage file
+	 * @return the content of the storage file which contains only the key word
+	 */
+	
+	/*
+	public FileData search(String keyword){
+		FileData list = searchFile(keyword);
+
+		return list;
+	}
+	*/
+	/**
+	 * This methods delete a specific line of the content in the storage file
+	 * @param line the line number of the line which is to be deleted
+	 * @param data the FileData which contains the hash map that links the line
+	 * number to content of the storage file
+	 */
+	/*
+	public void delete(String line, FileData data){
+
+		String fileName = filePath;
+
+		HashMap<String, Integer> originalMap = data.getOriginalMap();
+		HashMap<Integer, String> displayMap = data.getDisplayMap();
+
+		try{
+			int numLine = Integer.parseInt(line);
+			String key = displayMap.get(numLine);
+			int deleteNum = originalMap.get(key);
+
+			deleteLine(deleteNum, fileName);
+
+		}catch(NumberFormatException e){
+
+			System.out.println("Error deleting");
+		}
+
+	}
+	*/
+	
+	
 	
 	/**
 	 * This methods updates and set the new storage file path
@@ -129,6 +177,7 @@ public class FileStorage {
 		File newFile = new File(newPath);
 		try {
 			Files.copy(oldFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			//System.out.println("copied");
 		} catch (IOException e) {
 			System.out.println("Copy file fail");
 		} finally {
@@ -147,47 +196,7 @@ public class FileStorage {
 
 	}
 
-	/**
-	 * This methods retrieve and returns the content of the storage file
-	 * which contains a particular key word
-	 * @param keyword the key word to find a specific content in the storage file
-	 * @return the content of the storage file which contains only the key word
-	 */
 	
-	/*
-	public FileData search(String keyword){
-		FileData list = searchFile(keyword);
-
-		return list;
-	}
-	*/
-	/**
-	 * This methods delete a specific line of the content in the storage file
-	 * @param line the line number of the line which is to be deleted
-	 * @param data the FileData which contains the hash map that links the line
-	 * number to content of the storage file
-	 */
-	public void delete(String line, FileData data){
-
-		String fileName = filePath;
-
-		HashMap<String, Integer> originalMap = data.getOriginalMap();
-		HashMap<Integer, String> displayMap = data.getDisplayMap();
-
-		try{
-			int numLine = Integer.parseInt(line);
-			String key = displayMap.get(numLine);
-			int deleteNum = originalMap.get(key);
-
-			deleteLine(deleteNum, fileName);
-
-		}catch(NumberFormatException e){
-
-			System.out.println("Error deleting");
-		}
-
-	}
-
 	/**
 	 * This methods gets the content of the storage file
 	 * Create a hash map to map the original content of the storage file to its original sequence

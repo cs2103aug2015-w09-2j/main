@@ -45,6 +45,13 @@ public class JsonFileContent {
 		}
 		
 	}
+	
+	public void isJsonFileEmpty(File file){
+		
+		if (file.length() == 0) {
+			createJsonFile(file);
+		} 
+	}
 
 	
 }
