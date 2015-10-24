@@ -40,8 +40,8 @@ public class MainApp extends Application {
 	}
 
 	public ObservableList<Task> getTasks() {
-		// return tasks;
-		return dummyTasks;
+		return tasks;
+		// return dummyTasks;
 	}
 
 	public void processCommand(String command) throws NoSuchFieldException, ParseException { // exception will be handled by Logic later, remove this later

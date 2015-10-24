@@ -105,8 +105,8 @@ public class MainLayoutController {
 	public void getCommand() throws NoSuchFieldException, ParseException { // exception will be handled by Logic later, remove this later
 		String command = commandBox.getText(); // rename to entry
 
-		// mainApp.processCommand(command);
-		tasks.add(new Floating(command));
+		mainApp.processCommand(command);
+		// tasks.add(new Floating(command));
 		commandBox.setText("");
 	}
 
