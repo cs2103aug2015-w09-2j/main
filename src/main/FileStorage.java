@@ -87,8 +87,8 @@ public class FileStorage {
 		return json.getAllTask();
 	}
 	
-	public Task deleteTask(Task task){
-		return json.delete(task);
+	public void deleteTask(Task task){
+		json.delete(task);
 	}
 	
 	/**
