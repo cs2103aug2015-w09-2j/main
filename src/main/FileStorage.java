@@ -65,9 +65,9 @@ public class FileStorage {
 		if(!file.exists()){
 			createFile(file);
 			//Check file if it is in the json empty format
-			jsonContent.isJsonFileEmpty(file);
 			jsonContent.createJsonFile(file);
 		}
+		jsonContent.isJsonFileEmpty(file);
 		json.jsonWriteTask(task);
 	}
 	
@@ -456,10 +456,11 @@ public class FileStorage {
 		return data;
 	}
 
+	/*
 	public void deleteTask(int taskNumber){
 		deleteLine(taskNumber,filePath);
 	}
-
+	*/
 	/**
 	 * This methods delete the specific line in the storage file
 	 * @param numLine	the line number to be deleted

@@ -118,7 +118,9 @@ public class JsonFile {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void deleteTask(Task task){
 		Map obj =new LinkedHashMap();
+		
 		String taskType = determineTaskType(task);
+		
 		String description,startDate, startTime, endDate, endTime, strTask;
 		ArrayList<JSONArray> contentList = getJsonFileContent();
 		
@@ -136,24 +138,26 @@ public class JsonFile {
 				endDate = ((Event)task).getEndDate().toString();
 				endTime = ((Event)task).getEndTime().toString();		
 				strTask = description + " " + startDate + " " + startTime + " " + endDate + " " + endTime;
-				
-				eventArray = deleteSpecificTask(eventArray, strTask);
+				//System.out.println(strTask);
+				eventArray = deleteEventTask(eventArray, strTask);
 				break;
 			case "DEADLINE":
 				endDate = ((Deadline)task).getEndDate().toString();
 				endTime = ((Deadline)task).getEndTime().toString();
 				strTask = description  + " " + endDate + " " + endTime;
-				
-				deadlineArray = deleteSpecificTask(deadlineArray, strTask);
+				//System.out.println(strTask);
+				deadlineArray = deleteDeadlineTask(deadlineArray, strTask);
 				break;
 			case "FLOATING":
 				strTask = description;
-				floatingArray = deleteSpecificTask(floatingArray, strTask);
+				//System.out.println(strTask);
+				floatingArray = deleteFloatingTask(floatingArray, strTask);
 				break;
 			default:
 				System.out.println("Delete task in JsonFile.java do nothings");
 			
 		}
+		
 		obj.put("EVENT", eventArray);
 		obj.put("DEADLINE", deadlineArray);
 		obj.put("FLOATING", floatingArray);
@@ -183,25 +187,56 @@ public class JsonFile {
 		
 	}
 	
-	private JSONArray deleteSpecificTask(JSONArray array, String deleteTask){
+	
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private JSONArray deleteEventTask(JSONArray array, String deleteTask){
 		//concept in eventTaskArray, deadlineTaskArray, floatingTaskArray
 		
-		ArrayList<Task> eventTaskList = new ArrayList<Task>();
+		JSONArray eventArray = new JSONArray();
 		JSONParser jsonParser = new JSONParser();
+			
+		String strContent = array.toJSONString().substring(1, array.toJSONString().length()-1);
+		
+		String contentArr[] = strContent.split("\\}");
+		
+		for(int i=0; i<contentArr.length; i++){
+			if(i!=0){
+				contentArr[i] = contentArr[i].substring(1);
+			}
+			contentArr[i] += "}";
+		}
 		
 		for(int i=0; i<array.size(); i++){
 			
 			try{
-				JSONObject obj = (JSONObject) jsonParser.parse(array.get(i).toString().replace("\\", ""));
-			
+				
+				//System.out.println(eArray.toJSONString().substring(1, eArray.toJSONString().length()-1));
+				
+				JSONObject obj = (JSONObject) jsonParser.parse(contentArr[i]);
+				
+				
+				String description = obj.get("task").toString();
 				String startDate = obj.get("start-date").toString();
 				String endDate = obj.get("end-date").toString();
 				String startTime = obj.get("start-time").toString();
 				String endTime = obj.get("end-time").toString();
 			
-				String description = obj.get("task").toString();
+				
 				
 				String strTask = description + " " + startDate + " " + startTime + " " + endDate + " " + endTime;
+				
+				if(!strTask.equals(deleteTask)){
+					Map eventMap = new LinkedHashMap();
+					
+					eventMap.put("task", description);
+					eventMap.put("start-date", startDate);
+					eventMap.put("start-time", endDate);
+					eventMap.put("end-date", startTime);
+					eventMap.put("end-time", endTime);
+					
+					eventArray.add(eventMap);
+				}
 			
 				//If strTask == deletetask dun include in the new JSONArray
 				
@@ -209,30 +244,127 @@ public class JsonFile {
 			}catch (ParseException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			} catch (NoSuchFieldException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (java.text.ParseException e1) {
+			}
+		}
+		
+		return eventArray;
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private JSONArray deleteDeadlineTask(JSONArray array, String deleteTask){
+		//concept in eventTaskArray, deadlineTaskArray, floatingTaskArray
+		
+		JSONArray deadlineArray = new JSONArray();
+		JSONParser jsonParser = new JSONParser();
+			
+		String strContent = array.toJSONString().substring(1, array.toJSONString().length()-1);
+		
+		String contentArr[] = strContent.split("\\}");
+		
+		for(int i=0; i<contentArr.length; i++){
+			if(i!=0){
+				contentArr[i] = contentArr[i].substring(1);
+			}
+			contentArr[i] += "}";
+		}
+		
+		for(int i=0; i<array.size(); i++){
+			
+			try{
+				
+				//System.out.println(eArray.toJSONString().substring(1, eArray.toJSONString().length()-1));
+				
+				JSONObject obj = (JSONObject) jsonParser.parse(contentArr[i]);
+				
+				
+				String description = obj.get("task").toString();
+				String endDate = obj.get("end-date").toString();
+				String endTime = obj.get("end-time").toString();
+			
+				
+				
+				String strTask = description + " " + endDate + " " + endTime;
+				
+				if(!strTask.equals(deleteTask)){
+					Map deadlineMap = new LinkedHashMap();
+					
+					deadlineMap.put("task", description);
+					deadlineMap.put("end-date", endDate);
+					deadlineMap.put("end-time", endTime);
+					
+					deadlineArray.add(deadlineMap);
+				}
+			
+				//If strTask == deletetask dun include in the new JSONArray
+				
+		
+			}catch (ParseException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
 		
+		return deadlineArray;
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private JSONArray deleteFloatingTask(JSONArray array, String deleteTask){
+		//concept in eventTaskArray, deadlineTaskArray, floatingTaskArray
+		
+		JSONArray floatingArray = new JSONArray();
+		JSONParser jsonParser = new JSONParser();
+			
+		String strContent = array.toJSONString().substring(1, array.toJSONString().length()-1);
+		
+		String contentArr[] = strContent.split("\\}");
+		
+		for(int i=0; i<contentArr.length; i++){
+			if(i!=0){
+				contentArr[i] = contentArr[i].substring(1);
+			}
+			contentArr[i] += "}";
+		}
+		
+		for(int i=0; i<array.size(); i++){
+			
+			try{
+				
+				//System.out.println(eArray.toJSONString().substring(1, eArray.toJSONString().length()-1));
+				
+				JSONObject obj = (JSONObject) jsonParser.parse(contentArr[i]);
+				
+				
+				String description = obj.get("task").toString();
+					
+				
+				String strTask = description;
+				
+				if(!strTask.equals(deleteTask)){
+					Map floatingMap = new LinkedHashMap();
+					
+					floatingMap.put("task", description);
+					
+					floatingArray.add(floatingMap);
+				}
+			
+				//If strTask == deletetask dun include in the new JSONArray
+				
+		
+			}catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
+		return floatingArray;
 	}
 	
 	private String determineTaskType(Task task){
-		String startDate, endDate;
 		
-		startDate = ((Event)task).getStartDate().toString();
-		endDate = ((Deadline)task).getEndDate().toString();
+		String taskType = task.getClass().toString().substring(11).toUpperCase();
 		
-		if(startDate != null && endDate != null){
-			return "EVENT";
-		}else if(startDate== null && endDate != null){
-			return "DEADLINE";
-		}else{
-			return "FLOATING";
-		}
+		return taskType;
+			
 	}
 	
 	private ArrayList<Task> searchEvent(String keyword, JSONArray event){
@@ -334,8 +466,12 @@ public class JsonFile {
 		for(int i=0; i<event.size(); i++){
 			
 			try{
+				//System.out.println("raw: " + event.get(i).toString());
+				
 				JSONObject obj = (JSONObject) jsonParser.parse(event.get(i).toString().replace("\\", ""));
-			
+				
+				//System.out.println("obj: " + obj);
+				
 				String strStartDate = obj.get("start-date").toString();
 				String strEndDate = obj.get("end-date").toString();
 				String strStartTime = obj.get("start-time").toString();
@@ -482,7 +618,7 @@ public class JsonFile {
 		JSONArray deadlineArray =  deadlineJsonArray(contentList.get(1));
 		JSONArray floatingArray =  floatingJsonArray(contentList.get(2));
 		
-		
+		//System.out.println("Write:" + eventArray.toJSONString());
 		
 		switch(taskType){
 			case "EVENT":
@@ -503,7 +639,7 @@ public class JsonFile {
 		obj.put("FLOATING", floatingArray);
 		
 		
-		
+		//System.out.println("obj: " + obj);
 		
 		 StringWriter out = new StringWriter();
 		   try {
@@ -624,7 +760,7 @@ public class JsonFile {
 				eventMap.put("end-time", jsonObject.get("end-time"));
 				
 				
-			
+				
 				eventArray.add(eventMap);
 				
 			}

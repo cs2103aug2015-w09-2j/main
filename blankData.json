@@ -3,3 +3,6 @@
 "DEADLINE":[],
 "FLOATING":[]
 }
+
+
+{"EVENT":[{"task":"jad","start-date":"10/1/2015","start-time":"1500","end-date":"10/1/2015","end-time":"1700"},{"task":"jad","start-date":"10/1/2015","start-time":"1500","end-date":"10/1/2015","end-time":"1700"}],"DEADLINE":[{"task":"eejade","end-date":"3/1/2015","end-time":"1500"}],"FLOATING":[{"task":"jade"}]}
