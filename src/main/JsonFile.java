@@ -87,9 +87,12 @@ public class JsonFile {
 	
 	private void isFileEmpty(){
 		File file = new File(filePath);
+		
 		jsonContent.isJsonFileEmpty(file);
 	}
 	public ArrayList<ArrayList<Task>> search(String keyword){
+		isFileEmpty();
+		
 		ArrayList<ArrayList<Task>> searchResult = new ArrayList<ArrayList<Task>>();
 		ArrayList<JSONArray> content = getJsonFileContent();
 		
