@@ -10,8 +10,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-
+import javafx.scene.layout.Pane;
 import main.ui.MainApp;
 
 import main.Task;
@@ -24,25 +25,15 @@ public class MainLayoutController {
 	private MainApp mainApp;
 
 	private ObservableList<Task> tasks; // task is retrieved from MainApp; events, deadlines, and floatings are use to separate tasks
-	private ObservableList<Event> events;
-	private ObservableList<Deadline> deadlines;
-	private ObservableList<Floating> floatingTasks;
 
 
 	// Fields for binding to UI components
 	@FXML
-	private ListView<Event> eventsListView;
-	@FXML
-	private ListView<Deadline> deadlinesListView;
-	@FXML
-	private ListView<Floating> floatingTasksListView;
+	private TableView<Task> tasksTable;
 	@FXML
 	private TextField commandBox;
 
 	public MainLayoutController() {
-		events = FXCollections.observableArrayList();
-		deadlines = FXCollections.observableArrayList();
-		floatingTasks = FXCollections.observableArrayList();
 	}
 
 	public void initialize() {
@@ -58,8 +49,7 @@ public class MainLayoutController {
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
 		getTasks();
-		separateTasks();
-		setupListViews();
+		setupTableView();
 	}
 
 	private void getTasks() {
@@ -67,7 +57,7 @@ public class MainLayoutController {
 		System.out.println(tasks.size());
 	}
 
-	private void setupListViews() {
+	private void setupTableView() {
 
 		tasks.addListener(new ListChangeListener<Task>() {
 			@Override
@@ -81,24 +71,7 @@ public class MainLayoutController {
 			}
 		});
 
-		eventsListView.setItems(events);
-		deadlinesListView.setItems(deadlines);
-		floatingTasksListView.setItems(floatingTasks);
-	}
-
-	private void separateTasks() {
-		for (int i = 0; i < tasks.size(); i++) {
-			Task aTask = tasks.get(i);
-			if (aTask instanceof Event) {
-				events.add((Event) aTask);
-			}
-			else if (aTask instanceof Deadline) {
-				deadlines.add((Deadline) aTask);
-			}
-			else {
-				floatingTasks.add((Floating) aTask);
-			}
-		}
+		tasksTable.setItems(tasks);
 	}
 
 	@FXML
@@ -108,6 +81,16 @@ public class MainLayoutController {
 		// mainApp.processCommand(command);
 		tasks.add(new Floating(command));
 		commandBox.setText("");
+	}
+
+	public void hideHeader() {
+        Pane header = (Pane) tasksTable.lookup("TableHeaderRow");
+        if (header.isVisible()){
+            header.setMaxHeight(0);
+            header.setMinHeight(0);
+            header.setPrefHeight(0);
+            header.setVisible(false);
+        }
 	}
 
 	/*

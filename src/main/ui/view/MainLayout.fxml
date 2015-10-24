@@ -7,22 +7,24 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.ui.view.MainLayoutController">
    <children>
       <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="575.0" prefWidth="900.0">
          <children>
-            <TableView layoutX="274.0" layoutY="77.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <TableView fx:id="tasksTable" layoutX="274.0" layoutY="77.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="No" />
-                <TableColumn prefWidth="75.0" text="Task" />
-                  <TableColumn prefWidth="83.0" text="Start time" />
-                  <TableColumn prefWidth="67.0" text="End time" />
+                <TableColumn prefWidth="40.0" text="No" />
+                <TableColumn prefWidth="600.0" text="Task" />
+                  <TableColumn prefWidth="130.0" text="Start time" />
+                  <TableColumn prefWidth="130.0" text="End time" />
               </columns>
             </TableView>
          </children>
       </AnchorPane>
-      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="900.0" />
+      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="900.0">
+         <children>
+            <TextField fx:id="commandBox" layoutX="60.0" layoutY="-15.0" prefHeight="35.0" prefWidth="800.0" promptText="Enter your command here..." AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0" />
+         </children></AnchorPane>
       <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="900.0" />
    </children>
 </VBox>

@@ -13,8 +13,7 @@ import javafx.fxml.FXMLLoader;
 
 import javafx.scene.Scene;
 
-import javafx.scene.layout.GridPane;
-
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import main.ui.view.MainLayoutController;
@@ -25,7 +24,7 @@ import main.Task;
 public class MainApp extends Application {
 
 	private Stage primaryStage;
-	private GridPane mainLayout;
+	private VBox mainLayout;
 	private ObservableList<Task> tasks; // previously was <String>
 	private ObservableList<Task> dummyTasks; // for testing because the app doesn't work
 	private Logic logic;
@@ -57,7 +56,7 @@ public class MainApp extends Application {
 			// Load the scene graph from MainLayout.fxml
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource("view/MainLayout.fxml"));
-			mainLayout = (GridPane) loader.load();
+			mainLayout = (VBox) loader.load();
 
 			// Set up the controller
 			MainLayoutController mainLayoutController = loader.getController();
@@ -67,6 +66,7 @@ public class MainApp extends Application {
 			Scene scene = new Scene(mainLayout, 900, 600);
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			mainLayoutController.hideHeader();
 
 		}
 		catch (IOException e) {
@@ -85,7 +85,7 @@ public class MainApp extends Application {
 		this.primaryStage.setTitle("Vodo");
 		//[Ravi] made the use of singleton logic
 		logic = Logic.getInstance();
-		logic.setTasks(tasks); // >> at this point logic should fill the task
+		// logic.setTasks(tasks); // >> at this point logic should fill the task
 
 		showMainLayout();
 	}
