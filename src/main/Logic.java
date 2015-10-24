@@ -54,6 +54,7 @@ public class Logic {
 	private ObservableList<Task> tasks; // [teddy] just fill the tasks
 	private static Command.CommandType undoCommand = Command.CommandType.UNKNOWN;
 	private static Task undoTaskObject;
+	private static ArrayList<Task> taskHistory;
 
 	/**
 	 * Description Takes in the command as a string from the user input and
@@ -279,6 +280,9 @@ public class Logic {
 	 * add/delete/edit the to-do list
 	 */
 	public void fillTasks() {
-		tasks = FXCollections.observableList(fileStorage.readAllTask());
+		ArrayList<Task> asd = fileStorage.readAllTask();
+		tasks = FXCollections.observableList(asd);
+		System.out.println(asd.size());
+		
 	}
 }
