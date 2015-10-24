@@ -65,17 +65,17 @@ public class UserInterface {
 	private void processCommand(String command) {
 		boolean isSuccessful = false;
 
-		try {
+		//try {
 			isSuccessful = vodoLogic.processCommand(command);
-		}
-		catch (Exception exception) {
+		//}
+		/*catch (Exception exception) {
 			if (exception instanceof NoSuchFieldException) {
 				printToUser("No such field");
 			}
 			if (exception instanceof ParseException) {
 				printToUser(MESSAGE_INVALID_COMMAND);
 			}
-		}
+		}*/
 
 		if (isSuccessful) {
 			printToUser(MESSAGE_VALID_COMMAND);

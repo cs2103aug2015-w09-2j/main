@@ -127,7 +127,7 @@ public class Logic {
 			success = true;
 			break;
 		case UPDATE:
-			updateTask((UpdateTask) input);
+		//	updateTask((UpdateTask) input);
 			undoCommand = command;
 			undoTaskObject = null; // need to search for the Task object with
 									// the updated object description
@@ -143,11 +143,11 @@ public class Logic {
 			success = true;
 			break;
 		case SEARCH:
-			UI.displayView(search(inputString.substring(7)));
+			//UI.displayView(search(inputString.substring(7)));
 			success = true;
 			break;
 		case UNDO:
-			success = undo();
+		//	success = undo();
 			success = true;
 			break;
 		case DISPLAY:
@@ -159,7 +159,7 @@ public class Logic {
 		return success;
 	}
 
-	private boolean undo() {
+	/*private boolean undo() {
 		// TODO Auto-generated method stub
 		boolean isUndoSuccessful = false;
 		switch (undoCommand) {
@@ -177,14 +177,14 @@ public class Logic {
 			break;
 		}
 		return isUndoSuccessful;
-	}
+	}*/
 
 	/**
 	 * Description Method used to update the task
 	 * 
 	 * @param input
 	 */
-	private void updateTask(UpdateTask input) {
+	/*private void updateTask(UpdateTask input) {
 		FileData data = fileStorage.search(input.getSearchString());
 		fileStorage.delete("1", data);
 		if (input.hasStartDate()) {
@@ -198,13 +198,13 @@ public class Logic {
 			Floating floating = new Floating(input.getDescription());
 			fileStorage.writeTask(floating);
 		}
-	}
+	}*/
 
 	/**
 	 * @param substring
 	 * @return
 	 */
-	private ArrayList<Task> search(String substring) {
+	/*private ArrayList<Task> search(String substring) {
 		ArrayList<Task> output = new ArrayList<Task>();
 		FileData data = fileStorage.search(substring);
 		HashMap<Integer, String> displayMap = data.getDisplayMap();
@@ -214,7 +214,7 @@ public class Logic {
 			output.add(getTaskFromString((String) pair.getValue()));
 		}
 		return output;
-	}
+	}*/
 
 	/**
 	 * @param index
@@ -228,7 +228,7 @@ public class Logic {
 	/**
 	 * @return
 	 */
-	private ArrayList<Task> stringToTask() {
+	/*private ArrayList<Task> stringToTask() {
 		ArrayList<String> data = new ArrayList<String>();
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		data = FileStorage.readFile();
@@ -237,17 +237,17 @@ public class Logic {
 		}
 		// TODO Auto-generated method stub
 		return tasks;
-	}
+	}*/
 
 	/**
 	 * @param s
 	 * @return
 	 */
-	private Task getTaskFromString(String s) {
+	/*private Task getTaskFromString(String s) {
 		Task a = parser.parse(s).getTask();
 		// System.out.println(a.toString());
 		return parser.parse(s).getTask();
-	}
+	}*/
 
 	/**
 	 * Set the reference to MainApp
@@ -279,6 +279,6 @@ public class Logic {
 	 * add/delete/edit the to-do list
 	 */
 	public void fillTasks() {
-		tasks = FXCollections.observableList(stringToTask());
+		tasks = FXCollections.observableList(fileStorage.readAllTask());
 	}
 }
