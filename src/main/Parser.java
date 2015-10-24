@@ -126,7 +126,6 @@ public class Parser {
 			
 		return strCommand.replace(dateBuffer.pop(), "");
 	}
-	
 	private  TimeClass getTime(String strCommand){
 		String[] strSplitWords = strCommand.split(" ");
 		TimeClass time = null;
@@ -240,7 +239,7 @@ public class Parser {
 	
 	/* Parsing Methods */
 	
-	private Update parseUpdateCommand(String strCommand){
+private Update parseUpdateCommand(String strCommand){
 		
 		String strSearchString = getSearchString(strCommand);
 		
@@ -469,10 +468,10 @@ public class Parser {
 	public static void main(String[] args) throws NoSuchFieldException, ParseException{
 		Parser p = new Parser();
 		//String command = "update new swimming -d swimming";
-		String command = "add lol from 23/10 3am to next week 1733";
+		String command = "add lol from 23/10 3am to next week 0733";
 	
 		Command t = p.parse(command);
-		System.out.println(((Event)t.getTask()).getEndTime().to12HourFormat());
+		
 	
 	}
 
