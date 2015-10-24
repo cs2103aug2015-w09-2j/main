@@ -360,7 +360,41 @@ public class Parser {
 			strCommand = strCommand.replace(strStartDateAndStartTime, "");
 			
 			strDescription = strCommand;
+			
+			//NO description found!
+			if(strDescription.replaceAll(" ", "") == "" )
+				return null;
 		
+			//No startdatetime or enddatetime
+			if(startDate == null && startTime == null || endDate==null && endTime == null)
+				return null;
+			
+			if(startDate == null){
+				try {
+					startDate = new DateClass(DateHandler.getDateNow());
+				} catch (NoSuchFieldException | ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			if(endDate == null){
+				try {
+					endDate = new DateClass(DateHandler.getDateNow());
+				} catch (NoSuchFieldException | ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			if(startTime == null){
+				startTime = new TimeClass(TimeHandler.getHourNow() + "", TimeHandler.getMinuteNow() + "");
+			}
+			
+			if(endTime == null){
+				endTime = new TimeClass(TimeHandler.getHourNow() + "", TimeHandler.getMinuteNow() + "");
+			}
+			
 			command = new Command(CommandType.ADD_EVENT);
 			
 			command.setTask(new Event(strDescription, startDate, startTime, endDate, endTime));
@@ -399,6 +433,28 @@ public class Parser {
 			
 			strDescription = strCommand;
 
+			//NO description found!
+			if(strDescription.replaceAll(" ", "") == "" )
+				return null;
+		
+			//No enddatetime
+			if(endDate==null && endTime == null)
+				return null;
+			
+		
+			if(endDate == null){
+				try {
+					endDate = new DateClass(DateHandler.getDateNow());
+				} catch (NoSuchFieldException | ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			if(endTime == null){
+				endTime = new TimeClass(TimeHandler.getHourNow() + "", TimeHandler.getMinuteNow() + "");
+			}
+			
 			command = new Command(CommandType.ADD_DEADLINE);
 			
 			command.setTask(new Deadline(strDescription, endDate, endTime));
@@ -419,7 +475,6 @@ public class Parser {
 		
 	}
 	
-	
 	private Command parseSearchCommand(String strCommand){
 		//remove "search" word
 		String strSearchString = removeNWords(1, strCommand);
@@ -430,13 +485,11 @@ public class Parser {
 	private Command parseUndoCommand(String strCommand){
 		return new Undo();
 	}
-	
-	
+
 	private Command parseRedoCommand(String strCommand){
 		return new Redo();
 	}
 	
-
 	private Command parseDisplayCommand(String strCommand){
 		String displayString = removeNWords(1, strCommand);
 		return new Display(displayString);
@@ -469,7 +522,7 @@ public class Parser {
 	public static void main(String[] args) throws NoSuchFieldException, ParseException{
 		Parser p = new Parser();
 		//String command = "update new swimming -d swimming";
-		String command = "add lol by mon midnight";
+		String command = "add lol from  3pm to 5pm";
 	
 		Command t = p.parse(command);
 		System.out.println(((Event)t.getTask()).getEndTime().to12HourFormat());
