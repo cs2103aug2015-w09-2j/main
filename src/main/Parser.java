@@ -237,6 +237,14 @@ public class Parser {
 		return false;
 	}
 	
+	private boolean isADeleteCommand(String strCommand){
+		//If the first word is update
+		String strFirstWord = getWord(0, strCommand);
+		if(strFirstWord.equals("delete") || strFirstWord.equals("remove")){
+			return true;
+		}
+		return false;
+	}
 	
 	/* Parsing Methods */
 	
@@ -495,6 +503,11 @@ public class Parser {
 		return new Display(displayString);
 	}
 	
+	private Command parseDeleteCommand(String strCommand){
+		strCommand = removeNWords(1, strCommand);
+		return new Delete(strCommand);
+	}
+	
 	public  Command parse(String strCommand){
 		
 		Command parsedCommand;
@@ -511,6 +524,8 @@ public class Parser {
 			parsedCommand = parseRedoCommand(strCommand);
 		} else if(isADisplayCommand(strCommand)){
 			parsedCommand = parseDisplayCommand(strCommand);
+		} else if(isADeleteCommand(strCommand)){
+			parsedCommand = parseDeleteCommand(strCommand);
 		} else{
 			parsedCommand = null;
 		}

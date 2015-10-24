@@ -21,12 +21,16 @@ import org.json.simple.parser.ParseException;
 public class JsonFile {
 	
 	private static String filePath;
+	private static JsonFileContent jsonContent;
 	
 	public JsonFile(){
 		JsonFile.filePath = null;
+		jsonContent = new JsonFileContent();
 	}
 	public JsonFile(String filePath){
 		JsonFile.filePath = filePath;
+		jsonContent = new JsonFileContent();
+		
 	}
 	
 	
@@ -60,23 +64,35 @@ public class JsonFile {
 		}
 	}
 	
-	public ArrayList<Task> getEventTask(){		
+	//Check if file is not blank if yes write the empty json format
+	public ArrayList<Task> getEventTask(){	
+		isFileEmpty();
 		return readTask("EVENT");
 	}
 	
 	public ArrayList<Task> getDeadlineTask(){
+		isFileEmpty();
 		return readTask("DEADLINE");
 	}
 	
 	public ArrayList<Task> getFloatingTask(){
+		isFileEmpty();
 		return readTask("FLOATING");
 	}
 	
 	public ArrayList<Task> getAllTask(){
+		isFileEmpty();
 		return readTask("ALL");
 	}
 	
+	private void isFileEmpty(){
+		File file = new File(filePath);
+		
+		jsonContent.isJsonFileEmpty(file);
+	}
 	public ArrayList<ArrayList<Task>> search(String keyword){
+		isFileEmpty();
+		
 		ArrayList<ArrayList<Task>> searchResult = new ArrayList<ArrayList<Task>>();
 		ArrayList<JSONArray> content = getJsonFileContent();
 		
@@ -89,6 +105,35 @@ public class JsonFile {
 		searchResult.add(floating);
 		
 		return searchResult;
+	}
+	
+	public Task delete(Task task){
+		return deleteTask(task);
+	}
+	
+	private Task deleteTask(Task task){
+		String taskType = determineTaskType(task);
+		
+		switch(taskType){
+			
+		}
+		//24/10/2015 1500
+		return null;
+	}
+	
+	private String determineTaskType(Task task){
+		String startDate, endDate;
+		
+		startDate = ((Event)task).getStartDate().toString();
+		endDate = ((Deadline)task).getEndDate().toString();
+		
+		if(startDate != null && endDate != null){
+			return "EVENT";
+		}else if(startDate== null && endDate != null){
+			return "DEADLINE";
+		}else{
+			return "FLOATING";
+		}
 	}
 	
 	private ArrayList<Task> searchEvent(String keyword, JSONArray event){
@@ -220,15 +265,15 @@ public class JsonFile {
 		return eventTaskList;
 	}
 	
-	private ArrayList<Task> deadlineTaskArray(JSONArray event){
+	private ArrayList<Task> deadlineTaskArray(JSONArray deadline){
 		
 		ArrayList<Task> deadlineTaskList = new ArrayList<Task>();
 		JSONParser jsonParser = new JSONParser();
 		
-		for(int i=0; i<event.size(); i++){
+		for(int i=0; i<deadline.size(); i++){
 			
 			try{
-				JSONObject obj = (JSONObject) jsonParser.parse(event.get(i).toString().replace("\\", ""));
+				JSONObject obj = (JSONObject) jsonParser.parse(deadline.get(i).toString().replace("\\", ""));
 			
 				
 				String strEndDate = obj.get("end-date").toString();
