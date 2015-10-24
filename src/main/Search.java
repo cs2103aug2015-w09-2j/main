@@ -1,15 +1,23 @@
 package main;
 
-public class Search extends Command {
+import java.util.ArrayList;
 
-	private String strSearchString;
+public class Search extends Command {
 	
-	public Search(String searchString){
+	private ArrayList<String> strSearchStrings;
+	
+	public Search(){
 		super(CommandType.SEARCH);
-		this.strSearchString = searchString;
+		strSearchStrings = new ArrayList<String>();
+		 
 	}
 	
-	public String getSearchString(){
-		return strSearchString;
+	public ArrayList<String> getSearchStrings(){
+		return strSearchStrings;
 	}
+	
+	public void addSearchString(String searchString){
+		strSearchStrings.add(searchString);
+	}
+
 }
