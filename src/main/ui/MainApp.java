@@ -5,7 +5,7 @@ import java.text.ParseException;
 import java.util.ArrayList; // remove later
 
 import javafx.application.Application;
-
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -109,6 +109,10 @@ public class MainApp extends Application {
 		logic.setTasks(events, deadlines, floatings);
 
 		showMainLayout();
+	}
+
+	public void exit() {
+		Platform.exit();
 	}
 
 	public static void main(String[] args) {
