@@ -9,7 +9,7 @@ public class Update extends Command {
 	 * @param searchString
 	 */
 	public Update(UpdateTask taskToUpdate) {
-		super(null);
+		super(Command.CommandType.UPDATE);
 
 		this.taskToUpdate = taskToUpdate;
 	}

@@ -47,13 +47,14 @@ public class Logic {
 															// be deleted once
 															// we shift to GUI
 	private FileStorage fileStorage = new FileStorage();
-	//private static Command.CommandType command;
-	//private static Command.CommandType undoCommand = Command.CommandType.UNKNOWN; // most
-																					// recent
-																					// undo
-																					// command
-	//private static Task undoTaskObject;
-	//private static ArrayList<Task> taskHistory;
+	// private static Command.CommandType command;
+	// private static Command.CommandType undoCommand =
+	// Command.CommandType.UNKNOWN; // most
+	// recent
+	// undo
+	// command
+	// private static Task undoTaskObject;
+	// private static ArrayList<Task> taskHistory;
 	private static Stack<Command> undoCommandHistory;
 	private static Stack<Command> redoCommandHistory;
 	private static ArrayList<Task> allEvents;
@@ -90,11 +91,11 @@ public class Logic {
 	}
 
 	private void updateTaskLists() {
-		allEvents = new ArrayList<Task>();
-		allDeadlines = new ArrayList<Task>();
-		allFloatingTasks = new ArrayList<Task>();
-		allTasks = new ArrayList<Task>();
-		
+		// allEvents = new ArrayList<Task>();
+		// allDeadlines = new ArrayList<Task>();
+		// allFloatingTasks = new ArrayList<Task>();
+		// allTasks = new ArrayList<Task>();
+
 		allEvents = fileStorage.readEventTask();
 		allDeadlines = fileStorage.readDeadlineTask();
 		allFloatingTasks = fileStorage.readFloatingTask();
@@ -131,8 +132,8 @@ public class Logic {
 		switch (inputCommand.getCommandType()) {
 		case ADD_EVENT:
 			fileStorage.writeTask(inputCommand.getTask());
-			//undoCommand = inputCommand.getCommandType();
-			//undoTaskObject = inputCommand.getTask();
+			// undoCommand = inputCommand.getCommandType();
+			// undoTaskObject = inputCommand.getTask();
 			undoCommandHistory.push(inputCommand);
 			updateTaskLists();
 			// fillTasks(); // [teddy]
@@ -141,8 +142,8 @@ public class Logic {
 			break;
 		case ADD_DEADLINE:
 			fileStorage.writeTask(inputCommand.getTask());
-			//undoCommand = inputCommand.getCommandType();
-			//undoTaskObject = inputCommand.getTask();
+			// undoCommand = inputCommand.getCommandType();
+			// undoTaskObject = inputCommand.getTask();
 			undoCommandHistory.push(inputCommand);
 			updateTaskLists();
 			// fillTasks();
@@ -151,8 +152,8 @@ public class Logic {
 			break;
 		case ADD_FLOATING:
 			fileStorage.writeTask(inputCommand.getTask());
-			//undoCommand = inputCommand.getCommandType();
-			//undoTaskObject = inputCommand.getTask();
+			// undoCommand = inputCommand.getCommandType();
+			// undoTaskObject = inputCommand.getTask();
 			undoCommandHistory.push(inputCommand);
 			updateTaskLists();
 			// fillTasks();
@@ -164,17 +165,17 @@ public class Logic {
 			update(inputCommand);
 			// commandHistory.push(inputCommand);
 			updateTaskLists();
-			//undoCommand = inputCommand.getCommandType();
-			//undoTaskObject = null; // need to search for the Task object with
-									// the updated object description
+			// undoCommand = inputCommand.getCommandType();
+			// undoTaskObject = null; // need to search for the Task object with
+			// the updated object description
 			// fillTasks();
 			success = true;
 			break;
 		case DELETE:
 			deleteTask(inputCommand);
-			//undoCommand = inputCommand.getCommandType();
-			//undoTaskObject = null; // need to search for the Task object with
-									// the updated object description
+			// undoCommand = inputCommand.getCommandType();
+			// undoTaskObject = null; // need to search for the Task object with
+			// the updated object description
 			// fillTasks();
 			success = true;
 			break;
@@ -194,8 +195,8 @@ public class Logic {
 			success = true;
 			UI.displayView(fileStorage.readAllTask());
 			break;
-		//case EXIT:
-		//	System.exit(0);
+		// case EXIT:
+		// System.exit(0);
 		default:
 			break;
 		}
@@ -215,38 +216,39 @@ public class Logic {
 
 	private boolean redo() {
 		// TODO Auto-generated method stub
-		if(redoCommandHistory.pop()==null)
+		if (redoCommandHistory.size()== 0)
 			return false;
 		Command redoCommand = redoCommandHistory.pop();
 		Command.CommandType redoCommandType = redoCommand.getCommandType();
-		switch(redoCommandType){
+		switch (redoCommandType) {
 		case ADD_EVENT:
 		case ADD_DEADLINE:
 		case ADD_FLOATING:
 			undoCommandHistory.push(redoCommand);
 			fileStorage.writeTask(redoCommand.getTask());
+			updateRespectiveGUICol(redoCommand.getTask().getClass().getName());
 			updateTaskLists();
 			break;
 		case DELETE:
 			undoCommandHistory.push(redoCommand);
-			fileStorage.deleteTask(((Delete)redoCommand).getTaskDeleted());
+			fileStorage.deleteTask(((Delete) redoCommand).getTaskDeleted());
+			updateRespectiveGUICol((((Delete) redoCommand).getTaskDeleted().getClass().getName()));
 			updateTaskLists();
 			break;
 		case UPDATE:
-			Update undoUpdate = ((Update)redoCommand);
-			UpdateTask oldTaskUpdated = undoUpdate.getTaskToUpdate(); 
+			Update undoUpdate = ((Update) redoCommand);
+			UpdateTask oldTaskUpdated = undoUpdate.getTaskToUpdate();
 			UpdateTask newUpdatedTask = undoUpdate.getUpdatedTask();
-			undoCommandHistory.push(new Update(newUpdatedTask,oldTaskUpdated));
-			//redoCommandHistory.push(undoUpdate);
-			fileStorage.deleteTask((Task)newUpdatedTask);
-			fileStorage.writeTask((Task)oldTaskUpdated);
+			undoCommandHistory.push(new Update(newUpdatedTask, oldTaskUpdated));
+			// redoCommandHistory.push(undoUpdate);
+			fileStorage.deleteTask((Task) newUpdatedTask);
+			fileStorage.writeTask((Task) oldTaskUpdated);
 			updateTaskLists();
 			break;
 		default:
 			break;
 		}
 
-		
 		return false;
 	}
 
@@ -269,31 +271,33 @@ public class Logic {
 
 	private boolean undo() {
 		// TODO Auto-generated method stub
-		if(undoCommandHistory.pop()==null)
+		if (undoCommandHistory.size()==0)
 			return false;
 		Command undoCommand = undoCommandHistory.pop();
 		Command.CommandType undoCommandType = undoCommand.getCommandType();
-		switch(undoCommandType){
+		switch (undoCommandType) {
 		case ADD_EVENT:
 		case ADD_DEADLINE:
 		case ADD_FLOATING:
 			redoCommandHistory.push(undoCommand);
 			fileStorage.deleteTask(undoCommand.getTask());
+			updateRespectiveGUICol(undoCommand.getTask().getClass().getName());
 			updateTaskLists();
 			break;
 		case DELETE:
 			redoCommandHistory.push(undoCommand);
-			fileStorage.writeTask(((Delete)undoCommand).getTaskDeleted());
+			fileStorage.writeTask(((Delete) undoCommand).getTaskDeleted());
 			updateTaskLists();
+			updateRespectiveGUICol((((Delete) undoCommand).getTaskDeleted().getClass().getName()));
 			break;
 		case UPDATE:
-			Update undoUpdate = ((Update)undoCommand);
-			UpdateTask oldTaskUpdated = undoUpdate.getTaskToUpdate(); 
+			Update undoUpdate = ((Update) undoCommand);
+			UpdateTask oldTaskUpdated = undoUpdate.getTaskToUpdate();
 			UpdateTask newUpdatedTask = undoUpdate.getUpdatedTask();
-			redoCommandHistory.push(new Update(newUpdatedTask,oldTaskUpdated));
-			//redoCommandHistory.push(undoUpdate);
-			fileStorage.deleteTask((Task)newUpdatedTask);
-			fileStorage.writeTask((Task)oldTaskUpdated);
+			redoCommandHistory.push(new Update(newUpdatedTask, oldTaskUpdated));
+			// redoCommandHistory.push(undoUpdate);
+			fileStorage.deleteTask((Task) newUpdatedTask);
+			fileStorage.writeTask((Task) oldTaskUpdated);
 			updateTaskLists();
 			break;
 		default:
@@ -318,18 +322,11 @@ public class Logic {
 	private void update(Command inputCommand) {
 		Update updateCommand = (Update) inputCommand;
 		UpdateTask processUpdate = (UpdateTask) updateCommand.getTask();
-		ArrayList<ArrayList<Task>> searchResult = fileStorage.search(processUpdate.getSearchString());
+		//System.out.println(processUpdate.getSearchString());
 		Task taskToUpdate;
-		if (searchResult.get(0) != null)
-			taskToUpdate = (Event) searchResult.get(0).get(0);
-		else if (searchResult.get(1) != null)
-			taskToUpdate = (Deadline) searchResult.get(0).get(0);
-		else if (searchResult.get(2) != null)
-			taskToUpdate = (Floating) searchResult.get(0).get(0);
-		else
-			taskToUpdate = null;
-		// updateCommand.setTaskToUpdate((UpdateTask) taskToUpdate);
-		fileStorage.deleteTask(updateCommand.getTaskToUpdate());
+		taskToUpdate = fileStorage.searchAllTask(processUpdate.getSearchString()).get(0);
+		fileStorage.deleteTask(taskToUpdate);
+		updateRespectiveGUICol(taskToUpdate.getClass().getName());
 		Task updatedTask;
 		if (processUpdate.hasStartDate()) {
 			updatedTask = new Event(processUpdate.getDescription(), processUpdate.getStartDate(),
@@ -345,28 +342,54 @@ public class Logic {
 		updateTaskLists();
 	}
 
-	/**
-	 * @param index
-	 */
 	private void deleteTask(Command inputCommand) {
 		Delete deleteCommand = ((Delete) inputCommand);
 		Task taskToDelete = null;
-		if (deleteCommand.hasDeleteString()) {
-			ArrayList<ArrayList<Task>> searchResult = fileStorage.search(deleteCommand.getDeleteString());
-			if (searchResult.get(0) != null)
-				taskToDelete = (Event) searchResult.get(0).get(0);
-			else if (searchResult.get(1) != null)
-				taskToDelete = (Deadline) searchResult.get(0).get(0);
-			else if (searchResult.get(2) != null)
-				taskToDelete = (Floating) searchResult.get(0).get(0);
-			else
-				taskToDelete = null;
+		if(deleteCommand.hasDeleteString()){
+			taskToDelete = fileStorage.searchAllTask(deleteCommand.getDeleteString()).get(0);
 		}
+		String deleteTaskType = taskToDelete.getClass().getName();
+		updateRespectiveGUICol(deleteTaskType);
 		fileStorage.deleteTask(taskToDelete);
 		deleteCommand.setTaskDeleted(taskToDelete);
 		undoCommandHistory.push(deleteCommand);
 		updateTaskLists();
 	}
+
+	private void updateRespectiveGUICol(String taskType) {
+		switch(taskType){
+		case "main.Event" :
+			fillEvents();
+			break;
+		case "main.Deadline":
+			fillDeadlines();
+			break;
+		case "main.Floating":
+			fillFloatings();
+			break;
+		default :
+			System.out.println(taskType);
+			break;	
+		}
+	}
+
+	/**
+	 * @param index
+	 */
+	/*
+	 * private void deleteTask(Command inputCommand) { Delete deleteCommand =
+	 * ((Delete) inputCommand); Task taskToDelete = null; if
+	 * (deleteCommand.hasDeleteString()) { ArrayList<ArrayList<Task>>
+	 * searchResult = fileStorage.search(deleteCommand.getDeleteString()); if
+	 * (searchResult.get(0) != null) taskToDelete = (Event)
+	 * searchResult.get(0).get(0); else if (searchResult.get(1) != null)
+	 * taskToDelete = (Deadline) searchResult.get(0).get(0); else if
+	 * (searchResult.get(2) != null) taskToDelete = (Floating)
+	 * searchResult.get(0).get(0); else taskToDelete = null; }
+	 * fileStorage.deleteTask(taskToDelete);
+	 * deleteCommand.setTaskDeleted(taskToDelete);
+	 * undoCommandHistory.push(deleteCommand); updateTaskLists(); }
+	 */
 
 	/**
 	 * @return
@@ -436,16 +459,16 @@ public class Logic {
 
 	public void fillEvents() {
 		events.setAll(fileStorage.readEventTask());
-		//events.setAll(allEvents);
+		// events.setAll(allEvents);
 	}
 
 	public void fillDeadlines() {
 		deadlines.setAll(fileStorage.readDeadlineTask());
-		//deadlines.setAll(allDeadlines);
+		// deadlines.setAll(allDeadlines);
 	}
 
 	public void fillFloatings() {
 		floatings.setAll(fileStorage.readFloatingTask());
-		//floatings.setAll(allFloatingTasks);
+		// floatings.setAll(allFloatingTasks);
 	}
 }
