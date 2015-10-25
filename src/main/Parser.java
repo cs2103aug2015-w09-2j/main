@@ -250,6 +250,7 @@ public class Parser {
 	
 	private Update parseUpdateCommand(String strCommand){
 		
+		strCommand = removeNWords(1, strCommand);
 		String strSearchString = getSearchString(strCommand);
 		
 		UpdateTask updateTask = new UpdateTask(strSearchString);
@@ -560,7 +561,7 @@ public class Parser {
 		Parser p = new Parser();
 		
 		//String command = "update new swimming -d swimming";
-		String command = "search 25/10 everything";
+		String command = "update laundry -d new laundry";
 	
 		Command t = p.parse(command);
 		System.out.println(((Event)t.getTask()).getEndTime().to12HourFormat());
