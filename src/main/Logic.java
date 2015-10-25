@@ -52,7 +52,8 @@ public class Logic {
 																					// command
 	//private static Task undoTaskObject;
 	//private static ArrayList<Task> taskHistory;
-	private static Stack<Command> commandHistory;
+	private static Stack<Command> undoCommandHistory;
+	private static Stack<Command> redoCommandHistory;
 	private static ArrayList<Task> allEvents;
 	private static ArrayList<Task> allDeadlines;
 	private static ArrayList<Task> allFloatingTasks;
@@ -125,7 +126,7 @@ public class Logic {
 			fileStorage.writeTask(inputCommand.getTask());
 			//undoCommand = inputCommand.getCommandType();
 			//undoTaskObject = inputCommand.getTask();
-			commandHistory.push(inputCommand);
+			undoCommandHistory.push(inputCommand);
 			updateTaskLists();
 			// fillTasks(); // [teddy]
 			fillEvents();
@@ -135,7 +136,7 @@ public class Logic {
 			fileStorage.writeTask(inputCommand.getTask());
 			//undoCommand = inputCommand.getCommandType();
 			//undoTaskObject = inputCommand.getTask();
-			commandHistory.push(inputCommand);
+			undoCommandHistory.push(inputCommand);
 			updateTaskLists();
 			// fillTasks();
 			fillDeadlines();
@@ -145,7 +146,7 @@ public class Logic {
 			fileStorage.writeTask(inputCommand.getTask());
 			//undoCommand = inputCommand.getCommandType();
 			//undoTaskObject = inputCommand.getTask();
-			commandHistory.push(inputCommand);
+			undoCommandHistory.push(inputCommand);
 			updateTaskLists();
 			// fillTasks();
 			fillFloatings();
@@ -207,6 +208,38 @@ public class Logic {
 
 	private boolean redo() {
 		// TODO Auto-generated method stub
+		if(redoCommandHistory.pop()==null)
+			return false;
+		Command redoCommand = redoCommandHistory.pop();
+		Command.CommandType redoCommandType = redoCommand.getCommandType();
+		switch(redoCommandType){
+		case ADD_EVENT:
+		case ADD_DEADLINE:
+		case ADD_FLOATING:
+			undoCommandHistory.push(redoCommand);
+			fileStorage.writeTask(redoCommand.getTask());
+			updateTaskLists();
+			break;
+		case DELETE:
+			undoCommandHistory.push(redoCommand);
+			fileStorage.deleteTask(((Delete)redoCommand).getTaskDeleted());
+			updateTaskLists();
+			break;
+		case UPDATE:
+			Update undoUpdate = ((Update)redoCommand);
+			UpdateTask oldTaskUpdated = undoUpdate.getTaskToUpdate(); 
+			UpdateTask newUpdatedTask = undoUpdate.getUpdatedTask();
+			undoCommandHistory.push(new Update(newUpdatedTask,oldTaskUpdated));
+			//redoCommandHistory.push(undoUpdate);
+			fileStorage.deleteTask((Task)newUpdatedTask);
+			fileStorage.writeTask((Task)oldTaskUpdated);
+			updateTaskLists();
+			break;
+		default:
+			break;
+		}
+
+		
 		return false;
 	}
 
@@ -229,7 +262,37 @@ public class Logic {
 
 	private boolean undo() {
 		// TODO Auto-generated method stub
-		return false;
+		if(undoCommandHistory.pop()==null)
+			return false;
+		Command undoCommand = undoCommandHistory.pop();
+		Command.CommandType undoCommandType = undoCommand.getCommandType();
+		switch(undoCommandType){
+		case ADD_EVENT:
+		case ADD_DEADLINE:
+		case ADD_FLOATING:
+			redoCommandHistory.push(undoCommand);
+			fileStorage.deleteTask(undoCommand.getTask());
+			updateTaskLists();
+			break;
+		case DELETE:
+			redoCommandHistory.push(undoCommand);
+			fileStorage.writeTask(((Delete)undoCommand).getTaskDeleted());
+			updateTaskLists();
+			break;
+		case UPDATE:
+			Update undoUpdate = ((Update)undoCommand);
+			UpdateTask oldTaskUpdated = undoUpdate.getTaskToUpdate(); 
+			UpdateTask newUpdatedTask = undoUpdate.getUpdatedTask();
+			redoCommandHistory.push(new Update(newUpdatedTask,oldTaskUpdated));
+			//redoCommandHistory.push(undoUpdate);
+			fileStorage.deleteTask((Task)newUpdatedTask);
+			fileStorage.writeTask((Task)oldTaskUpdated);
+			updateTaskLists();
+			break;
+		default:
+			break;
+		}
+		return true;
 	}
 
 	/**
@@ -271,7 +334,7 @@ public class Logic {
 			updatedTask = new Floating(processUpdate.getDescription());
 		}
 		fileStorage.writeTask(updatedTask);
-		commandHistory.push(new Update((UpdateTask) taskToUpdate, (UpdateTask) updatedTask));
+		undoCommandHistory.push(new Update((UpdateTask) taskToUpdate, (UpdateTask) updatedTask));
 		updateTaskLists();
 	}
 
@@ -294,7 +357,7 @@ public class Logic {
 		}
 		fileStorage.deleteTask(taskToDelete);
 		deleteCommand.setTaskDeleted(taskToDelete);
-		commandHistory.push(deleteCommand);
+		undoCommandHistory.push(deleteCommand);
 		updateTaskLists();
 	}
 
