@@ -200,7 +200,7 @@ public class Logic {
 	 * ADD_DEADLINE: case ADD_FLOATING: fileStorage.delete("1",
 	 * fileStorage.search(undoTaskObject.getDescription())); isUndoSuccessful =
 	 * true; break; case DELETE:
-	 * 
+	 *
 	 * break; case UPDATE: updateTask((UpdateTask) undoTaskObject); break; }
 	 * return isUndoSuccessful; }
 	 */
@@ -374,6 +374,5 @@ public class Logic {
 
 	public void fillFloatings() {
 		floatings.setAll(fileStorage.readFloatingTask());
-		System.out.println(floatings.size());
 	}
 }
