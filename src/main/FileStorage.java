@@ -89,8 +89,23 @@ public class FileStorage {
 	
 	public void deleteTask(Task task){
 		json.delete(task);
+
+	}
+	public ArrayList<Task>searchEventTask(String keyword){
+		return json.searchEventTask(keyword);
 	}
 	
+	public ArrayList<Task>searchDeadlineTask(String keyword){
+		return json.searchDeadlineTask(keyword);
+	}
+	
+	public ArrayList<Task>searchFloatingTask(String keyword){
+		return json.searchFloatingTask(keyword);
+	}
+	
+	public ArrayList<Task>searchAllTask(String keyword){
+		return json.searchAllTask(keyword);
+	}
 	/**
 	 * ArrayList.get(0) --> ArrayList<Task> [Events]
 	 * ArrayList.get(1) --> ArrayList<Task> [Deadline]
