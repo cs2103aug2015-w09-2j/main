@@ -12,7 +12,7 @@ public class CommandType {
 		ADD_DEADLINE("-d"), ADD_EVENT("-e"), ADD_FLOATING("-f"),
 		UPDATE("update"), DELETE("delete"), DISPLAY("display"), SEARCH("search"),
 		UNDO("undo"),REDO("redo"),
-		UNKNOWN("");
+		UNKNOWN(""), EXIT("exit");
 
 		private String strCommand;
 

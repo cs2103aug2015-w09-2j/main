@@ -1,23 +1,40 @@
 package main;
 
-public class Update extends Command{
+public class Update extends Command {
 
-	private UpdateTask updateTask;
-	
-	
+	private UpdateTask taskToUpdate;
+	private UpdateTask updatedTask;
+
 	/**
 	 * @param searchString
 	 */
-	public Update(UpdateTask updateTask){
+	public Update(UpdateTask taskToUpdate) {
 		super(null);
-		
-		this.updateTask = updateTask;
-	}
-	
-	public UpdateTask getUpdateTask(){
-		return updateTask;
+
+		this.taskToUpdate = taskToUpdate;
 	}
 
+	public Update(UpdateTask taskToUpdate, UpdateTask updatedTask) {
+		super(null);
+
+		this.taskToUpdate = taskToUpdate;
+		this.updatedTask = updatedTask;
+	}
+
+	public UpdateTask getTaskToUpdate() {
+		return taskToUpdate;
+	}
+
+	public void setTaskToUpdate(UpdateTask taskToUpdate){
+		this.updatedTask = taskToUpdate;
+	}
+
+	public void setUpdatedTask(UpdateTask updatedTask){
+		this.updatedTask = updatedTask;
+	}
 	
-	
+	public UpdateTask getUpdatedTask() {
+		return updatedTask;
+	}
+
 }
