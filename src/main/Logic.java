@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Stack;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,7 +18,7 @@ import main.ui.MainApp;
  */
 public class Logic {
 	private String fileName;
-	private static int numOfLogics = 0;
+	private static Logic oneLogic = null;
 
 	/**
 	 * Description Constructor : Creates and instance of the Logic class with
@@ -30,12 +31,10 @@ public class Logic {
 	 */
 
 	public static Logic getInstance() {
-		if (numOfLogics == 0) {
-			numOfLogics++;
-			return new Logic();
-		} else {
-			return null;
-		}
+		if (oneLogic == null) {;
+			oneLogic =  new Logic();
+		} 
+		return oneLogic;
 	}
 
 	/**
@@ -53,7 +52,7 @@ public class Logic {
 	private static Command.CommandType undoCommand = Command.CommandType.UNKNOWN;
 	private static Task undoTaskObject;
 	private static ArrayList<Task> taskHistory;
-
+	private static Stack<Command> commandHistory;
 	private MainApp mainApp; // [teddy] reference to UI
 	// private ObservableList<Task> tasks; // [teddy] just fill the tasks
 	private ObservableList<Task> events;
@@ -298,13 +297,8 @@ public class Logic {
 	 * Added by Teddy Ravi, you can just call this method every time user
 	 * add/delete/edit the to-do list
 	 */
-<<<<<<< HEAD
-	public void fillTasks() {
-		ArrayList<Task> asd = fileStorage.readAllTask();
-		tasks = FXCollections.observableList(asd);
-		System.out.println(asd.size());
 		
-=======
+
 /*	public void fillTasks() {
 		tasks.setAll(fileStorage.readAllTask());
 	}*/
@@ -320,6 +314,5 @@ public class Logic {
 	public void fillFloatings() {
 		floatings.setAll(fileStorage.readFloatingTask());
 		System.out.println(floatings.size());
->>>>>>> c069c5cd42542ba3713eb63bf0186ab4f87dff65
 	}
 }
