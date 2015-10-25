@@ -4,6 +4,7 @@ public class Delete extends Command{
 
 	String strDeleteString;
 	Integer intTaskID;
+	Task taskDeleted;
 	
 	public Delete(String input){
 		super(CommandType.DELETE);
@@ -20,10 +21,19 @@ public class Delete extends Command{
 				strDeleteString = input;
 			}
 		}
+		taskDeleted = null;
 	}
 	
 	public String getDeleteString(){
 		return strDeleteString;
+	}
+	
+	public void setTaskDeleted(Task taskDeleted){
+		this.taskDeleted = taskDeleted;
+	}
+	
+	public Task getTaskDeleted(){
+		return taskDeleted;
 	}
 	
 	public int getTaskID(){
