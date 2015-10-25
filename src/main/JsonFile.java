@@ -88,6 +88,30 @@ public class JsonFile {
 		return readTask("ALL");
 	}
 	
+	public ArrayList<Task> searchEventTask(String keyword){
+		ArrayList<JSONArray> content = getJsonFileContent();
+		isFileEmpty();
+		return searchEvent(keyword, content.get(0));
+	}
+	
+	public ArrayList<Task> searchDeadlineTask(String keyword){
+		ArrayList<JSONArray> content = getJsonFileContent();
+		isFileEmpty();
+		return searchDeadline(keyword, content.get(1));
+	}
+	
+	public ArrayList<Task> searchFloatingTask(String keyword){
+		ArrayList<JSONArray> content = getJsonFileContent();
+		isFileEmpty();
+		return searchFloating(keyword, content.get(2));
+	}
+	
+	public ArrayList<Task> searchAllTask(String keyword){
+		isFileEmpty();
+		return searchAll(keyword);
+	}
+	
+	
 	private void isFileEmpty(){
 		File file = new File(filePath);
 		
@@ -436,6 +460,26 @@ public class JsonFile {
 		}
 		
 		return searchList;
+	}
+	
+	private ArrayList<Task> searchAll(String keyword){
+		ArrayList<JSONArray> content = getJsonFileContent();
+		ArrayList<Task> event = searchEvent(keyword, content.get(0));
+		ArrayList<Task> deadline = searchDeadline(keyword, content.get(1));
+		ArrayList<Task> floating = searchFloating(keyword, content.get(2));
+		ArrayList<Task> allTasks = new ArrayList<Task>();
+		
+		for(int i=0; i<event.size(); i++){
+			allTasks.add(event.get(i));
+		}
+		for(int i=0; i<deadline.size(); i++){
+			allTasks.add(deadline.get(i));
+		}
+		for(int i=0; i<floating.size(); i++){
+			allTasks.add(floating.get(i));
+		}
+		
+		return allTasks;
 	}
 	
 	private ArrayList<Task> readTask(String taskType){
