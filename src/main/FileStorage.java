@@ -89,6 +89,7 @@ public class FileStorage {
 	
 	public void deleteTask(Task task){
 		json.delete(task);
+
 	}
 	
 	/**

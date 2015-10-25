@@ -112,7 +112,12 @@ public class JsonFile {
 	}
 	
 	public void delete(Task task){
-		deleteTask(task);
+		File file = new File(filePath);
+		if(task != null){
+			if(file.exists()){
+				deleteTask(task);
+			}
+		}
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
