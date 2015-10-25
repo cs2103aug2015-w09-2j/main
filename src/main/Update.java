@@ -15,7 +15,7 @@ public class Update extends Command {
 	}
 
 	public Update(UpdateTask taskToUpdate, UpdateTask updatedTask) {
-		super(null);
+		super(Command.CommandType.UPDATE);
 
 		this.taskToUpdate = taskToUpdate;
 		this.updatedTask = updatedTask;

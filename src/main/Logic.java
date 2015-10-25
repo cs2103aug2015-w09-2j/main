@@ -292,12 +292,14 @@ public class Logic {
 			break;
 		case UPDATE:
 			Update undoUpdate = ((Update) undoCommand);
-			UpdateTask oldTaskUpdated = undoUpdate.getTaskToUpdate();
-			UpdateTask newUpdatedTask = undoUpdate.getUpdatedTask();
-			redoCommandHistory.push(new Update(newUpdatedTask, oldTaskUpdated));
+			Task oldTaskUpdated = undoUpdate.getTaskToUpdate();
+			Task newUpdatedTask = undoUpdate.getUpdatedTask();
+			redoCommandHistory.push(new Update(taskToUpdateTask(newUpdatedTask), taskToUpdateTask(oldTaskUpdated)));
 			// redoCommandHistory.push(undoUpdate);
-			fileStorage.deleteTask((Task) newUpdatedTask);
-			fileStorage.writeTask((Task) oldTaskUpdated);
+			fileStorage.deleteTask(newUpdatedTask);
+			fileStorage.writeTask(oldTaskUpdated);
+			updateRespectiveGUICol(newUpdatedTask.getClass().getName());
+			updateRespectiveGUICol(oldTaskUpdated.getClass().getName());
 			updateTaskLists();
 			break;
 		default:
@@ -321,7 +323,7 @@ public class Logic {
 
 	private void update(Command inputCommand) {
 		Update updateCommand = (Update) inputCommand;
-		UpdateTask processUpdate = (UpdateTask) updateCommand.getTask();
+		UpdateTask processUpdate = (UpdateTask) updateCommand.getTaskToUpdate();
 		//System.out.println(processUpdate.getSearchString());
 		Task taskToUpdate;
 		taskToUpdate = fileStorage.searchAllTask(processUpdate.getSearchString()).get(0);
@@ -338,10 +340,30 @@ public class Logic {
 			updatedTask = new Floating(processUpdate.getDescription());
 		}
 		fileStorage.writeTask(updatedTask);
-		undoCommandHistory.push(new Update((UpdateTask) taskToUpdate, (UpdateTask) updatedTask));
+		updateRespectiveGUICol(updatedTask.getClass().getName());
+		undoCommandHistory.push(new Update( taskToUpdateTask(taskToUpdate),  taskToUpdateTask(updatedTask)));
 		updateTaskLists();
 	}
 
+	private UpdateTask taskToUpdateTask(Task current){
+		UpdateTask convertedTask = new UpdateTask(current.getDescription());
+		convertedTask.setDescription(current.getDescription());
+		String taskType = current.getClass().getName();
+		switch(taskType){
+		case "main.Event":
+			convertedTask.setStartDate(((Event) current).getStartDate());
+			convertedTask.setStartTime(((Event) current).getStartTime());
+			convertedTask.setEndDate(((Event) current).getEndDate());
+			convertedTask.setEndTime(((Event) current).getEndTime());
+			break;
+		case "main.Deadline":
+			convertedTask.setEndDate(((Deadline) current).getEndDate());
+			convertedTask.setEndTime(((Deadline) current).getEndTime());
+			break;
+		}
+		return convertedTask;
+	}
+	
 	private void deleteTask(Command inputCommand) {
 		Delete deleteCommand = ((Delete) inputCommand);
 		Task taskToDelete = null;
@@ -368,7 +390,10 @@ public class Logic {
 			fillFloatings();
 			break;
 		default :
-			System.out.println(taskType);
+			fillFloatings();
+			fillDeadlines();
+			fillEvents();
+			//System.out.println(taskType);
 			break;	
 		}
 	}
