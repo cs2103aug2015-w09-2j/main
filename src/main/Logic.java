@@ -38,6 +38,8 @@ public class Logic {
 	 */
 	private Logic() {
 		updateTaskLists();
+		undoCommandHistory = new Stack<Command>();
+		redoCommandHistory = new Stack<Command>();
 	}
 
 	private static Parser parser = new Parser();
@@ -88,6 +90,11 @@ public class Logic {
 	}
 
 	private void updateTaskLists() {
+		allEvents = new ArrayList<Task>();
+		allDeadlines = new ArrayList<Task>();
+		allFloatingTasks = new ArrayList<Task>();
+		allTasks = new ArrayList<Task>();
+		
 		allEvents = fileStorage.readEventTask();
 		allDeadlines = fileStorage.readDeadlineTask();
 		allFloatingTasks = fileStorage.readFloatingTask();
@@ -429,13 +436,16 @@ public class Logic {
 
 	public void fillEvents() {
 		events.setAll(fileStorage.readEventTask());
+		//events.setAll(allEvents);
 	}
 
 	public void fillDeadlines() {
 		deadlines.setAll(fileStorage.readDeadlineTask());
+		//deadlines.setAll(allDeadlines);
 	}
 
 	public void fillFloatings() {
 		floatings.setAll(fileStorage.readFloatingTask());
+		//floatings.setAll(allFloatingTasks);
 	}
 }
