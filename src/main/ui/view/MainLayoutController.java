@@ -8,10 +8,10 @@ import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 
 import javafx.fxml.FXML;
-
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-
+import javafx.util.Callback;
 import main.ui.MainApp;
 
 import main.Task;
@@ -35,7 +35,7 @@ public class MainLayoutController {
 	@FXML
 	private ListView<Task> deadlinesListView;
 	@FXML
-	private ListView<Task> floatingTasksListView;
+	private ListView<Task> floatingsListView;
 	@FXML
 	private TextField commandBox;
 
@@ -49,6 +49,32 @@ public class MainLayoutController {
 		/*
 		 * ListView cell factory can be used to customize the content
 		 */
+		eventsListView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
+
+			@Override
+			public ListCell<Task> call(ListView<Task> eventsListView) {
+				return new TaskCell.EventCell();
+			}
+
+		});
+
+		deadlinesListView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
+
+			@Override
+			public ListCell<Task> call(ListView<Task> deadlinesListView) {
+				return new TaskCell.DeadlineCell(events.size());
+			}
+
+		});
+
+		floatingsListView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
+
+			@Override
+			public ListCell<Task> call(ListView<Task> floatingsListView) {
+				return new TaskCell.FloatingCell(events.size() + deadlines.size());
+			}
+
+		});
 	}
 
 	/**
@@ -87,7 +113,7 @@ public class MainLayoutController {
 
 		eventsListView.setItems(events);
 		deadlinesListView.setItems(deadlines);
-		floatingTasksListView.setItems(floatings);
+		floatingsListView.setItems(floatings);
 	}
 
 /*	private void separateTasks() {
