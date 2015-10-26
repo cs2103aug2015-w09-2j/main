@@ -32,12 +32,7 @@ public class TaskCell {
 	}
 
 	protected static class DeadlineCell extends ListCell<Task> {
-		private int startIndex;
-
-		protected DeadlineCell(int startIndex) {
-			this.startIndex = startIndex;
-		}
-
+		public static int startIndex;
 
 		@Override
 		protected void updateItem(Task item, boolean empty) {
@@ -56,11 +51,8 @@ public class TaskCell {
 	}
 
 	protected static class FloatingCell extends ListCell<Task> {
-		private int startIndex;
+		public static int startIndex;
 
-		protected FloatingCell(int startIndex) {
-			this.startIndex = startIndex;
-		}
 		@Override
 		protected void updateItem(Task item, boolean empty) {
 			super.updateItem(item, empty);
