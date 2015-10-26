@@ -62,7 +62,8 @@ public class MainLayoutController {
 
 			@Override
 			public ListCell<Task> call(ListView<Task> deadlinesListView) {
-				return new TaskCell.DeadlineCell(events.size());
+				TaskCell.DeadlineCell.startIndex = events.size();
+				return new TaskCell.DeadlineCell();
 			}
 
 		});
@@ -71,7 +72,8 @@ public class MainLayoutController {
 
 			@Override
 			public ListCell<Task> call(ListView<Task> floatingsListView) {
-				return new TaskCell.FloatingCell(events.size() + deadlines.size());
+				TaskCell.FloatingCell.startIndex = events.size() + deadlines.size();
+				return new TaskCell.FloatingCell();
 			}
 
 		});
@@ -86,6 +88,10 @@ public class MainLayoutController {
 		getTasks();
 		// separateTasks();
 		setupListViews();
+	}
+
+	public void focusCommandBox() {
+		commandBox.requestFocus();
 	}
 
 	private void getTasks() {

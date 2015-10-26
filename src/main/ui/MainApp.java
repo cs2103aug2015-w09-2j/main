@@ -88,6 +88,8 @@ public class MainApp extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 
+			mainLayoutController.focusCommandBox();
+
 		}
 		catch (IOException e) {
 			e.printStackTrace();
