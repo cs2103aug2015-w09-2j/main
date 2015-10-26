@@ -132,51 +132,32 @@ public class Logic {
 		switch (inputCommand.getCommandType()) {
 		case ADD_EVENT:
 			fileStorage.writeTask(inputCommand.getTask());
-			// undoCommand = inputCommand.getCommandType();
-			// undoTaskObject = inputCommand.getTask();
 			undoCommandHistory.push(inputCommand);
 			updateTaskLists();
-			// fillTasks(); // [teddy]
 			fillEvents();
 			success = true;
 			break;
 		case ADD_DEADLINE:
 			fileStorage.writeTask(inputCommand.getTask());
-			// undoCommand = inputCommand.getCommandType();
-			// undoTaskObject = inputCommand.getTask();
 			undoCommandHistory.push(inputCommand);
 			updateTaskLists();
-			// fillTasks();
 			fillDeadlines();
 			success = true;
 			break;
 		case ADD_FLOATING:
 			fileStorage.writeTask(inputCommand.getTask());
-			// undoCommand = inputCommand.getCommandType();
-			// undoTaskObject = inputCommand.getTask();
 			undoCommandHistory.push(inputCommand);
 			updateTaskLists();
-			// fillTasks();
 			fillFloatings();
 			success = true;
 			break;
 		case UPDATE:
-			// updateTask((UpdateTask) input);
 			update(inputCommand);
-			// commandHistory.push(inputCommand);
 			updateTaskLists();
-			// undoCommand = inputCommand.getCommandType();
-			// undoTaskObject = null; // need to search for the Task object with
-			// the updated object description
-			// fillTasks();
 			success = true;
 			break;
 		case DELETE:
 			deleteTask(inputCommand);
-			// undoCommand = inputCommand.getCommandType();
-			// undoTaskObject = null; // need to search for the Task object with
-			// the updated object description
-			// fillTasks();
 			success = true;
 			break;
 		case SEARCH:
@@ -203,19 +184,8 @@ public class Logic {
 		return success;
 	}
 
-	/*
-	 * private boolean undo() { // TODO Auto-generated method stub boolean
-	 * isUndoSuccessful = false; switch (undoCommand) { case ADD_EVENT: case
-	 * ADD_DEADLINE: case ADD_FLOATING: fileStorage.delete("1",
-	 * fileStorage.search(undoTaskObject.getDescription())); isUndoSuccessful =
-	 * true; break; case DELETE:
-	 *
-	 * break; case UPDATE: updateTask((UpdateTask) undoTaskObject); break; }
-	 * return isUndoSuccessful; }
-	 */
 
 	private boolean redo() {
-		// TODO Auto-generated method stub
 		if (redoCommandHistory.size()== 0)
 			return false;
 		Command redoCommand = redoCommandHistory.pop();
@@ -245,8 +215,8 @@ public class Logic {
 			//redoCommandHistory.push(redoUpdate);	
 			undoCommandHistory.push(undoUpdate);
 			// redoCommandHistory.push(undoUpdate);
-			fileStorage.deleteTask(undoUpdate.getUpdateTask());
-			fileStorage.writeTask(undoUpdate.getCurrentTask());
+			fileStorage.deleteTask(undoUpdate.getCurrentTask());
+			fileStorage.writeTask(undoUpdate.getUpdateTask());
 			//fileStorage.deleteTask((Task) newUpdatedTask);
 			//fileStorage.writeTask((Task) oldTaskUpdated);
 			updateTaskLists();
@@ -261,25 +231,8 @@ public class Logic {
 		return false;
 	}
 
-	/**
-	 * Description Method used to update the task
-	 *
-	 * @param input
-	 */
-	/*
-	 * private void updateTask(UpdateTask input) { FileData data =
-	 * fileStorage.search(input.getSearchString()); fileStorage.delete("1",
-	 * data); if (input.hasStartDate()) { Event event = new
-	 * Event(input.getDescription(), input.getStartDate(), input.getStartTime(),
-	 * input.getEndDate(), input.getEndTime()); fileStorage.writeTask(event); }
-	 * else if (input.hasEndDate()) { Deadline deadline = new
-	 * Deadline(input.getDescription(), input.getEndDate(), input.getEndTime());
-	 * fileStorage.writeTask(deadline); } else { Floating floating = new
-	 * Floating(input.getDescription()); fileStorage.writeTask(floating); } }
-	 */
 
 	private boolean undo() {
-		// TODO Auto-generated method stub
 		if (undoCommandHistory.size()==0)
 			return false;
 		Command undoCommand = undoCommandHistory.pop();
@@ -304,15 +257,17 @@ public class Logic {
 			Task oldTaskUpdated = undoUpdate.getTaskToUpdate();
 			Task newUpdatedTask = undoUpdate.getUpdatedTask();
 			Update redoUpdate = new Update(taskToUpdateTask(newUpdatedTask), taskToUpdateTask(oldTaskUpdated));
-			redoUpdate.setCurrentTask(undoUpdate.getUpdateTask());
-			redoUpdate.setUpdateTask(undoUpdate.getCurrentTask());
+			redoUpdate.setCurrentTask(undoUpdate.getCurrentTask());
+			redoUpdate.setUpdateTask(undoUpdate.getUpdateTask());
 			redoCommandHistory.push(redoUpdate);
 			// redoCommandHistory.push(undoUpdate);
 			//fileStorage.deleteTask(undoUpdate.getUpdateTask());
 			fileStorage.writeTask(undoUpdate.getCurrentTask());
 			fileStorage.deleteTask(undoUpdate.getUpdateTask());
-			updateRespectiveGUICol(newUpdatedTask.getClass().getName());
-			updateRespectiveGUICol(oldTaskUpdated.getClass().getName());
+			System.out.println(undoUpdate.getCurrentTask().toString());
+			System.out.println(undoUpdate.getUpdateTask().toString());
+			updateRespectiveGUICol(undoUpdate.getCurrentTask().getClass().getName());
+			updateRespectiveGUICol(undoUpdate.getUpdateTask().getClass().getName());
 			updateTaskLists();
 			break;
 		default:
@@ -321,25 +276,13 @@ public class Logic {
 		return true;
 	}
 
-	/**
-	 * @param substring
-	 * @return
-	 */
-	/*
-	 * private ArrayList<Task> search(String substring) { ArrayList<Task> output
-	 * = new ArrayList<Task>(); FileData data = fileStorage.search(substring);
-	 * HashMap<Integer, String> displayMap = data.getDisplayMap(); Iterator it =
-	 * displayMap.entrySet().iterator(); while (it.hasNext()) { Map.Entry pair =
-	 * (Map.Entry) it.next(); output.add(getTaskFromString((String)
-	 * pair.getValue())); } return output; }
-	 */
-
+	
 	private void update(Command inputCommand) {
 		Update updateCommand = (Update) inputCommand;
 		UpdateTask processUpdate = (UpdateTask) updateCommand.getTaskToUpdate();
 		//System.out.println(processUpdate.getSearchString());
 		Task taskToUpdate;
-		taskToUpdate = fileStorage.searchAllTask(processUpdate.getSearchString()).get(0);
+		taskToUpdate = fileStorage.absoluteSearch(processUpdate.getSearchString()).get(0);
 		fileStorage.deleteTask(taskToUpdate);
 		updateRespectiveGUICol(taskToUpdate.getClass().getName());
 		Task updatedTask;
@@ -384,7 +327,7 @@ public class Logic {
 		Delete deleteCommand = ((Delete) inputCommand);
 		Task taskToDelete = null;
 		if(deleteCommand.hasDeleteString()){
-			taskToDelete = fileStorage.searchAllTask(deleteCommand.getDeleteString()).get(0);
+			taskToDelete = fileStorage.absoluteSearch(deleteCommand.getDeleteString()).get(0);
 		}
 		String deleteTaskType = taskToDelete.getClass().getName();
 		updateRespectiveGUICol(deleteTaskType);
