@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
@@ -51,6 +52,14 @@
             <Insets left="10.0" right="10.0" />
          </GridPane.margin>
       </TextField>
+      <ImageView fitHeight="37.0" fitWidth="151.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2">
+         <image>
+            <Image url="@../../../../resources/logo.png" />
+         </image>
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </ImageView>
    </children>
    <padding>
       <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
