@@ -16,9 +16,9 @@ public  class DateHandler {
 
 
 	public static enum Days{
-		SUNDAY("Sunday", 1), MONDAY("Monday", 2), TUESDAY("Tuesday", 3), WEDNESDAY("Wednesday", 4),
-		THURSDAY("Thursday", 5), FRIDAY("Friday", 6),
-		SATURDAY("Saturday", 7);
+		SUNDAY("Sun", 1), MONDAY("Mon", 2), TUESDAY("Tue", 3), WEDNESDAY("Wed", 4),
+		THURSDAY("Thu", 5), FRIDAY("Fri", 6),
+		SATURDAY("Sat", 7);
 
 		private int intDayOfWeek;
 		private String strDay;
