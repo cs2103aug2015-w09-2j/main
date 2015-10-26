@@ -246,6 +246,14 @@ public class Parser {
 		return false;
 	}
 	
+	private boolean isADoneCommand(String strCommand){
+		//If the first word is update
+		String strFirstWord = getWord(0, strCommand);
+		if(strFirstWord.equals("done")){
+			return true;
+		}
+		return false;	
+	}
 	/* Parsing Methods */
 	
 	private Update parseUpdateCommand(String strCommand){
@@ -531,6 +539,43 @@ public class Parser {
 		return new Delete(strCommand);
 	}
 	
+	private Command parseDoneCommand(String strCommand){
+		strCommand = removeNWords(1, strCommand);
+		
+		String[] strSplit = strCommand.split(",");
+		Set<Integer> parsedIDs = new TreeSet<Integer>();
+		
+		for(String str : strSplit){
+			str = str.replaceAll(" ", ""); //remove all white spaces
+			
+			if(str.matches("\\d-\\d")){
+				int firstDigit = Integer.valueOf(str.split("-")[0]);
+				int secondDigit = Integer.valueOf(str.split("-")[1]);
+				
+				//make first smaller than second
+				if(firstDigit > secondDigit){
+					firstDigit ^= secondDigit;
+					secondDigit = firstDigit;
+					firstDigit ^= secondDigit;
+					
+				}
+				
+				for(int i = firstDigit; i <= secondDigit; i++){
+					parsedIDs.add(i);
+				}
+			} else if(str.matches("\\d+")){
+				parsedIDs.add(Integer.valueOf(str));
+			} 
+		}
+		
+		if(parsedIDs.isEmpty()){
+			return null;
+		} else{
+			Done doneCommand = new Done(parsedIDs);
+			return doneCommand;
+		}
+	}
+	
 	public  Command parse(String strCommand){
 		
 		Command parsedCommand;
@@ -549,7 +594,9 @@ public class Parser {
 			parsedCommand = parseDisplayCommand(strCommand);
 		} else if(isADeleteCommand(strCommand)){
 			parsedCommand = parseDeleteCommand(strCommand);
-		} else{
+		} else if (isADoneCommand(strCommand)){
+			parsedCommand = parseDoneCommand(strCommand);
+		}else{
 			parsedCommand = null;
 		}
 		
@@ -561,7 +608,7 @@ public class Parser {
 		Parser p = new Parser();
 		
 		//String command = "update new swimming -d swimming";
-		String command = "update laundry -d new laundry";
+		String command = "done 1-3,3,16";
 	
 		Command t = p.parse(command);
 		System.out.println(((Event)t.getTask()).getEndTime().to12HourFormat());

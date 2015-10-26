@@ -5,7 +5,7 @@ public class Command {
 	public static enum CommandType{
 		ADD_DEADLINE("deadline"), ADD_FLOATING("floating"),ADD_EVENT("event"),
 		UPDATE("update"), DELETE("delete"), CLEAR("clear"), EXIT("exit"), 
-		DISPLAY("display"), SEARCH("search"),UNDO("undo"),REDO("redo"),
+		DISPLAY("display"), SEARCH("search"),UNDO("undo"),REDO("redo"), DONE("done"),
 		UNKNOWN("");
 
 		private String strCommand;
