@@ -280,7 +280,7 @@ public class Logic {
 	private void update(Command inputCommand) {
 		Update updateCommand = (Update) inputCommand;
 		UpdateTask processUpdate = (UpdateTask) updateCommand.getTaskToUpdate();
-		//System.out.println(processUpdate.getSearchString());
+		System.out.println(processUpdate.getSearchString());
 		Task taskToUpdate;
 		taskToUpdate = fileStorage.absoluteSearch(processUpdate.getSearchString()).get(0);
 		fileStorage.deleteTask(taskToUpdate);
