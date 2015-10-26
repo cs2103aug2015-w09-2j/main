@@ -42,7 +42,7 @@ public class Update extends Command {
 	}
 	
 	public Task getCurrentTask() {
-		return taskToUpdate;
+		return currentTask;
 	}
 
 	public void setUpdateTask(Task updateTask){

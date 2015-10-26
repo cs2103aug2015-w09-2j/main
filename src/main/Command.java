@@ -4,7 +4,7 @@ public class Command {
 	//To be used by parser and logic
 	public static enum CommandType{
 		ADD_DEADLINE("deadline"), ADD_FLOATING("floating"),ADD_EVENT("event"),
-		UPDATE("update"), DELETE("delete"), 
+		UPDATE("update"), DELETE("delete"), CLEAR("clear"), EXIT("exit"), 
 		DISPLAY("display"), SEARCH("search"),UNDO("undo"),REDO("redo"),
 		UNKNOWN("");
 

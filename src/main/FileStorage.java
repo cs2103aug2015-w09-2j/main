@@ -106,6 +106,10 @@ public class FileStorage {
 	public ArrayList<Task>searchAllTask(String keyword){
 		return json.searchAllTask(keyword);
 	}
+	
+	public ArrayList<Task>absoluteSearch(String description){
+		return json.absoluteSearch(description);
+	}
 	/**
 	 * ArrayList.get(0) --> ArrayList<Task> [Events]
 	 * ArrayList.get(1) --> ArrayList<Task> [Deadline]
