@@ -236,13 +236,22 @@ public class Logic {
 			updateTaskLists();
 			break;
 		case UPDATE:
-			Update undoUpdate = ((Update) redoCommand);
-			UpdateTask oldTaskUpdated = undoUpdate.getTaskToUpdate();
-			UpdateTask newUpdatedTask = undoUpdate.getUpdatedTask();
-			undoCommandHistory.push(new Update(newUpdatedTask, oldTaskUpdated));
+			Update redoUpdate = ((Update) redoCommand);
+			UpdateTask oldTaskUpdated = redoUpdate.getTaskToUpdate();
+			UpdateTask newUpdatedTask = redoUpdate.getUpdatedTask();
+			Update undoUpdate = new Update(taskToUpdateTask(newUpdatedTask), taskToUpdateTask(oldTaskUpdated));
+			undoUpdate.setCurrentTask(redoUpdate.getCurrentTask());
+			undoUpdate.setUpdateTask(redoUpdate.getUpdateTask());
+			//redoCommandHistory.push(redoUpdate);	
+			undoCommandHistory.push(undoUpdate);
 			// redoCommandHistory.push(undoUpdate);
-			fileStorage.deleteTask((Task) newUpdatedTask);
-			fileStorage.writeTask((Task) oldTaskUpdated);
+			fileStorage.deleteTask(undoUpdate.getUpdateTask());
+			fileStorage.writeTask(undoUpdate.getCurrentTask());
+			//fileStorage.deleteTask((Task) newUpdatedTask);
+			//fileStorage.writeTask((Task) oldTaskUpdated);
+			updateTaskLists();
+			updateRespectiveGUICol(newUpdatedTask.getClass().getName());
+			updateRespectiveGUICol(oldTaskUpdated.getClass().getName());
 			updateTaskLists();
 			break;
 		default:
@@ -294,10 +303,14 @@ public class Logic {
 			Update undoUpdate = ((Update) undoCommand);
 			Task oldTaskUpdated = undoUpdate.getTaskToUpdate();
 			Task newUpdatedTask = undoUpdate.getUpdatedTask();
-			redoCommandHistory.push(new Update(taskToUpdateTask(newUpdatedTask), taskToUpdateTask(oldTaskUpdated)));
+			Update redoUpdate = new Update(taskToUpdateTask(newUpdatedTask), taskToUpdateTask(oldTaskUpdated));
+			redoUpdate.setCurrentTask(undoUpdate.getUpdateTask());
+			redoUpdate.setUpdateTask(undoUpdate.getCurrentTask());
+			redoCommandHistory.push(redoUpdate);
 			// redoCommandHistory.push(undoUpdate);
-			fileStorage.deleteTask(newUpdatedTask);
-			fileStorage.writeTask(oldTaskUpdated);
+			//fileStorage.deleteTask(undoUpdate.getUpdateTask());
+			fileStorage.writeTask(undoUpdate.getCurrentTask());
+			fileStorage.deleteTask(undoUpdate.getUpdateTask());
 			updateRespectiveGUICol(newUpdatedTask.getClass().getName());
 			updateRespectiveGUICol(oldTaskUpdated.getClass().getName());
 			updateTaskLists();
@@ -339,9 +352,12 @@ public class Logic {
 		} else {
 			updatedTask = new Floating(processUpdate.getDescription());
 		}
+		Update output = new Update( taskToUpdateTask(taskToUpdate),  taskToUpdateTask(updatedTask));
+		output.setCurrentTask(taskToUpdate);
+		output.setUpdateTask(updatedTask);
 		fileStorage.writeTask(updatedTask);
 		updateRespectiveGUICol(updatedTask.getClass().getName());
-		undoCommandHistory.push(new Update( taskToUpdateTask(taskToUpdate),  taskToUpdateTask(updatedTask)));
+		undoCommandHistory.push(output);
 		updateTaskLists();
 	}
 
@@ -375,6 +391,7 @@ public class Logic {
 		fileStorage.deleteTask(taskToDelete);
 		deleteCommand.setTaskDeleted(taskToDelete);
 		undoCommandHistory.push(deleteCommand);
+		updateRespectiveGUICol(taskToDelete.getClass().getName());
 		updateTaskLists();
 	}
 

@@ -4,6 +4,10 @@ public class Update extends Command {
 
 	private UpdateTask taskToUpdate;
 	private UpdateTask updatedTask;
+	
+	private Task currentTask ;
+	private Task updateTask;
+	
 
 	/**
 	 * @param searchString
@@ -35,6 +39,22 @@ public class Update extends Command {
 	
 	public UpdateTask getUpdatedTask() {
 		return updatedTask;
+	}
+	
+	public Task getCurrentTask() {
+		return taskToUpdate;
+	}
+
+	public void setUpdateTask(Task updateTask){
+		this.updateTask = updateTask;
+	}
+
+	public void setCurrentTask(Task currentTask){
+		this.currentTask = currentTask;
+	}
+	
+	public Task getUpdateTask() {
+		return updateTask;
 	}
 
 }
