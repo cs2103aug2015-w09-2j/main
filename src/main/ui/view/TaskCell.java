@@ -24,8 +24,11 @@ public class TaskCell {
 				setText(null);
 				setGraphic(null);
 			} else {
-				item = (Event) item;
-				setText(this.getIndex()+1 + ") " + item.toString());
+				String day = ((Event) item).getStartDate().getStrDay();
+				String month = ((Event) item).getStartDate().getStrMonth();
+				String time = ((Event) item).getStartTime().to12HourFormat();
+
+				setText(this.getIndex()+1 + ") " + day + " " + time + " " + item.getDescription());
 				setGraphic(null);
 			}
 		}
@@ -42,8 +45,11 @@ public class TaskCell {
 				setText(null);
 				setGraphic(null);
 			} else {
-				item = (Deadline) item;
-				setText(startIndex + this.getIndex() + 1 + ") " + item.toString());
+				String day = ((Deadline) item).getEndDate().getStrDay();
+				String month = ((Deadline) item).getEndDate().getStrMonth();
+				String time = ((Deadline) item).getEndTime().to12HourFormat();
+
+				setText(startIndex + this.getIndex() + 1 + ") " + day + " " + time + " " + item.getDescription());
 				setGraphic(null);
 			}
 		}
