@@ -23,15 +23,14 @@ public class MainLayoutController {
 
 	private MainApp mainApp;
 
-	// private ObservableList<Task> tasks; // task is retrieved from MainApp; events, deadlines, and floatings are use to separate tasks
-	private ObservableList<Task> events;    // previously the ObservableList was type-aware (Event, Deadline, Floating)
+	private ObservableList<Task> events;
 	private ObservableList<Task> deadlines;
 	private ObservableList<Task> floatings;
 
 
 	// Fields for binding to UI components
 	@FXML
-	private ListView<Task> eventsListView; // previously the ListView was type-aware (Event, Deadline, Floating)
+	private ListView<Task> eventsListView;
 	@FXML
 	private ListView<Task> deadlinesListView;
 	@FXML
@@ -40,42 +39,40 @@ public class MainLayoutController {
 	private TextField commandBox;
 
 	public MainLayoutController() {
-/*		events = FXCollections.observableArrayList();
-		deadlines = FXCollections.observableArrayList();
-		floatingTasks = FXCollections.observableArrayList();*/
 	}
 
 	public void initialize() {
-		/*
-		 * ListView cell factory can be used to customize the content
-		 */
-		eventsListView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
+		customizeEventCellFactory();
+		customizeDeadlineCellFactory();
+		customizeFloatingCellFactory();
+	}
 
+	public void customizeEventCellFactory() {
+		eventsListView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 			@Override
 			public ListCell<Task> call(ListView<Task> eventsListView) {
 				return new TaskCell.EventCell();
 			}
-
 		});
+	}
 
+	public void customizeDeadlineCellFactory() {
 		deadlinesListView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
-
 			@Override
 			public ListCell<Task> call(ListView<Task> deadlinesListView) {
 				TaskCell.DeadlineCell.startIndex = events.size();
 				return new TaskCell.DeadlineCell();
 			}
-
 		});
+	}
 
+	public void customizeFloatingCellFactory() {
 		floatingsListView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
-
 			@Override
 			public ListCell<Task> call(ListView<Task> floatingsListView) {
 				TaskCell.FloatingCell.startIndex = events.size() + deadlines.size();
 				return new TaskCell.FloatingCell();
 			}
-
 		});
 	}
 
@@ -86,8 +83,30 @@ public class MainLayoutController {
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
 		getTasks();
-		// separateTasks();
 		setupListViews();
+		setListeners();
+	}
+
+	public void setListeners() {
+		events.addListener(new ListChangeListener<Task>() {
+			@Override
+			public void onChanged(Change <? extends Task> aChange) {
+				while (aChange.next()) {
+					customizeDeadlineCellFactory();
+					customizeFloatingCellFactory();
+				}
+			}
+		});
+
+		deadlines.addListener(new ListChangeListener<Task>() {
+			@Override
+			public void onChanged(Change <? extends Task> aChange) {
+				System.out.println("A changed has been received");
+				while (aChange.next()) {
+					customizeFloatingCellFactory();
+				}
+			}
+		});
 	}
 
 	public void focusCommandBox() {
@@ -95,58 +114,23 @@ public class MainLayoutController {
 	}
 
 	private void getTasks() {
-//		tasks = mainApp.getTasks();
 		events = mainApp.getEvents();
 		deadlines = mainApp.getDeadlines();
 		floatings = mainApp.getFloatings();
-
-		// System.out.println(tasks.size());
 	}
 
 	private void setupListViews() {
-
-/*		tasks.addListener(new ListChangeListener<Task>() {
-			@Override
-			public void onChanged(Change<? extends Task> aChange) {
-				while (aChange.next()) {
-					if (aChange.wasAdded()) {
-						System.out.println("from: " + aChange.getFrom());
-						System.out.println("to: " + aChange.getTo());
-					}
-				}
-			}
-		});*/
-
 		eventsListView.setItems(events);
 		deadlinesListView.setItems(deadlines);
 		floatingsListView.setItems(floatings);
 	}
 
-/*	private void separateTasks() {
-		for (int i = 0; i < tasks.size(); i++) {
-			Task aTask = tasks.get(i);
-			if (aTask instanceof Event) {
-				events.add((Event) aTask);
-			}
-			else if (aTask instanceof Deadline) {
-				deadlines.add((Deadline) aTask);
-			}
-			else {
-				floatings.add((Floating) aTask);
-			}
-		}
-	}*/
-
 	@FXML
 	public void getCommand() throws NoSuchFieldException, ParseException { // exception will be handled by Logic later, remove this later
-		String command = commandBox.getText(); // rename to entry
+		String command = commandBox.getText();
 
 		mainApp.processCommand(command);
-		// tasks.add(new Floating(command));
 		commandBox.setText("");
 	}
 
-	/*
-	 * Need to register a changeListener to task, and then get the last task
-	 */
 }
