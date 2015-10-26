@@ -161,7 +161,7 @@ public class Logic {
 			success = true;
 			break;
 		case SEARCH:
-			// UI.displayView(search(inputString.substring(7)));
+			search(inputCommand);
 			success = true;
 			break;
 		case UNDO:
@@ -176,14 +176,24 @@ public class Logic {
 			success = true;
 			UI.displayView(fileStorage.readAllTask());
 			break;
-		// case EXIT:
-		// System.exit(0);
+		case EXIT:
+			mainApp.exit();
+			success = true;
+			break;
 		default:
 			break;
 		}
 		return success;
 	}
 
+
+	private void search(Command inputCommand) {
+		Search searchCommand = (Search)inputCommand;
+		ArrayList<String> searchCriterias = searchCommand.getSearchStrings();
+		fillEvents(fileStorage.searchEventTask(searchCriterias.get(0)));
+		fillDeadlines(fileStorage.searchDeadlineTask(searchCriterias.get(0)));
+		fillFloatings(fileStorage.searchFloatingTask(searchCriterias.get(0)));
+	}
 
 	private boolean redo() {
 		if (redoCommandHistory.size()== 0)
@@ -326,7 +336,25 @@ public class Logic {
 	private void deleteTask(Command inputCommand) {
 		Delete deleteCommand = ((Delete) inputCommand);
 		Task taskToDelete = null;
-		if(deleteCommand.hasDeleteString()){
+		updateTaskLists();
+		if(deleteCommand.hasTaskID()){
+			if(deleteCommand.getTaskID()<=allEvents.size()){
+				String taskDesc = allEvents.get(deleteCommand.getTaskID()-1).getDescription();
+				System.out.println(Arrays.toString(allEvents.toArray()));
+				System.out.println(taskDesc);
+				//System.out.println(fileStorage.absoluteSearch(taskDesc).toString());
+				//taskToDelete = fileStorage.absoluteSearch(taskDesc).get(0);
+				taskToDelete = fileStorage.searchAllTask(taskDesc).get(0);
+			}else if(deleteCommand.getTaskID()<=allEvents.size()+allDeadlines.size()){
+				int indexToDelete =deleteCommand.getTaskID() - allEvents.size()-1; 
+				//taskToDelete = fileStorage.absoluteSearch(allDeadlines.get(indexToDelete).getDescription()).get(0);
+				taskToDelete = fileStorage.searchAllTask(allDeadlines.get(indexToDelete).getDescription()).get(0);
+			}else{
+				int indexToDelete =deleteCommand.getTaskID() - allEvents.size() -allDeadlines.size()-1;
+				//taskToDelete = fileStorage.absoluteSearch(allFloatingTasks.get(indexToDelete).getDescription()).get(0);
+				taskToDelete = fileStorage.searchAllTask(allFloatingTasks.get(indexToDelete).getDescription()).get(0);
+			}
+		}else if(deleteCommand.hasDeleteString()){
 			taskToDelete = fileStorage.absoluteSearch(deleteCommand.getDeleteString()).get(0);
 		}
 		String deleteTaskType = taskToDelete.getClass().getName();
@@ -358,44 +386,6 @@ public class Logic {
 		}
 	}
 
-	/**
-	 * @param index
-	 */
-	/*
-	 * private void deleteTask(Command inputCommand) { Delete deleteCommand =
-	 * ((Delete) inputCommand); Task taskToDelete = null; if
-	 * (deleteCommand.hasDeleteString()) { ArrayList<ArrayList<Task>>
-	 * searchResult = fileStorage.search(deleteCommand.getDeleteString()); if
-	 * (searchResult.get(0) != null) taskToDelete = (Event)
-	 * searchResult.get(0).get(0); else if (searchResult.get(1) != null)
-	 * taskToDelete = (Deadline) searchResult.get(0).get(0); else if
-	 * (searchResult.get(2) != null) taskToDelete = (Floating)
-	 * searchResult.get(0).get(0); else taskToDelete = null; }
-	 * fileStorage.deleteTask(taskToDelete);
-	 * deleteCommand.setTaskDeleted(taskToDelete);
-	 * undoCommandHistory.push(deleteCommand); updateTaskLists(); }
-	 */
-
-	/**
-	 * @return
-	 */
-	/*
-	 * private ArrayList<Task> stringToTask() { ArrayList<String> data = new
-	 * ArrayList<String>(); ArrayList<Task> tasks = new ArrayList<Task>(); data
-	 * = FileStorage.readFile(); for (String s : data) {
-	 * tasks.add(getTaskFromString(s)); } // TODO Auto-generated method stub
-	 * return tasks; }
-	 */
-
-	/**
-	 * @param s
-	 * @return
-	 */
-	/*
-	 * private Task getTaskFromString(String s) { Task a =
-	 * parser.parse(s).getTask(); // System.out.println(a.toString()); return
-	 * parser.parse(s).getTask(); }
-	 */
 
 	/**
 	 * Set the reference to MainApp
@@ -443,17 +433,32 @@ public class Logic {
 	 */
 
 	public void fillEvents() {
-		events.setAll(fileStorage.readEventTask());
-		// events.setAll(allEvents);
+		//events.setAll(fileStorage.readEventTask());
+		 events.setAll(allEvents);
 	}
 
 	public void fillDeadlines() {
-		deadlines.setAll(fileStorage.readDeadlineTask());
-		// deadlines.setAll(allDeadlines);
+		//deadlines.setAll(fileStorage.readDeadlineTask());
+		 deadlines.setAll(allDeadlines);
 	}
 
 	public void fillFloatings() {
-		floatings.setAll(fileStorage.readFloatingTask());
-		// floatings.setAll(allFloatingTasks);
+		//floatings.setAll(fileStorage.readFloatingTask());
+		 floatings.setAll(allFloatingTasks);
+	}
+	
+	public void fillEvents(ArrayList<Task> searchResult) {
+		//events.setAll(fileStorage.readEventTask());
+		 events.setAll(searchResult);
+	}
+	
+	public void fillDeadlines(ArrayList<Task> searchResult) {
+		//events.setAll(fileStorage.readEventTask());
+		 events.setAll(searchResult);
+	}
+	
+	public void fillFloatings(ArrayList<Task> searchResult) {
+		//floatings.setAll(fileStorage.readFloatingTask());
+		 floatings.setAll(searchResult);
 	}
 }
