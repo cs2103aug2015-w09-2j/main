@@ -51,6 +51,7 @@ public class JsonFileContent {
 		if (file.length() == 0) {
 			createJsonFile(file);
 		} 
+
 	}
 
 	

@@ -470,7 +470,7 @@ public class JsonFile {
 	}
 	
 	private ArrayList<Task> absoluteSearchDescription(String keyword){
-		String description,startDate, startTime, endDate, endTime;
+		String description;
 		
 		ArrayList<JSONArray> content = getJsonFileContent();
 		
@@ -482,15 +482,8 @@ public class JsonFile {
 		for(int i=0; i<eventList.size(); i++){
 			Task task = eventList.get(i);
 			description = task.getDescription();
-			startDate = ((Event)task).getStartDate().toString();
-			startTime = ((Event)task).getStartTime().toString();
-			endDate = ((Event)task).getEndDate().toString();
-			endTime = ((Event)task).getEndTime().toString();
-			
-			String strTask = description + " " + startDate + " " + startTime + " " + endDate + " " + endTime;
-			
-			
-			if(strTask.equals(keyword)){
+					
+			if(description.equals(keyword)){
 				searchList.add(task);
 			}
 			
@@ -499,12 +492,8 @@ public class JsonFile {
 		for(int i=0; i<deadlineList.size(); i++){
 			Task task = deadlineList.get(i);
 			description = task.getDescription();
-			endDate = ((Deadline)task).getEndDate().toString();
-			endTime = ((Deadline)task).getEndTime().toString();
-			
-			String strTask = description  + " " + endDate + " " + endTime;
-			
-			if(strTask.equals(keyword)){
+				
+			if(description.equals(keyword)){
 				searchList.add(task);
 			}
 		}
@@ -512,10 +501,8 @@ public class JsonFile {
 		for(int i=0; i<floatingList.size(); i++){
 			Task task = floatingList.get(i);
 			description = task.getDescription();
-			
-			String strTask = description;
-			
-			if(strTask.equals(keyword)){
+				
+			if(description.equals(keyword)){
 				searchList.add(task);
 			}
 		}
@@ -542,8 +529,6 @@ public class JsonFile {
 		
 		return allTasks;
 	}
-	
-	
 	
 	private ArrayList<Task> readTask(String taskType){
 		ArrayList<JSONArray> content = getJsonFileContent();
