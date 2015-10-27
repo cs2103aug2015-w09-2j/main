@@ -85,29 +85,57 @@ public class Json {
 	public ArrayList<Task> searchEventTask(String keyword){
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(); 
 		isFileEmpty();
-		return jsonSearch.searchEvent(keyword, content.get(0));
+		return jsonSearch.searchEvent(keyword, keyword, content.get(0));
+	}
+	
+	public ArrayList<Task> searchEventTask(String keyword1, String keyword2){
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(); 
+		isFileEmpty();
+		return jsonSearch.searchEvent(keyword1, keyword2, content.get(0));
 	}
 	
 	public ArrayList<Task> searchDeadlineTask(String keyword){
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent();
 		isFileEmpty();
-		return jsonSearch.searchDeadline(keyword, content.get(1));
+		return jsonSearch.searchDeadline(keyword, keyword, content.get(1));
+	}
+	
+	public ArrayList<Task> searchDeadlineTask(String keyword1, String keyword2){
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent();
+		isFileEmpty();
+		return jsonSearch.searchDeadline(keyword1, keyword2, content.get(1));
 	}
 	
 	public ArrayList<Task> searchFloatingTask(String keyword){
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent();
 		isFileEmpty();
-		return jsonSearch.searchFloating(keyword, content.get(2));
+		return jsonSearch.searchFloating(keyword, keyword, content.get(2));
+	}
+	
+	public ArrayList<Task> searchFloatingTask(String keyword1, String keyword2){
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent();
+		isFileEmpty();
+		return jsonSearch.searchFloating(keyword1, keyword2, content.get(2));
 	}
 	
 	public ArrayList<Task> searchAllTask(String keyword){
 		isFileEmpty();
-		return jsonSearch.searchAll(keyword);
+		return jsonSearch.searchAll(keyword, keyword);
 	}
 	
-	public ArrayList<Task>absoluteSearch(String description){
+	public ArrayList<Task> searchAllTask(String keyword1, String keyword2){
 		isFileEmpty();
-		return jsonSearch.absoluteSearchDescription(description);
+		return jsonSearch.searchAll(keyword1, keyword2);
+	}
+	
+	public ArrayList<Task>absoluteSearch(String task){
+		isFileEmpty();
+		return jsonSearch.absoluteSearchDescription(task, task);
+	}
+	
+	public ArrayList<Task>absoluteSearch(String task, String taskInfo){
+		isFileEmpty();
+		return jsonSearch.absoluteSearchDescription(task, taskInfo);
 	}
 	
 

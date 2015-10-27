@@ -91,12 +91,31 @@ public class FileStorage {
 	}
 	
 	/**
+	 * Search and return all events tasks which contains both keyword1 and keyword2
+	 * @param keyword1 first keyword of a task
+	 * @param keyword2 second keyword of a task
+	 * @return ArrayList<Task> of event tasks which contains both keyword1 and keyword2
+	 */
+	public ArrayList<Task>searchEventTask(String keyword1, String keyword2){
+		return json.searchEventTask(keyword1, keyword2);
+	}
+	
+	/**
 	 * Search and return all deadline tasks which contains the keyword
 	 * @param keyword keyword of a task
 	 * @return ArrayList<Task> of deadline tasks which contains the keyword
 	 */
 	public ArrayList<Task>searchDeadlineTask(String keyword){
 		return json.searchDeadlineTask(keyword);
+	}
+	/**
+	 * Search and return all deadline tasks which contains both keyword1 and keyword2
+	 * @param keyword1 first keyword of a task
+	 * @param keyword2 second keyword of a task
+	 * @return ArrayList<Task> of deadline tasks which contains both keyword1 and keyword2
+	 */
+	public ArrayList<Task>searchDeadlineTask(String keyword1, String keyword2){
+		return json.searchDeadlineTask(keyword1, keyword2);
 	}
 	
 	/**
@@ -109,6 +128,16 @@ public class FileStorage {
 	}
 	
 	/**
+	 * Search and return all floating tasks which contains both keyword1 and keyword2
+	 * @param keyword1 first keyword of a task
+	 * @param keyword2 second keyword of a task
+	 * @return ArrayList<Task> of floating tasks which contains both keyword1 and keyword2
+	 */
+	public ArrayList<Task>searchFloatingTask(String keyword1, String keyword2){
+		return json.searchFloatingTask(keyword1, keyword2);
+	}
+	
+	/**
 	 * Search and return all event, deadline and floating tasks which contains the keyword
 	 * @param keyword keyword of a task
 	 * @return ArrayList<Task> of event, deadline and floating tasks which contains the keyword
@@ -118,12 +147,35 @@ public class FileStorage {
 	}
 	
 	/**
-	 * Search and return all event, deadline and floating tasks which matches the description exactly
-	 * @param description the complete description of a task
-	 * @return ArrayList<Task> of event, deadline and floating tasks which matches the description exactly
+	 * Search and return all event, deadline and floating tasks which contains both keyword1 and keyword2
+	 * @param keyword1 first keyword of a task
+	 * @param keyword2 second keyword of a task
+	 * @return ArrayList<Task> of event, deadline and floating tasks which contains both keyword1 and keyword2
 	 */
-	public ArrayList<Task>absoluteSearch(String description){
-		return json.absoluteSearch(description);
+	public ArrayList<Task>searchAllTask(String keyword1, String keyword2){
+		return json.searchAllTask(keyword1, keyword2);
+	}
+	
+	/**
+	 * Search and return all event, deadline and floating tasks which matches the task exactly
+	 * @param task the complete description of a task
+	 * @return ArrayList<Task> of event, deadline and floating tasks which matches the task exactly
+	 */
+	public ArrayList<Task>absoluteSearch(String task){
+		return json.absoluteSearch(task);
+	}
+	
+	/**
+	 * Search and return all event, deadline and floating tasks which matches 
+	 * both the task and taskInfo exactly. taskInfo can be the start date, start time,
+	 * end date or end time of the task itself
+	 * @param description the complete description of a task
+	 * @param description the complete description of a task
+	 * @return ArrayList<Task> of event, deadline and floating tasks which matches 
+	 * both the task and taskInfo exactly
+	 */
+	public ArrayList<Task>absoluteSearch(String task, String taskInfo){
+		return json.absoluteSearch(task, taskInfo);
 	}
 	
 	/**
