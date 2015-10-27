@@ -348,7 +348,7 @@ public class Parser {
 				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutTime);
 				endDate = prettyTime.getDate();
 			}
-			strCommand = strCommand.replace(strEndDateAndEndTime, "");
+			strCommand = strCommand.replace(strEndDateAndEndTime, "").trim();
 			
 			//<-----------------Handling Start Date and Time--------->
 			String strStartDateAndStartTime = strCommand.substring(strCommand.lastIndexOf("from"));
@@ -374,7 +374,7 @@ public class Parser {
 				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutTime);
 				startDate = prettyTime.getDate();
 			}
-			strCommand = strCommand.replace(strStartDateAndStartTime, "");
+			strCommand = strCommand.replace(strStartDateAndStartTime, "").trim();
 			
 			strDescription = strCommand;
 			
@@ -446,7 +446,7 @@ public class Parser {
 				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutTime);
 				endDate = prettyTime.getDate();
 			}
-			strCommand = strCommand.replace(strEndDateAndEndTime, "");
+			strCommand = strCommand.replace(strEndDateAndEndTime, "").trim();
 			
 			strDescription = strCommand;
 
@@ -512,7 +512,7 @@ public class Parser {
 					break;
 				} else{
 					searchObj.addSearchString(date.toString());
-					strSearchString =  strSearchString.replace(prettyTime.getParsedDateGroup().get(0), "");
+					strSearchString =  strSearchString.replace(prettyTime.getParsedDateGroup().get(0), "").trim();
 				}
 			}
 		}
@@ -608,9 +608,12 @@ public class Parser {
 		Parser p = new Parser();
 		
 		//String command = "update new swimming -d swimming";
-		String command = "done 1-3,3,16";
-	
+		String command = "add hello babyv by today  ";
 		Command t = p.parse(command);
+		
+		command = "add hello babyv from today to tmr  ";
+		t = p.parse(command);
+		
 		System.out.println(((Event)t.getTask()).getEndTime().to12HourFormat());
 	
 	}
