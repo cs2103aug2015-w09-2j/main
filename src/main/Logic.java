@@ -61,6 +61,10 @@ public class Logic {
 	private static ArrayList<Task> allDeadlines;
 	private static ArrayList<Task> allFloatingTasks;
 	private static ArrayList<Task> allTasks;
+	private static ArrayList<Task> searchResultEvents;
+	private static ArrayList<Task> searchResultDeadlines;
+	private static ArrayList<Task> searchResultFloatingTasks;
+	private static ArrayList<Task> searchResultTasks;
 	private MainApp mainApp; // [teddy] reference to UI
 	// private ObservableList<Task> tasks; // [teddy] just fill the tasks
 	private ObservableList<Task> events;
@@ -161,7 +165,7 @@ public class Logic {
 			break;
 		case DISPLAY:
 			success = true;
-			UI.displayView(fileStorage.readAllTask());
+			display();
 			break;
 		case EXIT:
 			mainApp.exit();
@@ -174,12 +178,29 @@ public class Logic {
 	}
 
 
+	private void display() {
+		updateTaskLists();
+		fillEvents();
+		fillFloatings();
+		fillDeadlines();
+	}
+
 	private void search(Command inputCommand) {
 		Search searchCommand = (Search)inputCommand;
 		ArrayList<String> searchCriterias = searchCommand.getSearchStrings();
-		fillEvents(fileStorage.searchEventTask(searchCriterias.get(0)));
-		fillDeadlines(fileStorage.searchDeadlineTask(searchCriterias.get(0)));
-		fillFloatings(fileStorage.searchFloatingTask(searchCriterias.get(0)));
+		/*searchResultEvents =fileStorage.searchEventTask(searchCriterias.get(0)); 
+		fillEvents(searchResultEvents);
+		searchResultDeadlines =fileStorage.searchDeadlineTask(searchCriterias.get(0));  
+		fillDeadlines(searchResultDeadlines);
+		searchResultFloatingTasks =fileStorage.searchFloatingTask(searchCriterias.get(0));  
+		fillFloatings(searchResultFloatingTasks);
+		*/
+		allEvents =fileStorage.searchEventTask(searchCriterias.get(0)); 
+		fillEvents();
+		allDeadlines =fileStorage.searchDeadlineTask(searchCriterias.get(0));  
+		fillDeadlines();
+		allFloatingTasks =fileStorage.searchFloatingTask(searchCriterias.get(0));  
+		fillFloatings();
 	}
 
 	private boolean redo() {
@@ -193,14 +214,14 @@ public class Logic {
 		case ADD_FLOATING:
 			undoCommandHistory.push(redoCommand);
 			fileStorage.writeTask(redoCommand.getTask());
-			updateRespectiveGUICol(redoCommand.getTask().getClass().getName());
 			updateTaskLists();
+			updateRespectiveGUICol(redoCommand.getTask().getClass().getName());
 			break;
 		case DELETE:
 			undoCommandHistory.push(redoCommand);
 			fileStorage.deleteTask(((Delete) redoCommand).getTaskDeleted());
-			updateRespectiveGUICol((((Delete) redoCommand).getTaskDeleted().getClass().getName()));
 			updateTaskLists();
+			updateRespectiveGUICol((((Delete) redoCommand).getTaskDeleted().getClass().getName()));
 			break;
 		case UPDATE:
 			Update redoUpdate = ((Update) redoCommand);
@@ -219,7 +240,7 @@ public class Logic {
 			updateTaskLists();
 			updateRespectiveGUICol(newUpdatedTask.getClass().getName());
 			updateRespectiveGUICol(oldTaskUpdated.getClass().getName());
-			updateTaskLists();
+			//updateTaskLists();
 			break;
 		default:
 			break;
@@ -240,8 +261,8 @@ public class Logic {
 		case ADD_FLOATING:
 			redoCommandHistory.push(undoCommand);
 			fileStorage.deleteTask(undoCommand.getTask());
-			updateRespectiveGUICol(undoCommand.getTask().getClass().getName());
 			updateTaskLists();
+			updateRespectiveGUICol(undoCommand.getTask().getClass().getName());
 			break;
 		case DELETE:
 			redoCommandHistory.push(undoCommand);
@@ -263,9 +284,9 @@ public class Logic {
 			fileStorage.deleteTask(undoUpdate.getUpdateTask());
 			System.out.println(undoUpdate.getCurrentTask().toString());
 			System.out.println(undoUpdate.getUpdateTask().toString());
+			updateTaskLists();
 			updateRespectiveGUICol(undoUpdate.getCurrentTask().getClass().getName());
 			updateRespectiveGUICol(undoUpdate.getUpdateTask().getClass().getName());
-			updateTaskLists();
 			break;
 		default:
 			break;
