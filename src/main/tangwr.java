@@ -13,10 +13,10 @@ public class tangwr {
 		
 		
 		//JsonFile js = new JsonFile("data.json");
-		/*
-		DateClass date1 = new DateClass(3, 1);
-		DateClass date2 = new DateClass(4, 1);
-		TimeClass time1 = new TimeClass("1500");
+		
+		DateClass date1 = new DateClass(10, 1);
+		DateClass date2 = new DateClass(10, 1);
+		TimeClass time1 = new TimeClass("1510");
 		TimeClass time2 = new TimeClass("1700");
 		
 		Event e = new Event("jad", date1, time1, date2, time2);
@@ -24,15 +24,49 @@ public class tangwr {
 		Deadline d = new Deadline("eejade", date1, time1);
 		
 		
-		fs.writeTask(d);
-		fs.writeTask(f);
-		fs.writeTask(e);
+		//Event e = new Event("werewr", date1, time1, date2, time2);
+		//Floating f = new Floating("234dff");
+		//Deadline d = new Deadline("eewr323r", date1, time1);
+		//Event r = null;
 		
+		//fs.writeTask(d);
+		//fs.writeTask(f);
+		//fs.writeTask(e);
+		fs.deleteTask(e);
 		
-		
+		/*
+		ArrayList<Task> sss = fs.absoluteSearch("ra");
+		for(int i=0; i<sss.size(); i++){
+			Task t = sss.get(i);
+			System.out.println(t);
+		}
 		*/
+		/*
+		ArrayList<Task> se = fs.searchEventTask("r");
+		ArrayList<Task> sd = fs.searchDeadlineTask("r");
+		ArrayList<Task> sf = fs.searchFloatingTask("r");
+		ArrayList<Task> sa = fs.searchAllTask("r");
 		
-		ArrayList<ArrayList<Task>> tk = fs.search("4/1");
+		
+		for(int i=0; i<se.size(); i++){
+			Task t = se.get(i);
+			System.out.println(t);
+		}
+		for(int i=0; i<sd.size(); i++){
+			Task t = sd.get(i);
+			System.out.println(t);
+		}
+		for(int i=0; i<sf.size(); i++){
+			Task t = sf.get(i);
+			System.out.println(t);
+		}
+		for(int i=0; i<sa.size(); i++){
+			Task t = sa.get(i);
+			System.out.println(t);
+		}
+		*/
+		/*
+		ArrayList<ArrayList<Task>> tk = fs.search("ja");
 		
 		ArrayList<Task> t = tk.get(0);
 		
@@ -57,7 +91,7 @@ public class tangwr {
 			Task k = ff.get(i);
 			System.out.println(k.getDescription());
 		}
-		
+		*/
 		//System.out.println("Hello");
 		//js.search("he");
 		//js.jsonWriteTask(event);
@@ -80,7 +114,7 @@ public class tangwr {
 		System.out.println(dead.size());
 		for(int i = 0; i<dead.size(); i++){
 			Task k = dead.get(i);
-			System.out.println(k.getDescription() + " " + ((Event)k).getEndDate().toString() + " " + ((Event)k).getEndTime().toString());
+			System.out.println(k.getDescription() + " " + ((Deadline)k).getEndDate().toString() + " " + ((Deadline)k).getEndTime().toString());
 		}
 		
 		ArrayList<Task> ff = fs.readFloatingTask();
@@ -88,8 +122,8 @@ public class tangwr {
 			Task k = ff.get(i);
 			System.out.println(k.getDescription());
 		}
-		*/
 		
+		*/
 		
 		
 	}
