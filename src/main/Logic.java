@@ -462,7 +462,7 @@ public class Logic {
 	}
 
 	public void fillFloatings() {
-		// floatings.setAll(fileStorage.readFloatingTask());
+		 //floatings.setAll(fileStorage.readFloatingTask());
 		floatings.setAll(allFloatingTasks);
 	}
 
