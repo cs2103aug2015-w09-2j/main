@@ -103,20 +103,7 @@ public class Logic {
 		// TODO Auto-generated method stub
 	}
 
-	/*
-	 * @SuppressWarnings("finally") public boolean processCommand(String input)
-	 * throws NoSuchFieldException, ParseException { boolean output = false; try
-	 * { Command task = parser.parse(input); if
-	 * (task.getCommandType().equals(Command.CommandType.UNKNOWN)) { output =
-	 * false; } else { //output= true; output =
-	 * executeCommand(task.getCommandType(), task.getTask(), input); } } catch
-	 * (NoSuchFieldException e) { System.out.println(
-	 * "There is no such field, so the command entered is incorrect" + "  " +
-	 * e); } catch (ParseException e) { System.out.println(
-	 * "There was an exepction which was caused while parsing" + " " + e); }
-	 * finally { return output; } }
-	 */
-
+	
 	/**
 	 * Description Executes the command
 	 *
@@ -343,24 +330,25 @@ public class Logic {
 				System.out.println(Arrays.toString(allEvents.toArray()));
 				System.out.println(taskDesc);
 				//System.out.println(fileStorage.absoluteSearch(taskDesc).toString());
-				//taskToDelete = fileStorage.absoluteSearch(taskDesc).get(0);
-				taskToDelete = fileStorage.searchAllTask(taskDesc).get(0);
+				taskToDelete = fileStorage.absoluteSearch(taskDesc).get(0);
+				//taskToDelete = fileStorage.searchAllTask(taskDesc).get(0);
 			}else if(deleteCommand.getTaskID()<=allEvents.size()+allDeadlines.size()){
 				int indexToDelete =deleteCommand.getTaskID() - allEvents.size()-1; 
-				//taskToDelete = fileStorage.absoluteSearch(allDeadlines.get(indexToDelete).getDescription()).get(0);
-				taskToDelete = fileStorage.searchAllTask(allDeadlines.get(indexToDelete).getDescription()).get(0);
+				taskToDelete = fileStorage.absoluteSearch(allDeadlines.get(indexToDelete).getDescription()).get(0);
+				//taskToDelete = fileStorage.searchAllTask(allDeadlines.get(indexToDelete).getDescription()).get(0);
 			}else{
 				int indexToDelete =deleteCommand.getTaskID() - allEvents.size() -allDeadlines.size()-1;
-				//taskToDelete = fileStorage.absoluteSearch(allFloatingTasks.get(indexToDelete).getDescription()).get(0);
-				taskToDelete = fileStorage.searchAllTask(allFloatingTasks.get(indexToDelete).getDescription()).get(0);
+				taskToDelete = fileStorage.absoluteSearch(allFloatingTasks.get(indexToDelete).getDescription()).get(0);
+				//taskToDelete = fileStorage.searchAllTask(allFloatingTasks.get(indexToDelete).getDescription()).get(0);
 			}
 		}else if(deleteCommand.hasDeleteString()){
 			taskToDelete = fileStorage.absoluteSearch(deleteCommand.getDeleteString()).get(0);
 		}
 		String deleteTaskType = taskToDelete.getClass().getName();
-		updateRespectiveGUICol(deleteTaskType);
 		fileStorage.deleteTask(taskToDelete);
 		deleteCommand.setTaskDeleted(taskToDelete);
+		updateTaskLists();
+		updateRespectiveGUICol(deleteTaskType);
 		undoCommandHistory.push(deleteCommand);
 		updateRespectiveGUICol(taskToDelete.getClass().getName());
 		updateTaskLists();
