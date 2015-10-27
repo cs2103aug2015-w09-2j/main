@@ -70,8 +70,11 @@ public class PrettyTimeWrapper {
 		parsedDates = p.parse(parseString);
 		parsedDateGroups = p.parseSyntax(parseString);
 	
-		date = parseDate(parsedDates.get(0).toString());
-		time = parseTime(parsedDates.get(0).toString());
+		if(!parsedDates.isEmpty()){
+			date = parseDate(parsedDates.get(0).toString());
+			time = parseTime(parsedDates.get(0).toString());
+		}
+			
 	}
 	
 	public TimeClass parseTime(String command){
