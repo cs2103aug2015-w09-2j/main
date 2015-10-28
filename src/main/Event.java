@@ -1,6 +1,6 @@
 package main;
 
-public class Event extends Task implements Comparable<Event> {
+public class Event extends Task {
 
 
 	private DateClass startDate;
@@ -67,11 +67,11 @@ public class Event extends Task implements Comparable<Event> {
 	}
 
 	@Override
-	public int compareTo(Event anotherEvent) {
-		if (this.getStartDate().equals(anotherEvent.getStartDate())) {
-			return this.getStartTime().compareTo(anotherEvent.getStartTime());
+	public int compareTo(Task anotherEvent) {
+		if (this.getStartDate().equals(((Event) anotherEvent).getStartDate())) {
+			return this.getStartTime().compareTo(((Event) anotherEvent).getStartTime());
 		} else {
-			return this.getStartDate().compareTo(anotherEvent.getStartDate());
+			return this.getStartDate().compareTo(((Event) anotherEvent).getStartDate());
 		}
 	}
 }
