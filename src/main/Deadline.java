@@ -1,6 +1,6 @@
 package main;
 
-public class Deadline extends Task implements Comparable<Deadline> {
+public class Deadline extends Task {
 
 	private DateClass endDate;
 	private TimeClass endTime;
@@ -43,11 +43,11 @@ public class Deadline extends Task implements Comparable<Deadline> {
 	}
 
 	@Override
-	public int compareTo(Deadline anotherDeadline) {
-		if (this.getEndDate().equals(anotherDeadline.getEndDate())) {
-			return this.getEndTime().compareTo(anotherDeadline.getEndTime());
+	public int compareTo(Task anotherDeadline) {
+		if (this.getEndDate().equals(((Deadline) anotherDeadline).getEndDate())) {
+			return this.getEndTime().compareTo(((Deadline) anotherDeadline).getEndTime());
 		} else {
-			return this.getEndDate().compareTo(anotherDeadline.getEndDate());
+			return this.getEndDate().compareTo(((Deadline) anotherDeadline).getEndDate());
 		}
 	}
 }

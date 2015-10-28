@@ -1,8 +1,6 @@
 /*
  * Comment on this class:
- * 1. Consider extracting the individual cell class from TaskCell
- * 2. Consider just implementing TaskCell if there're not type-specific customization
- * 3. If there is a type-specific customization, consider combining Event and Deadline together
+ * Consider extracting the individual cell class from TaskCell
  */
 package main.ui.view;
 
