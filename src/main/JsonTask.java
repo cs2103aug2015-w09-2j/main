@@ -6,6 +6,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.ocpsoft.prettytime.shade.edu.emory.mathcs.backport.java.util.Collections;
 
 public class JsonTask {
 
@@ -49,7 +50,7 @@ public class JsonTask {
 				e1.printStackTrace();
 			}
 		}
-		
+		Collections.sort(eventTaskList);
 		return eventTaskList;
 	}
 	
@@ -86,7 +87,7 @@ public class JsonTask {
 				e1.printStackTrace();
 			}
 		}
-		
+		Collections.sort(deadlineTaskList);
 		return deadlineTaskList;
 	}
 	
@@ -110,7 +111,7 @@ public class JsonTask {
 				e1.printStackTrace();
 			}
 		}
-		
+		Collections.sort(floatingTaskList);
 		return floatingTaskList;
 		
 	}
