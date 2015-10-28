@@ -19,4 +19,11 @@ public class Floating extends Task{
 		return output;
 
 	}
+
+
+	@Override
+	public int compareTo(Task o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
