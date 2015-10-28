@@ -162,5 +162,11 @@ public class UpdateTask extends Task{
 		return strSearchString;
 	}
 
+	@Override
+	public int compareTo(Task o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	
 }
