@@ -77,7 +77,6 @@ public class MainApp extends Application {
 			primaryStage.show();
 
 			mainLayoutController.focusCommandBox();
-
 		}
 		catch (IOException e) {
 			e.printStackTrace();

@@ -41,7 +41,7 @@ public class MainLayoutController {
 	public MainLayoutController() {
 	}
 
-	public void initialize() {
+	public void initializeCustomCellFactory() {
 		customizeEventCellFactory();
 		customizeDeadlineCellFactory();
 		customizeFloatingCellFactory();
@@ -84,6 +84,7 @@ public class MainLayoutController {
 		this.mainApp = mainApp;
 		getTasks();
 		setupListViews();
+		initializeCustomCellFactory();
 		setListeners();
 	}
 
