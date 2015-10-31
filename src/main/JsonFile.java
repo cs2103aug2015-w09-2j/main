@@ -66,6 +66,7 @@ public class JsonFile {
 	 * This method return the JSONArray of EVENT, DEADLINE, FLOATING
 	 * @return ArrayList of JSONArray containing EVENT, DEADLINE, FLOATING
 	 */
+	/*
 	public ArrayList<JSONArray> getJsonFileContent(){
 		FileStorage fs = new FileStorage();
 		String filePath = fs.getFilePath();
@@ -104,7 +105,7 @@ public class JsonFile {
 		
 		return contentList;
 	}
-	
+	*/
 	public ArrayList<JSONArray> getJsonFileContent(String fileType){
 		FileStorage fs = new FileStorage();
 		String filePath = "";

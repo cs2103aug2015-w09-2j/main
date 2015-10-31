@@ -5,6 +5,8 @@ import org.json.simple.JSONArray;
 
 public class JsonSearch {
 
+	private static final String STORAGE_FILE = "STORAGE_FILE";
+	
 	public ArrayList<Task> searchEvent(String keyword1, String keyword2, JSONArray event){
 		
 		JsonTask jsonTask = new JsonTask();
@@ -81,7 +83,7 @@ public class JsonSearch {
 		JsonTask jsonTask = new JsonTask();
 		String description,startDate, startTime, endDate, endTime;
 		JsonFile jsonFile = new JsonFile();
-		ArrayList<JSONArray> content = jsonFile.getJsonFileContent();
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		
 		ArrayList<Task> eventList = jsonTask.eventTaskArray(content.get(0));
 		ArrayList<Task> deadlineList = jsonTask.deadlineTaskArray(content.get(1));
@@ -144,7 +146,7 @@ public class JsonSearch {
 	
 	public ArrayList<Task> searchAll(String keyword1, String keyword2){
 		JsonFile jsonFile = new JsonFile();
-		ArrayList<JSONArray> content = jsonFile.getJsonFileContent();
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		ArrayList<Task> event = searchEvent(keyword1, keyword2, content.get(0));
 		ArrayList<Task> deadline = searchDeadline(keyword1,keyword2, content.get(1));
 		ArrayList<Task> floating = searchFloating(keyword1, keyword2, content.get(2));
@@ -201,7 +203,7 @@ public class JsonSearch {
 	
 	public ArrayList<Task> searchAllTaskBeforeDate(DateClass date){
 		JsonFile jsonFile = new JsonFile();
-		ArrayList<JSONArray> content = jsonFile.getJsonFileContent();
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		ArrayList<Task> event = searchEventTaskBeforeDate(date, content.get(0));
 		ArrayList<Task> deadline = searchDeadlineTaskBeforeDate(date, content.get(1));
 		ArrayList<Task> allTasks = new ArrayList<Task>();

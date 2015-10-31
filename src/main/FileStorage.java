@@ -239,10 +239,24 @@ public class FileStorage {
 	 * @param task task to be deleted
 	 */
 	public void deleteTask(Task task){
-		json.delete(task);
-
+		json.deleteFromStorageFile(task);
 	}
 	
+	/**
+	 * Delete a task from the done file
+	 * @param task task to be deleted
+	 */
+	public void deleteDoneTask(Task task){
+		json.deleteFromDoneFile(task);
+	}
+	
+	/**
+	 * Delete a task from the overdue file
+	 * @param task task to be deleted
+	 */
+	public void deletOverdueTask(Task task){
+		json.deleteFromOverdueFile(task);
+	}
 	/**
 	 * This methods updates and set the new storage file path
 	 * @param newPath the new storage location which the user wants to store his data

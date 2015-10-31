@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import org.json.simple.JSONArray;
 
 public class JsonRead {
+	
+	private static final String STORAGE_FILE = "STORAGE_FILE";
+	private static final String DONE_FILE = "DONE_FILE";
+	private static final String OVERDUE_FILE = "OVERDUE_FILE";
 
 	public ArrayList<Task> readTask(String taskType){
 		JsonFile jsonFile = new JsonFile();
 		JsonTask jsonTask = new JsonTask();
-		ArrayList<JSONArray> content = jsonFile.getJsonFileContent();
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		ArrayList<Task> task = new ArrayList<Task>();
 		
 		

@@ -13,7 +13,9 @@ import org.json.simple.JSONValue;
 
 public class JsonWrite {
 
-	public void writeEventTask(String description, String startDate, String startTime, String endDate, String endTime){
+	/*
+	public void writeEventTask(String description, String startDate, String startTime, 
+			String endDate, String endTime){
 		String arr[] = {description, startDate, startTime, endDate, endTime};
 		writeToJsonFile("EVENT", arr);
 	}
@@ -28,6 +30,7 @@ public class JsonWrite {
 		writeToJsonFile("FLOATING", arr);
 		
 	}
+	*/
 	
 	public void writeEventTask(String description, String startDate, String startTime, 
 			String endDate, String endTime, String fileType){
@@ -46,7 +49,7 @@ public class JsonWrite {
 		
 	}
 	
-	
+	/*
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static void writeToJsonFile(String taskType, String arr[]){
 		
@@ -107,6 +110,7 @@ public class JsonWrite {
 		}
 		
 	}
+	*/
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static void writeToJsonFile(String taskType, String arr[], String fileType){

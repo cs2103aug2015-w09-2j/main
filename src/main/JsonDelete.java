@@ -16,7 +16,7 @@ import org.json.simple.parser.ParseException;
 public class JsonDelete {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void deleteTask(Task task){
+	public void deleteTask(Task task, String fileType){
 		JsonArray jsonArray = new JsonArray();
 		JsonFile jsonFile = new JsonFile();
 		Map obj =new LinkedHashMap();
@@ -24,7 +24,7 @@ public class JsonDelete {
 		String taskType = determineTaskType(task);
 		
 		String description,startDate, startTime, endDate, endTime, strTask;
-		ArrayList<JSONArray> contentList = jsonFile.getJsonFileContent();
+		ArrayList<JSONArray> contentList = jsonFile.getJsonFileContent(fileType);
 		
 		JSONArray eventArray =  jsonArray.eventJsonArray(contentList.get(0));
 		JSONArray deadlineArray =  jsonArray.deadlineJsonArray(contentList.get(1));

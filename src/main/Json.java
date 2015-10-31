@@ -14,6 +14,11 @@ public class Json {
 	private static JsonSearch jsonSearch;
 	private static JsonRead jsonRead;
 	private static JsonWrite jsonWrite;
+	private static String doneFilePath = "done.json";
+	private static String overdueFilePath = "overdue.json";
+	private static final String STORAGE_FILE = "STORAGE_FILE";
+	private static final String DONE_FILE = "DONE_FILE";
+	private static final String OVERDUE_FILE = "OVERDUE_FILE";
 	
 	public Json(){
 		Json.filePath = null;
@@ -48,25 +53,25 @@ public class Json {
 				startTime = ((Event)task).getStartTime().toString();
 				endDate = ((Event)task).getEndDate().toString();
 				endTime = ((Event)task).getEndTime().toString();
-				jsonWrite.writeEventTask(description, startDate, startTime, endDate, endTime);
+				jsonWrite.writeEventTask(description, startDate, startTime, endDate, endTime, STORAGE_FILE);
 				break;
 			case "DEADLINE":
 				endDate = ((Deadline)task).getEndDate().toString();
 				endTime = ((Deadline)task).getEndTime().toString();
-				jsonWrite.writeDeadlineTask(description, endDate ,endTime);
+				jsonWrite.writeDeadlineTask(description, endDate ,endTime, STORAGE_FILE);
 				break;
 			case "FLOATING":
-				jsonWrite.writeFloatingTask(description);
+				jsonWrite.writeFloatingTask(description, STORAGE_FILE);
 				break;
 		}
 	}
 
 	public void writeDoneTask(Task task){
-		writeToSpecificFile(task, "DONE_FILE");
+		writeToSpecificFile(task, DONE_FILE);
 	}
 	
 	public void writeOverdueTask(Task task){
-		writeToSpecificFile(task, "OVERDUE_FILE");
+		writeToSpecificFile(task, OVERDUE_FILE);
 	}
 	
 	
@@ -102,37 +107,37 @@ public class Json {
 	}
 	
 	public ArrayList<Task> searchEventTask(String keyword){
-		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(); 
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE); 
 		isFileEmpty();
 		return jsonSearch.searchEvent(keyword, keyword, content.get(0));
 	}
 	
 	public ArrayList<Task> searchEventTask(String keyword1, String keyword2){
-		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(); 
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE); 
 		isFileEmpty();
 		return jsonSearch.searchEvent(keyword1, keyword2, content.get(0));
 	}
 	
 	public ArrayList<Task> searchDeadlineTask(String keyword){
-		ArrayList<JSONArray> content = jsonFile.getJsonFileContent();
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		isFileEmpty();
 		return jsonSearch.searchDeadline(keyword, keyword, content.get(1));
 	}
 	
 	public ArrayList<Task> searchDeadlineTask(String keyword1, String keyword2){
-		ArrayList<JSONArray> content = jsonFile.getJsonFileContent();
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		isFileEmpty();
 		return jsonSearch.searchDeadline(keyword1, keyword2, content.get(1));
 	}
 	
 	public ArrayList<Task> searchFloatingTask(String keyword){
-		ArrayList<JSONArray> content = jsonFile.getJsonFileContent();
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		isFileEmpty();
 		return jsonSearch.searchFloating(keyword, keyword, content.get(2));
 	}
 	
 	public ArrayList<Task> searchFloatingTask(String keyword1, String keyword2){
-		ArrayList<JSONArray> content = jsonFile.getJsonFileContent();
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		isFileEmpty();
 		return jsonSearch.searchFloating(keyword1, keyword2, content.get(2));
 	}
@@ -158,13 +163,13 @@ public class Json {
 	}
 	
 	public ArrayList<Task>searchEventTaskBeforeDate(DateClass date){
-		ArrayList<JSONArray> content = jsonFile.getJsonFileContent();
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		isFileEmpty();
 		return jsonSearch.searchEventTaskBeforeDate(date, content.get(0));
 	}
 	
 	public ArrayList<Task>searchDeadlineTaskBeforeDate(DateClass date){
-		ArrayList<JSONArray> content = jsonFile.getJsonFileContent();
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		isFileEmpty();
 		return jsonSearch.searchDeadlineTaskBeforeDate(date, content.get(1));
 	}
@@ -173,12 +178,32 @@ public class Json {
 		return jsonSearch.searchAllTaskBeforeDate(date);
 	}
 	
-	public void delete(Task task){
+	public void deleteFromStorageFile(Task task){
 		File file = new File(filePath);
 		JsonDelete jsonDelete = new JsonDelete();
 		if(task != null){
 			if(file.exists()){
-				jsonDelete.deleteTask(task);
+				jsonDelete.deleteTask(task, STORAGE_FILE);
+			}
+		}
+	}
+	
+	public void deleteFromDoneFile(Task task){
+		File file = new File(doneFilePath);
+		JsonDelete jsonDelete = new JsonDelete();
+		if(task != null){
+			if(file.exists()){
+				jsonDelete.deleteTask(task, DONE_FILE);
+			}
+		}
+	}
+	
+	public void deleteFromOverdueFile(Task task){
+		File file = new File(overdueFilePath);
+		JsonDelete jsonDelete = new JsonDelete();
+		if(task != null){
+			if(file.exists()){
+				jsonDelete.deleteTask(task, OVERDUE_FILE);
 			}
 		}
 	}
