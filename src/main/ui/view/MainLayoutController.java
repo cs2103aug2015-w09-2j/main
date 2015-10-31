@@ -47,7 +47,7 @@ public class MainLayoutController {
 		customizeFloatingCellFactory();
 	}
 
-	public void customizeEventCellFactory() {
+	private void customizeEventCellFactory() {
 		eventsListView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 			@Override
 			public ListCell<Task> call(ListView<Task> eventsListView) {
@@ -56,7 +56,7 @@ public class MainLayoutController {
 		});
 	}
 
-	public void customizeDeadlineCellFactory() {
+	private void customizeDeadlineCellFactory() {
 		deadlinesListView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 			@Override
 			public ListCell<Task> call(ListView<Task> deadlinesListView) {
@@ -66,7 +66,7 @@ public class MainLayoutController {
 		});
 	}
 
-	public void customizeFloatingCellFactory() {
+	private void customizeFloatingCellFactory() {
 		floatingsListView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 			@Override
 			public ListCell<Task> call(ListView<Task> floatingsListView) {
@@ -88,13 +88,14 @@ public class MainLayoutController {
 		setListeners();
 	}
 
-	public void setListeners() {
+	private void setListeners() {
 		events.addListener(new ListChangeListener<Task>() {
 			@Override
 			public void onChanged(Change <? extends Task> aChange) {
 				while (aChange.next()) {
 					customizeDeadlineCellFactory();
 					customizeFloatingCellFactory();
+					break;
 				}
 			}
 		});
@@ -102,9 +103,9 @@ public class MainLayoutController {
 		deadlines.addListener(new ListChangeListener<Task>() {
 			@Override
 			public void onChanged(Change <? extends Task> aChange) {
-				System.out.println("A changed has been received");
 				while (aChange.next()) {
 					customizeFloatingCellFactory();
+					break;
 				}
 			}
 		});
@@ -127,11 +128,17 @@ public class MainLayoutController {
 	}
 
 	@FXML
-	public void getCommand() throws NoSuchFieldException, ParseException { // exception will be handled by Logic later, remove this later
+	private void getCommand() throws NoSuchFieldException, ParseException { // exception will be handled by Logic later, remove this later
 		String command = commandBox.getText();
 
 		mainApp.processCommand(command);
 		commandBox.setText("");
+	}
+
+	@FXML
+	private void listenToKeyTyped() {
+		String textTyped = commandBox.getText();
+		System.out.println(textTyped + " was typed");
 	}
 
 }
