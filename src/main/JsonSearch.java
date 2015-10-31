@@ -1,7 +1,6 @@
 package main;
 
 import java.util.ArrayList;
-
 import org.json.simple.JSONArray;
 
 public class JsonSearch {
@@ -161,6 +160,59 @@ public class JsonSearch {
 			allTasks.add(floating.get(i));
 		}
 		
+		return allTasks;
+	}
+	
+	public ArrayList<Task> searchEventTaskBeforeDate(DateClass date, JSONArray event){
+		JsonTask jsonTask = new JsonTask();
+
+		ArrayList<Task> eventList = jsonTask.eventTaskArray(event);
+		ArrayList<Task> searchList = new ArrayList<Task>();
+		
+		for(int i=0; i<eventList.size(); i++){
+			Task task = eventList.get(i);
+			
+			if(((Event)task).getEndDate().compareTo(date) <= 0){
+				searchList.add(task);
+			}
+					
+		}
+		
+		return searchList;
+	}
+	
+	public ArrayList<Task> searchDeadlineTaskBeforeDate(DateClass date, JSONArray deadline){
+		JsonTask jsonTask = new JsonTask();
+		
+		ArrayList<Task> deadlineList = jsonTask.deadlineTaskArray(deadline);
+		ArrayList<Task> searchList = new ArrayList<Task>();
+		
+		for(int i=0; i<deadlineList.size(); i++){
+			Task task = deadlineList.get(i);
+	
+			if(((Deadline)task).getEndDate().compareTo(date) <= 0){
+				searchList.add(task);
+			}
+		}
+		
+		return searchList;
+	}
+
+	
+	public ArrayList<Task> searchAllTaskBeforeDate(DateClass date){
+		JsonFile jsonFile = new JsonFile();
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent();
+		ArrayList<Task> event = searchEventTaskBeforeDate(date, content.get(0));
+		ArrayList<Task> deadline = searchDeadlineTaskBeforeDate(date, content.get(1));
+		ArrayList<Task> allTasks = new ArrayList<Task>();
+		
+		for(int i=0; i<event.size(); i++){
+			allTasks.add(event.get(i));
+		}
+		for(int i=0; i<deadline.size(); i++){
+			allTasks.add(deadline.get(i));
+		}
+	
 		return allTasks;
 	}
 	

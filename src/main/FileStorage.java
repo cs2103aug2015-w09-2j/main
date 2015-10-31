@@ -49,6 +49,10 @@ public class FileStorage {
 		json.writeTask(task);
 	}
 	
+	public void writeDoneTask(){
+		
+	}
+	
 	/**
 	 * Read and return all the event tasks in the storage file
 	 * @return ArrayList<Task> of event tasks
@@ -176,6 +180,33 @@ public class FileStorage {
 	 */
 	public ArrayList<Task>absoluteSearch(String task, String taskInfo){
 		return json.absoluteSearch(task, taskInfo);
+	}
+	
+	/**
+	 * Search and return all event tasks which ends before or on the given date
+	 * @param date the date in DateClass
+	 * @return ArrayList<Task> of event tasks ends before the given date
+	 */
+	public ArrayList<Task>searchEventTaskBeforeDate(DateClass date){
+		return json.searchEventTaskBeforeDate(date);
+	}
+	
+	/**
+	 * Search and return all deadline tasks which ends before or on the given date
+	 * @param date the date in DateClass
+	 * @return ArrayList<Task> of deadline tasks ends before the given date
+	 */
+	public ArrayList<Task>searchDeadlineTaskBeforeDate(DateClass date){
+		return json.searchDeadlineTaskBeforeDate(date);
+	}
+	
+	/**
+	 * Search and return all event and deadline tasks which ends before or on the given date
+	 * @param date the date in DateClass
+	 * @return ArrayList<Task> of event, deadline and tasks ends before the given date
+	 */
+	public ArrayList<Task>searchAllTaskBeforeDate(DateClass date){
+		return json.searchAllTaskBeforeDate(date);
 	}
 	
 	/**

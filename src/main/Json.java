@@ -138,7 +138,22 @@ public class Json {
 		return jsonSearch.absoluteSearchDescription(task, taskInfo);
 	}
 	
-
+	public ArrayList<Task>searchEventTaskBeforeDate(DateClass date){
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent();
+		isFileEmpty();
+		return jsonSearch.searchEventTaskBeforeDate(date, content.get(0));
+	}
+	
+	public ArrayList<Task>searchDeadlineTaskBeforeDate(DateClass date){
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent();
+		isFileEmpty();
+		return jsonSearch.searchDeadlineTaskBeforeDate(date, content.get(1));
+	}
+	public ArrayList<Task> searchAllTaskBeforeDate(DateClass date){
+		isFileEmpty();
+		return jsonSearch.searchAllTaskBeforeDate(date);
+	}
+	
 	public void delete(Task task){
 		File file = new File(filePath);
 		JsonDelete jsonDelete = new JsonDelete();
