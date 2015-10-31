@@ -15,6 +15,7 @@ public class Deadline extends Task {
 		super(description);
 		this.endDate = endDate;
 		this.endTime = endTime;
+		isDone = false;
 	}
 
 	/**

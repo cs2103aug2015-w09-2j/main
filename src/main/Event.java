@@ -24,6 +24,7 @@ public class Event extends Task {
 		this.endDate = endDate;
 		this.startTime = startTime;
 		this.endTime = endTime;
+		isDone = false;
 	}
 
 	/**
