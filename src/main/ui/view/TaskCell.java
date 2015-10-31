@@ -27,6 +27,10 @@ public class TaskCell {
 				String time = ((Event) item).getStartTime().to12HourFormat();
 
 				setText(this.getIndex()+1 + ") " + day + " " + time + " " + item.getDescription());
+				setPrefWidth(200);
+				setMaxWidth(200);
+				setMinWidth(200);
+				setWrapText(true);
 				setGraphic(null);
 			}
 		}
@@ -48,6 +52,10 @@ public class TaskCell {
 				String time = ((Deadline) item).getEndTime().to12HourFormat();
 
 				setText(startIndex + this.getIndex() + 1 + ") " + day + " " + time + " " + item.getDescription());
+				setPrefWidth(200);
+				setMaxWidth(200);
+				setMinWidth(200);
+				setWrapText(true);
 				setGraphic(null);
 			}
 		}
@@ -67,6 +75,10 @@ public class TaskCell {
 			} else {
 				item = (Floating) item;
 				setText(startIndex + this.getIndex() + 1 + ") " + item.toString());
+				setPrefWidth(200);
+				setMaxWidth(200);
+				setMinWidth(200);
+				setWrapText(true);
 				setGraphic(null);
 			}
 		}

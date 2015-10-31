@@ -4,4 +4,8 @@
 /.classpath
 .DS_Store
 .metadata/**/*
+<<<<<<< HEAD
 .data.json
+=======
+data.json
+>>>>>>> 317737a334427708ebfbd5c25949e7d132c293e1
