@@ -180,17 +180,36 @@ public class Parser {
 			return true;
 		}
 		
+		//else find for "at" and make sure it comes before "by" which is for evenet
+		
+		String[] splitWords = strCommand.split(" ");
+		
+		for(int i = splitWords.length - 1; i >= 0; i--){
+			if(splitWords[i].equals("by") || splitWords[i].equals("in")){
+				return false;
+			} else if(splitWords[i].equals("at")){
+				return true;
+			}
+		}
+		
 		return false;
 	}
 	
 	private boolean isADeadlineCommand(String strCommand){
 		//If strCommand has "by", its a deadline!
-		if(strCommand.contains("by")){
+		if(strCommand.contains("by") || strCommand.contains("in") || strCommand.contains("due")){
 			return true;
 		}
 		return false;
 	}
 	
+	private String preprocessNLP(String strNLP){
+		strNLP = strNLP.replace("tmr", "tomorrow");
+		strNLP = strNLP.replace("nxt", "next");
+		strNLP = strNLP.replace("wk", "week");
+		
+		return strNLP;
+	}
 
 	private boolean isAnUpdateCommand(String strCommand){
 		//If the first word is update
@@ -235,6 +254,15 @@ public class Parser {
 			return true;
 		}
 		return false;
+	}
+	
+	private String replaceLast(String string, String substring, String replacement)
+	{
+	  int index = string.lastIndexOf(substring);
+	  if (index == -1)
+	    return string;
+	  return string.substring(0, index) + replacement
+	          + string.substring(index+substring.length());
 	}
 	
 	private boolean isADeleteCommand(String strCommand){
@@ -309,8 +337,9 @@ public class Parser {
 	private Command parseAddCommand(String strCommand){
 		
 		String strDescription;
-		TimeClass startTime, endTime;
-		DateClass startDate, endDate;
+		String strStartDateAndStartTime = null;
+		TimeClass startTime = null, endTime = null;
+		DateClass startDate = null, endDate = null;
 		Command command;
 		
 		//1. Remove "add" from command
@@ -325,33 +354,45 @@ public class Parser {
 			 */
 			
 			//<------------------Handling End Date and Time---------->
-			String strEndDateAndEndTime = strCommand.substring(strCommand.lastIndexOf("to"));
-			
-			endDate = getDate(strEndDateAndEndTime);
-			endTime = getTime(strEndDateAndEndTime);
-			
-			if(endDate == null && endTime == null){
-				//use natural language to try get DateClass
-				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strEndDateAndEndTime);
-				endDate = prettyTime.getDate();
-				endTime = prettyTime.getTime();
-			}
-			else if(endDate != null && endTime == null){
-				String strWithoutDate = removeDate(strEndDateAndEndTime);
-				//use natural language to try get DateClass
-				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutDate);
-				endTime = prettyTime.getTime();
+			String strEndDateAndEndTime = null;
+			if(strCommand.contains("from") && strCommand.contains("to")){
+				strEndDateAndEndTime = strCommand.substring(strCommand.lastIndexOf("to"));
 				
-			} else if(endDate == null && endTime != null){
-				String strWithoutTime = removeTime(strEndDateAndEndTime);
-				//use natural language to try get DateClass
-				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutTime);
-				endDate = prettyTime.getDate();
+				strEndDateAndEndTime = preprocessNLP(strEndDateAndEndTime);
+				
+				endDate = getDate(strEndDateAndEndTime);
+				endTime = getTime(strEndDateAndEndTime);
+				
+				if(endDate == null && endTime == null){
+					//use natural language to try get DateClass
+					PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strEndDateAndEndTime);
+					endDate = prettyTime.getDate();
+					endTime = prettyTime.getTime();
+				}
+				else if(endDate != null && endTime == null){
+					String strWithoutDate = removeDate(strEndDateAndEndTime);
+					//use natural language to try get DateClass
+					PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutDate);
+					endTime = prettyTime.getTime();
+					
+				} else if(endDate == null && endTime != null){
+					String strWithoutTime = removeTime(strEndDateAndEndTime);
+					//use natural language to try get DateClass
+					PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutTime);
+					endDate = prettyTime.getDate();
+				}
+				strCommand = replaceLast(strCommand, strEndDateAndEndTime, "").trim();
+				strStartDateAndStartTime = strCommand.substring(strCommand.lastIndexOf("from"));	
+			} else if(strCommand.contains("at")){
+				strStartDateAndStartTime = strCommand.substring(strCommand.lastIndexOf("at"));
+				
 			}
-			strCommand = strCommand.replace(strEndDateAndEndTime, "").trim();
+			
+			
 			
 			//<-----------------Handling Start Date and Time--------->
-			String strStartDateAndStartTime = strCommand.substring(strCommand.lastIndexOf("from"));
+			
+			strStartDateAndStartTime = preprocessNLP(strStartDateAndStartTime);
 			
 			startDate = getDate(strStartDateAndStartTime);
 			startTime = getTime(strStartDateAndStartTime);
@@ -376,6 +417,12 @@ public class Parser {
 			}
 			strCommand = strCommand.replace(strStartDateAndStartTime, "").trim();
 			
+			if(endDate == null){
+					endDate = startDate;
+			}
+			if(endTime == null){
+				endTime = new TimeClass("2359");
+			}
 			strDescription = strCommand;
 			
 			//NO description found!
@@ -404,13 +451,7 @@ public class Parser {
 				}
 			}
 			
-			if(startTime == null){
-				startTime = new TimeClass(TimeHandler.getHourNow() + "", TimeHandler.getMinuteNow() + "");
-			}
 			
-			if(endTime == null){
-				endTime = new TimeClass(TimeHandler.getHourNow() + "", TimeHandler.getMinuteNow() + "");
-			}
 			
 			command = new Command(CommandType.ADD_EVENT);
 			
@@ -423,7 +464,16 @@ public class Parser {
 			 * Description by enddate endtime
 			 */
 			//<------------------Handling End Date and Time---------->
-			String strEndDateAndEndTime = strCommand.substring(strCommand.lastIndexOf("by"));
+			String strEndDateAndEndTime= null;
+			if(strCommand.contains("by"))
+				strEndDateAndEndTime = strCommand.substring(strCommand.lastIndexOf("by"));
+			else if (strCommand.contains("in"))
+				strEndDateAndEndTime = strCommand.substring(strCommand.lastIndexOf("in"));
+			
+			
+			//PreProcess
+			strEndDateAndEndTime = preprocessNLP(strEndDateAndEndTime);
+			
 			
 			endDate = getDate(strEndDateAndEndTime);
 			endTime = getTime(strEndDateAndEndTime);
@@ -608,11 +658,9 @@ public class Parser {
 		Parser p = new Parser();
 		
 		//String command = "update new swimming -d swimming";
-		String command = "add hello babyv by today  ";
+		String command = "add there is an event from 1/11 3pm  to next month";
 		Command t = p.parse(command);
 		
-		command = "add hello babyv from today to tmr  ";
-		t = p.parse(command);
 		
 		System.out.println(((Event)t.getTask()).getEndTime().to12HourFormat());
 	
