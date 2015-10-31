@@ -50,10 +50,24 @@ public class FileStorage {
 	}
 	
 	public void writeDoneTask(Task task){
+		File file = new File("done.json");
+		if(!file.exists()){
+			createFile(file);
+			//Check file if it is in the json empty format
+			jsonFile.createJsonFile(file);
+		}
+		jsonFile.isJsonFileEmpty(file);
 		json.writeDoneTask(task);
 	}
 	
 	public void writeOverdueTask(Task task){
+		File file = new File("overdue.json");
+		if(!file.exists()){
+			createFile(file);
+			//Check file if it is in the json empty format
+			jsonFile.createJsonFile(file);
+		}
+		jsonFile.isJsonFileEmpty(file);
 		json.writeOverdueTask(task);
 	}
 	
