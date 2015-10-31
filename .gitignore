@@ -4,4 +4,4 @@
 /.classpath
 .DS_Store
 .metadata/**/*
-/data.json
+.data.json
