@@ -29,6 +29,23 @@ public class JsonWrite {
 		
 	}
 	
+	public void writeEventTask(String description, String startDate, String startTime, 
+			String endDate, String endTime, String fileType){
+		String arr[] = {description, startDate, startTime, endDate, endTime};
+		writeToJsonFile("EVENT", arr, fileType);
+	}
+	
+	public void writeDeadlineTask(String description, String endDate ,String endTime, String fileType){
+		String arr[] = {description, endDate, endTime};
+		writeToJsonFile("DEADLINE", arr, fileType);
+	}
+	
+	public void writeFloatingTask(String description, String fileType){
+		String arr[] = {description};
+		writeToJsonFile("FLOATING", arr, fileType);
+		
+	}
+	
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static void writeToJsonFile(String taskType, String arr[]){
@@ -91,7 +108,80 @@ public class JsonWrite {
 		
 	}
 	
-	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private static void writeToJsonFile(String taskType, String arr[], String fileType){
+		
+		JsonFile jsonFile = new JsonFile();
+		JsonArray jsonArray = new JsonArray();
+		Map obj =new LinkedHashMap();
+		
+		ArrayList<JSONArray> contentList = jsonFile.getJsonFileContent(fileType);
+		
+		JSONArray eventArray =  jsonArray.eventJsonArray(contentList.get(0));
+		JSONArray deadlineArray =  jsonArray.deadlineJsonArray(contentList.get(1));
+		JSONArray floatingArray =  jsonArray.floatingJsonArray(contentList.get(2));
+		
+		//System.out.println("Write:" + eventArray.toJSONString());
+		
+		switch(taskType){
+			case "EVENT":
+				eventArray.add(newEvent(arr));		
+				break;
+			case "DEADLINE":
+				deadlineArray.add(newDeadline(arr));		
+				break;
+			case "FLOATING":
+				floatingArray.add(newFloating(arr));		
+				break;
+			default:
+				System.out.println("Error");
+		}
+		
+		obj.put("EVENT", eventArray);
+		obj.put("DEADLINE", deadlineArray);
+		obj.put("FLOATING", floatingArray);
+		
+		
+		//System.out.println("obj: " + obj);
+		
+		StringWriter out = new StringWriter();
+		
+		try {
+			JSONValue.writeJSONString(obj, out);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		String jsonText = out.toString().replace("\\", "");
+		
+		try {
+			FileStorage fs = new FileStorage();
+			String filePath = "";
+			switch(fileType){
+				case "STORAGE_FILE":
+					filePath = fs.getFilePath();
+					break;
+				case "DONE_FILE":
+					filePath = "done.json";
+					break;
+				case "OVERDUE_FILE":
+					filePath = "overdue.json";
+					break;
+				default:
+					System.out.println("writeToJsonFile(String taskType, String arr[], String fileType)" +
+							" has a empty filePath");
+			}
+			FileWriter file = new FileWriter(filePath);//"test.txt");
+			file.write(jsonText);
+			file.flush();
+			file.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static Map newEvent(String arr[]){
 		Map eventMap = new LinkedHashMap();
