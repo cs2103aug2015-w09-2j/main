@@ -73,10 +73,10 @@ public class MainApp extends Application {
 			// Show the scene containing the main layout
 			Scene scene = new Scene(mainLayout, 900, 600);
 			primaryStage.setScene(scene);
+			primaryStage.setResizable(false);
 			primaryStage.show();
 
 			mainLayoutController.focusCommandBox();
-
 		}
 		catch (IOException e) {
 			e.printStackTrace();

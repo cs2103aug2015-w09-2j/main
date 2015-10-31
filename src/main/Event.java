@@ -7,6 +7,7 @@ public class Event extends Task {
 	private DateClass endDate;
 	private TimeClass startTime;
 	private TimeClass endTime;
+	private boolean isDone ; 
 
 	/**
 	 * Description Constructor : Creates a event task, which is a subclass of the Command abstract class.
@@ -23,6 +24,7 @@ public class Event extends Task {
 		this.endDate = endDate;
 		this.startTime = startTime;
 		this.endTime = endTime;
+		isDone = false;
 	}
 
 	/**
@@ -33,12 +35,19 @@ public class Event extends Task {
 		return startDate;
 	}
 
+	public void setStartDate(DateClass startDate){
+		this.startDate = startDate;
+	}
 	/**
 	 * Description Gets the endDate of the event
 	 * @return
 	 */
 	public DateClass getEndDate() {
 		return endDate;
+	}
+	
+	public void setEndDate(DateClass endDate) {
+		this.endDate = endDate;
 	}
 
 	/**
@@ -47,6 +56,10 @@ public class Event extends Task {
 	 */
 	public TimeClass getStartTime() {
 		return startTime;
+	}
+	
+	public void setStartTime(TimeClass startTime) {
+		this.startTime = startTime;
 	}
 
 	/**
@@ -57,6 +70,10 @@ public class Event extends Task {
 		return endTime;
 	}
 
+	public void setEndTime(TimeClass endTime) {
+		this.endTime = endTime;
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -73,5 +90,13 @@ public class Event extends Task {
 		} else {
 			return this.getStartDate().compareTo(((Event) anotherEvent).getStartDate());
 		}
+	}
+
+	public boolean isDone() {
+		return isDone;
+	}
+
+	public void setDone(boolean isDone) {
+		this.isDone = isDone;
 	}
 }
