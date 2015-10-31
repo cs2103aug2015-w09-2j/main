@@ -4,7 +4,11 @@
  */
 package main.ui.view;
 
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import main.Task;
 import main.Event;
 import main.Deadline;
@@ -26,12 +30,27 @@ public class TaskCell {
 				String month = ((Event) item).getStartDate().getStrMonth();
 				String time = ((Event) item).getStartTime().to12HourFormat();
 
-				setText(this.getIndex()+1 + ") " + day + " " + time + " " + item.getDescription());
+				HBox anHBox = new HBox(2);
+				VBox aVBox = new VBox(2);
+				Label indexLabel = new Label();
+				Label timeLabel = new Label();
+				Label descriptionLabel = new Label();
+
+				indexLabel.setText(this.getIndex()+1 + "");
+				indexLabel.setPrefWidth(USE_COMPUTED_SIZE);
+				timeLabel.setText(day + " " + time);
+				timeLabel.setWrapText(true);
+				descriptionLabel.setText(item.getDescription());
+				descriptionLabel.setWrapText(true);
+
+				aVBox.getChildren().addAll(timeLabel, descriptionLabel);
+				anHBox.getChildren().addAll(indexLabel, aVBox);
+
+				// setText(this.getIndex()+1 + ") " + day + " " + time + " " + item.getDescription());
 				setPrefWidth(200);
 				setMaxWidth(200);
 				setMinWidth(200);
-				setWrapText(true);
-				setGraphic(null);
+				setGraphic(anHBox);
 			}
 		}
 	}
@@ -51,12 +70,27 @@ public class TaskCell {
 				String month = ((Deadline) item).getEndDate().getStrMonth();
 				String time = ((Deadline) item).getEndTime().to12HourFormat();
 
-				setText(startIndex + this.getIndex() + 1 + ") " + day + " " + time + " " + item.getDescription());
+				HBox anHBox = new HBox(2);
+				VBox aVBox = new VBox(2);
+				Label indexLabel = new Label();
+				Label timeLabel = new Label();
+				Label descriptionLabel = new Label();
+
+				indexLabel.setText(startIndex+this.getIndex()+1 + "");
+				indexLabel.setPrefWidth(USE_COMPUTED_SIZE);
+				timeLabel.setText(day + " " + time);
+				timeLabel.setWrapText(true);
+				descriptionLabel.setText(item.getDescription());
+				descriptionLabel.setWrapText(true);
+
+				aVBox.getChildren().addAll(timeLabel, descriptionLabel);
+				anHBox.getChildren().addAll(indexLabel, aVBox);
+
+				// setText(startIndex + this.getIndex() + 1 + ") " + day + " " + time + " " + item.getDescription());
 				setPrefWidth(200);
 				setMaxWidth(200);
 				setMinWidth(200);
-				setWrapText(true);
-				setGraphic(null);
+				setGraphic(anHBox);
 			}
 		}
 
@@ -74,12 +108,24 @@ public class TaskCell {
 				setGraphic(null);
 			} else {
 				item = (Floating) item;
-				setText(startIndex + this.getIndex() + 1 + ") " + item.toString());
+
+				HBox anHBox = new HBox(2);
+				Label indexLabel = new Label();
+				Label descriptionLabel = new Label();
+
+				indexLabel.setText(startIndex+this.getIndex()+1 + "");
+				indexLabel.setPrefWidth(USE_COMPUTED_SIZE);
+				indexLabel.setMinWidth(Control.USE_PREF_SIZE);
+				descriptionLabel.setText(item.getDescription());
+				descriptionLabel.setWrapText(true);
+
+				anHBox.getChildren().addAll(indexLabel, descriptionLabel);
+
+				// setText(startIndex + this.getIndex() + 1 + ") " + item.toString());
 				setPrefWidth(200);
 				setMaxWidth(200);
 				setMinWidth(200);
-				setWrapText(true);
-				setGraphic(null);
+				setGraphic(anHBox);
 			}
 		}
 

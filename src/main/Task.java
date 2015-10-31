@@ -10,5 +10,7 @@ public abstract class Task implements Comparable<Task> {
 	public String getDescription(){
 		return strDescription;
 	}
-
+	public void setDescription(String strDescription){
+		this.strDescription = strDescription;
+	}
 }

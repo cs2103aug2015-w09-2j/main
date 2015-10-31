@@ -186,15 +186,6 @@ public class Logic {
 	private void search(Command inputCommand) {
 		Search searchCommand = (Search) inputCommand;
 		ArrayList<String> searchCriterias = searchCommand.getSearchStrings();
-		/*
-		 * searchResultEvents
-		 * =fileStorage.searchEventTask(searchCriterias.get(0));
-		 * fillEvents(searchResultEvents); searchResultDeadlines
-		 * =fileStorage.searchDeadlineTask(searchCriterias.get(0));
-		 * fillDeadlines(searchResultDeadlines); searchResultFloatingTasks
-		 * =fileStorage.searchFloatingTask(searchCriterias.get(0));
-		 * fillFloatings(searchResultFloatingTasks);
-		 */
 		if (searchCriterias.size() == 1) {
 			allEvents = fileStorage.searchEventTask(searchCriterias.get(0));
 			fillEvents();
@@ -313,6 +304,49 @@ public class Logic {
 		fileStorage.deleteTask(taskToUpdate);
 		updateRespectiveGUICol(taskToUpdate.getClass().getName());
 		Task updatedTask;
+		String taskType = taskToUpdate.getClass().getName();
+		System.out.println(taskType);
+		switch(taskType){
+		case "main.Event" :
+			if(processUpdate.hasStartDate()){
+				((Event) taskToUpdate).setStartDate(processUpdate.getStartDate());
+			}
+			if(processUpdate.hasEndDate()){
+				((Event) taskToUpdate).setEndDate(processUpdate.getEndDate());
+			}
+			if(processUpdate.hasDescription()){
+				((Event) taskToUpdate).setDescription(processUpdate.getDescription());
+			}
+			updatedTask = taskToUpdate;
+			break;
+		case "main.Deadline":
+			if(processUpdate.hasStartDate()){
+				((Event) taskToUpdate).setStartDate(processUpdate.getStartDate());
+			}
+			if(processUpdate.hasEndDate()){
+				((Deadline) taskToUpdate).setEndDate(processUpdate.getEndDate());
+			}
+			if(processUpdate.hasDescription()){
+				taskToUpdate.setDescription(processUpdate.getDescription());
+			}
+			updatedTask = taskToUpdate;
+			break;
+		case "main.Floating":
+			if(processUpdate.hasStartDate()){
+				((Event) taskToUpdate).setStartDate(processUpdate.getStartDate());
+			}	
+			if(processUpdate.hasEndDate()){
+				((Deadline) taskToUpdate).setEndDate(processUpdate.getEndDate());
+			}
+			if(processUpdate.hasDescription()){
+				taskToUpdate.setDescription(processUpdate.getDescription());
+			}
+			updatedTask = taskToUpdate;
+			break;
+		default:
+			updatedTask = taskToUpdate;
+			break;
+		}/*
 		if (processUpdate.hasStartDate()) {
 			updatedTask = new Event(processUpdate.getDescription(), processUpdate.getStartDate(),
 					processUpdate.getStartTime(), processUpdate.getEndDate(), processUpdate.getEndTime());
@@ -321,7 +355,7 @@ public class Logic {
 					processUpdate.getEndTime());
 		} else {
 			updatedTask = new Floating(processUpdate.getDescription());
-		}
+		}*/
 		Update output = new Update(taskToUpdateTask(taskToUpdate), taskToUpdateTask(updatedTask));
 		output.setCurrentTask(taskToUpdate);
 		output.setUpdateTask(updatedTask);
