@@ -38,15 +38,26 @@ public class JsonRead {
 	
 	public ArrayList<Task> readDoneTask(){
 
-		//task = jsonTask.doneTaskArray(content);
-		//Different file;
-		//Create a get done file in json
+		JsonFile jsonFile = new JsonFile();
+		JsonTask jsonTask = new JsonTask();
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(DONE_FILE);
+		ArrayList<Task> task = new ArrayList<Task>();
 	
-		return null;
+		task = jsonTask.allTaskArray(content);
+		
+		return task;
 	}
 	
 	public ArrayList<Task> readOverdueTask(){
-		return null;
+		
+		JsonFile jsonFile = new JsonFile();
+		JsonTask jsonTask = new JsonTask();
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(OVERDUE_FILE);
+		ArrayList<Task> task = new ArrayList<Task>();
+	
+		task = jsonTask.allTaskArray(content);
+		
+		return task;
 	}
 	
 	

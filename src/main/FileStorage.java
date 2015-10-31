@@ -49,6 +49,10 @@ public class FileStorage {
 		json.writeTask(task);
 	}
 	
+	/**
+	 * Write a new task into the done file
+	 * @param task the task to be written into the done file
+	 */
 	public void writeDoneTask(Task task){
 		File file = new File("done.json");
 		if(!file.exists()){
@@ -60,6 +64,10 @@ public class FileStorage {
 		json.writeDoneTask(task);
 	}
 	
+	/**
+	 * Write a new task into the overdue file
+	 * @param task the task to be written into the overdue file
+	 */
 	public void writeOverdueTask(Task task){
 		File file = new File("overdue.json");
 		if(!file.exists()){
@@ -71,13 +79,22 @@ public class FileStorage {
 		json.writeOverdueTask(task);
 	}
 	
+	/**
+	 * Read and return all the done tasks in the done file
+	 * @return ArrayList<Task> of done tasks
+	 */
 	public ArrayList<Task> readDoneTask(){
 		return json.readDoneTask();
 	}
 	
+	/**
+	 * Read and return all the overdue tasks in the done file
+	 * @return ArrayList<Task> of overdue tasks
+	 */
 	public ArrayList<Task> readOverdueTask(){
 		return json.readOverdueTask();
 	}
+	
 	/**
 	 * Read and return all the event tasks in the storage file
 	 * @return ArrayList<Task> of event tasks
