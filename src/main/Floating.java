@@ -5,11 +5,10 @@ public class Floating extends Task{
 	/**Description Constructor : Creates a floating task, which is a subclass of the Command abstract class.
 	 * @param strDescription
 	 */
-	private boolean isDone; 
+	 
 	
 	public Floating (String strDescription){
 		super(strDescription); 
-		isDone = false;
 	}
 	
 	
@@ -27,15 +26,5 @@ public class Floating extends Task{
 	public int compareTo(Task o) {
 		// TODO Auto-generated method stub
 		return 0;
-	}
-
-
-	public boolean isDone() {
-		return isDone;
-	}
-
-
-	public void setDone(boolean isDone) {
-		this.isDone = isDone;
 	}
 }

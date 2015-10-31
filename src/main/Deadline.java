@@ -4,7 +4,7 @@ public class Deadline extends Task {
 
 	private DateClass endDate;
 	private TimeClass endTime;
-	private boolean isDone ;
+	
 	/**
 	 * Description Constructor : Creates a deadline task, which is a subclass of the Deadline abstract class.
 	 * @param description
@@ -15,7 +15,7 @@ public class Deadline extends Task {
 		super(description);
 		this.endDate = endDate;
 		this.endTime = endTime;
-		isDone = false;
+		
 	}
 
 	/**
@@ -60,11 +60,4 @@ public class Deadline extends Task {
 		}
 	}
 
-	public boolean isDone() {
-		return isDone;
-	}
-
-	public void setDone(boolean isDone) {
-		this.isDone = isDone;
-	}
 }

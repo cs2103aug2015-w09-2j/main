@@ -6,6 +6,7 @@ public abstract class Task implements Comparable<Task> {
 
 	public Task(String description){
 		strDescription = description;
+		
 	}
 	public String getDescription(){
 		return strDescription;

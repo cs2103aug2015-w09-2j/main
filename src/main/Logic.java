@@ -146,6 +146,10 @@ public class Logic {
 			updateTaskLists();
 			success = true;
 			break;
+		case DONE:
+			done(inputCommand);
+			success = true;
+			break;
 		case DELETE:
 			deleteTask(inputCommand);
 			success = true;
@@ -174,6 +178,39 @@ public class Logic {
 			break;
 		}
 		return success;
+	}
+
+	private void done(Command inputCommand) {
+		updateTaskLists();
+		Set<Integer> tasksDone = ((Done)inputCommand).getTaskIDs();
+		ArrayList<Task> tasksSetDone = new ArrayList<Task>();
+		for(Integer i : tasksDone){
+			tasksSetDone.add(markDone(i));
+			
+		}
+		updateTaskLists();
+		updateRespectiveGUICol("ALL");
+		undoCommandHistory.push(new Done(tasksDone,tasksSetDone));
+		System.out.println(Arrays.toString(tasksDone.toArray()));
+	}
+
+	private Task markDone(Integer i) {
+		if(i<=allEvents.size()){
+			fileStorage.writeDoneTask(allEvents.get(i-1));
+			fileStorage.deleteTask(allEvents.get(i-1));
+			System.out.println("from event");
+			return allEvents.get(i-1); 
+		}else if(i<=allEvents.size() + allDeadlines.size()){
+			fileStorage.writeDoneTask(allDeadlines.get(i-allEvents.size()-1));
+			fileStorage.deleteTask(allDeadlines.get(i-allEvents.size()-1));
+			System.out.println("from deadline");
+			return allDeadlines.get(i- allEvents.size()-1);
+		}else{
+			fileStorage.writeDoneTask(allFloatingTasks.get(i-allEvents.size()-allDeadlines.size()-1));
+			fileStorage.deleteTask(allFloatingTasks.get(i-allEvents.size()- allDeadlines.size()-1));
+			System.out.println("from floatings");
+			return allFloatingTasks.get(i - allEvents.size()-allDeadlines.size() -1);
+		}	
 	}
 
 	private void display() {
@@ -244,11 +281,19 @@ public class Logic {
 			updateRespectiveGUICol(oldTaskUpdated.getClass().getName());
 			// updateTaskLists();
 			break;
+		case DONE:
+			redoDone(redoCommand);
+			undoCommandHistory.push(redoCommand);
+			break;
 		default:
 			break;
 		}
 
 		return false;
+	}
+
+	private void redoDone(Command redoCommand) {
+		done((Done)redoCommand);
 	}
 
 	private boolean undo() {
@@ -289,10 +334,24 @@ public class Logic {
 			updateRespectiveGUICol(undoUpdate.getCurrentTask().getClass().getName());
 			updateRespectiveGUICol(undoUpdate.getUpdateTask().getClass().getName());
 			break;
+		case DONE : 
+			undoDone(undoCommand);
+			redoCommandHistory.push(undoCommand);
+			break;
 		default:
 			break;
 		}
 		return true;
+	}
+
+	private void undoDone(Command undoCommand) {
+		Done doneCommand = ((Done)undoCommand);
+		for(Task currentTask : doneCommand.getTasksSetDone()){
+			fileStorage.deleteDoneTask(currentTask);
+			fileStorage.writeTask(currentTask);
+		}
+		updateTaskLists();
+		updateRespectiveGUICol("ALL");
 	}
 
 	private void update(Command inputCommand) {
