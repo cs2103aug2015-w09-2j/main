@@ -8,6 +8,7 @@ import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -37,8 +38,22 @@ public class MainLayoutController {
 	private ListView<Task> floatingsListView;
 	@FXML
 	private TextField commandBox;
+	@FXML
+	private Label helpDialog;
+
 
 	public MainLayoutController() {
+	}
+
+	/**
+	 * This method is automatically called after the FXML is loaded
+	 */
+	@FXML
+	public void initialize() {
+		customizeEventCellFactory();
+		customizeDeadlineCellFactory();
+		customizeFloatingCellFactory();
+		helpDialog.setText(CommandListener.HELP_MAIN);
 	}
 
 	/**
@@ -49,7 +64,7 @@ public class MainLayoutController {
 		this.mainApp = mainApp;
 		getTasks();
 		setupListViews();
-		initializeCustomCellFactory();
+		initialize();
 		setListeners();
 	}
 
@@ -59,12 +74,6 @@ public class MainLayoutController {
 
 	public void showHelpDialog(String helpDialog) {
 		System.out.println(helpDialog);
-	}
-
-	private void initializeCustomCellFactory() {
-		customizeEventCellFactory();
-		customizeDeadlineCellFactory();
-		customizeFloatingCellFactory();
 	}
 
 	private void customizeEventCellFactory() {
@@ -143,7 +152,7 @@ public class MainLayoutController {
 	private void listenToKeyTyped() {
 		String textTyped = commandBox.getText();
 		String response = CommandListener.respondTo(textTyped);
-		System.out.println(response);
+		helpDialog.setText(response);
 	}
 
 }
