@@ -13,7 +13,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.util.Callback;
 import main.ui.MainApp;
-
+import main.ui.util.CommandListener;
 import main.Task;
 import main.Event;
 import main.Deadline;
@@ -41,7 +41,27 @@ public class MainLayoutController {
 	public MainLayoutController() {
 	}
 
-	public void initializeCustomCellFactory() {
+	/**
+	 * Set the reference to MainApp and setup the view
+	 * @param mainApp
+	 */
+	public void setMainApp(MainApp mainApp) {
+		this.mainApp = mainApp;
+		getTasks();
+		setupListViews();
+		initializeCustomCellFactory();
+		setListeners();
+	}
+
+	public void focusCommandBox() {
+		commandBox.requestFocus();
+	}
+
+	public void showHelpDialog(String helpDialog) {
+		System.out.println(helpDialog);
+	}
+
+	private void initializeCustomCellFactory() {
 		customizeEventCellFactory();
 		customizeDeadlineCellFactory();
 		customizeFloatingCellFactory();
@@ -76,18 +96,6 @@ public class MainLayoutController {
 		});
 	}
 
-	/**
-	 * Set the reference to MainApp and setup the view
-	 * @param mainApp
-	 */
-	public void setMainApp(MainApp mainApp) {
-		this.mainApp = mainApp;
-		getTasks();
-		setupListViews();
-		initializeCustomCellFactory();
-		setListeners();
-	}
-
 	private void setListeners() {
 		events.addListener(new ListChangeListener<Task>() {
 			@Override
@@ -109,10 +117,6 @@ public class MainLayoutController {
 				}
 			}
 		});
-	}
-
-	public void focusCommandBox() {
-		commandBox.requestFocus();
 	}
 
 	private void getTasks() {
@@ -138,7 +142,8 @@ public class MainLayoutController {
 	@FXML
 	private void listenToKeyTyped() {
 		String textTyped = commandBox.getText();
-		System.out.println(textTyped + " was typed");
+		String response = CommandListener.respondTo(textTyped);
+		System.out.println(response);
 	}
 
 }
