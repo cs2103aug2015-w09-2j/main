@@ -78,7 +78,21 @@ public class JsonDelete {
 		   //System.out.println(jsonText);
 		try {
 			FileStorage fs = new FileStorage();
-			String filePath = fs.getFilePath();
+			String filePath = "";
+			switch(fileType){
+				case "STORAGE_FILE":
+					filePath = fs.getFilePath();
+					break;
+				case "DONE_FILE":
+					filePath = "done.json";
+					break;
+				case "OVERDUE_FILE":
+					filePath = "overdue.json";
+					break;
+				default:
+					System.out.println("writeToJsonFile(String taskType, String arr[], String fileType)" +
+							" has a empty filePath");
+			}
 			FileWriter file = new FileWriter(filePath);//"test.txt");
 			file.write(jsonText);
 			file.flush();
