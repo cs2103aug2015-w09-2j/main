@@ -49,10 +49,21 @@ public class FileStorage {
 		json.writeTask(task);
 	}
 	
-	public void writeDoneTask(){
-		
+	public void writeDoneTask(Task task){
+		json.writeDoneTask(task);
 	}
 	
+	public void writeOverdueTask(Task task){
+		json.writeOverdueTask(task);
+	}
+	
+	public ArrayList<Task> readDoneTask(){
+		return json.readDoneTask();
+	}
+	
+	public ArrayList<Task> readOverdueTask(){
+		return json.readOverdueTask();
+	}
 	/**
 	 * Read and return all the event tasks in the storage file
 	 * @return ArrayList<Task> of event tasks

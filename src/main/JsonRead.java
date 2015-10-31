@@ -32,7 +32,18 @@ public class JsonRead {
 		return task;
 	}
 	
+	public ArrayList<Task> readDoneTask(){
+
+		//task = jsonTask.doneTaskArray(content);
+		//Different file;
+		//Create a get done file in json
 	
+		return null;
+	}
+	
+	public ArrayList<Task> readOverdueTask(){
+		return null;
+	}
 	
 	
 }

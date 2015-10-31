@@ -60,6 +60,15 @@ public class Json {
 				break;
 		}
 	}
+
+	public void writeDoneTask(Task task){
+		writeToSpecificFile(task, "DONE_FILE");
+	}
+	
+	public void writeOverdueTask(Task task){
+		writeToSpecificFile(task, "OVERDUE_FILE");
+	}
+	
 	
 	//Check if file is not blank if yes write the empty json format
 	public ArrayList<Task> readEventTask(){	
@@ -80,6 +89,16 @@ public class Json {
 	public ArrayList<Task> readAllTask(){
 		isFileEmpty();
 		return jsonRead.readTask("ALL");
+	}
+	
+	public ArrayList<Task> readDoneTask(){
+		isFileEmpty();
+		return jsonRead.readDoneTask();
+	}
+	
+	public ArrayList<Task> readOverdueTask(){
+		isFileEmpty();
+		return jsonRead.readOverdueTask();
 	}
 	
 	public ArrayList<Task> searchEventTask(String keyword){
@@ -164,7 +183,32 @@ public class Json {
 		}
 	}
 	
-	
+	private void writeToSpecificFile(Task task, String fileType){
+		String description,startDate, startTime, endDate, endTime;
+		String taskType = task.getClass().getName();
+		taskType = taskType.substring(5).toUpperCase();
+		description = task.getDescription();
+		
+		
+		switch(taskType){
+			case "EVENT":		
+				
+				startDate = ((Event)task).getStartDate().toString();
+				startTime = ((Event)task).getStartTime().toString();
+				endDate = ((Event)task).getEndDate().toString();
+				endTime = ((Event)task).getEndTime().toString();
+				jsonWrite.writeEventTask(description, startDate, startTime, endDate, endTime, fileType);
+				break;
+			case "DEADLINE":
+				endDate = ((Deadline)task).getEndDate().toString();
+				endTime = ((Deadline)task).getEndTime().toString();
+				jsonWrite.writeDeadlineTask(description, endDate ,endTime, fileType);
+				break;
+			case "FLOATING":
+				jsonWrite.writeFloatingTask(description, fileType);
+				break;
+		}
+	}
 	
 	private void isFileEmpty(){
 		File file = new File(filePath);
