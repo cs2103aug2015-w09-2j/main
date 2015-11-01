@@ -415,16 +415,20 @@ public class Logic {
 		Task taskToUpdate;
 		taskToUpdate = fileStorage.absoluteSearch(processUpdate.getSearchString()).get(0);
 		fileStorage.deleteTask(taskToUpdate);
+		
 		updateRespectiveGUICol(taskToUpdate.getClass().getName());
 		Task updatedTask;
 		if (processUpdate.hasStartDate()) {
 			updatedTask = new Event(processUpdate.getDescription(), processUpdate.getStartDate(),
 					processUpdate.getStartTime(), processUpdate.getEndDate(), processUpdate.getEndTime());
+			System.out.println("udpate is event");
 		} else if (processUpdate.hasEndDate()) {
 			updatedTask = new Deadline(processUpdate.getDescription(), processUpdate.getEndDate(),
 					processUpdate.getEndTime());
+			System.out.println("udpate is dealdine");
 		} else {
 			updatedTask = new Floating(processUpdate.getDescription());
+			System.out.println("floating");
 		}
 		Update output = new Update(taskToUpdateTask(taskToUpdate), taskToUpdateTask(updatedTask));
 		output.setCurrentTask(taskToUpdate);
