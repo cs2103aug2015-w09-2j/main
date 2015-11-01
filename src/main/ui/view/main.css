@@ -75,8 +75,9 @@
 	-fx-text-fill: #FFFFFF;
 }
 /* --------------------------------- */
+
 #help-box {
-	-fx-background-color: #EFEBE9;
+	-fx-background-color: rgba(239,235,233, 0.7);
 	-fx-background-radius: 6px;
 }
 

@@ -57,7 +57,7 @@
             <Image url="@../../../../resources/logo.png" />
          </image>
          <GridPane.margin>
-            <Insets left="10.0" />
+            <Insets left="15.0" />
          </GridPane.margin>
       </ImageView>
       <Pane id="help-box" minHeight="-Infinity" prefWidth="728.0" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="3">
