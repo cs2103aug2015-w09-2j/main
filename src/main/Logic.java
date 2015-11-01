@@ -37,13 +37,22 @@ public class Logic {
 	 * Description Default Constructor
 	 */
 	private Logic() {
+		try {
+			mainApp = new MainApp();
+		} catch (NoSuchFieldException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		updateTaskLists();
 		undoCommandHistory = new Stack<Command>();
 		redoCommandHistory = new Stack<Command>();
 	}
 
 	private static Parser parser = new Parser();
-	private static UserInterface UI = new UserInterface(); // [teddy] this will
+	//private static UserInterface UI = new UserInterface(); // [teddy] this will
 															// be deleted once
 															// we shift to GUI
 	private FileStorage fileStorage = new FileStorage();
