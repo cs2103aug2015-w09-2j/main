@@ -95,16 +95,10 @@ public class Logic {
 	}
 
 	private void updateTaskLists() {
-		// allEvents = new ArrayList<Task>();
-		// allDeadlines = new ArrayList<Task>();
-		// allFloatingTasks = new ArrayList<Task>();
-		// allTasks = new ArrayList<Task>();
-
 		allEvents = fileStorage.readEventTask();
 		allDeadlines = fileStorage.readDeadlineTask();
 		allFloatingTasks = fileStorage.readFloatingTask();
 		allTasks = fileStorage.readAllTask();
-		// TODO Auto-generated method stub
 	}
 
 	/**
@@ -186,7 +180,6 @@ public class Logic {
 		ArrayList<Task> tasksSetDone = new ArrayList<Task>();
 		for(Integer i : tasksDone){
 			tasksSetDone.add(markDone(i));
-			
 		}
 		updateTaskLists();
 		updateRespectiveGUICol("ALL");
@@ -200,7 +193,7 @@ public class Logic {
 			fileStorage.deleteTask(allEvents.get(i-1));
 			System.out.println("from event");
 			return allEvents.get(i-1); 
-		}else if(i<=allEvents.size() + allDeadlines.size()){
+		}else if(i<= allEvents.size() + allDeadlines.size()){
 			fileStorage.writeDoneTask(allDeadlines.get(i-allEvents.size()-1));
 			fileStorage.deleteTask(allDeadlines.get(i-allEvents.size()-1));
 			System.out.println("from deadline");
@@ -284,6 +277,7 @@ public class Logic {
 		case DONE:
 			redoDone(redoCommand);
 			undoCommandHistory.push(redoCommand);
+			updateRespectiveGUICol("ALL");
 			break;
 		default:
 			break;
@@ -293,7 +287,12 @@ public class Logic {
 	}
 
 	private void redoDone(Command redoCommand) {
-		done((Done)redoCommand);
+		ArrayList<Task> redoDoneTask = ((Done)redoCommand).getTasksSetDone();
+		for(Task currentTask : redoDoneTask){
+			fileStorage.writeDoneTask(currentTask);
+			fileStorage.deleteTask(currentTask);
+			updateTaskLists();
+		}
 	}
 
 	private boolean undo() {
@@ -337,6 +336,7 @@ public class Logic {
 		case DONE : 
 			undoDone(undoCommand);
 			redoCommandHistory.push(undoCommand);
+			updateRespectiveGUICol("ALL");
 			break;
 		default:
 			break;
@@ -349,8 +349,9 @@ public class Logic {
 		for(Task currentTask : doneCommand.getTasksSetDone()){
 			fileStorage.deleteDoneTask(currentTask);
 			fileStorage.writeTask(currentTask);
+			updateTaskLists();
 		}
-		updateTaskLists();
+		
 		updateRespectiveGUICol("ALL");
 	}
 
