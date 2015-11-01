@@ -37,15 +37,6 @@ public class Logic {
 	 * Description Default Constructor
 	 */
 	private Logic() {
-		try {
-			mainApp = new MainApp();
-		} catch (NoSuchFieldException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		updateTaskLists();
 		undoCommandHistory = new Stack<Command>();
 		redoCommandHistory = new Stack<Command>();
@@ -225,7 +216,7 @@ public class Logic {
 			fileStorage.writeDoneTask(allEvents.get(i-1));
 			fileStorage.deleteTask(allEvents.get(i-1));
 			System.out.println("from event");
-			return allEvents.get(i-1); 
+			return allEvents.get(i-1);
 		}else if(i<= allEvents.size() + allDeadlines.size()){
 			fileStorage.writeDoneTask(allDeadlines.get(i-allEvents.size()-1));
 			fileStorage.deleteTask(allDeadlines.get(i-allEvents.size()-1));
@@ -236,7 +227,7 @@ public class Logic {
 			fileStorage.deleteTask(allFloatingTasks.get(i-allEvents.size()- allDeadlines.size()-1));
 			System.out.println("from floatings");
 			return allFloatingTasks.get(i - allEvents.size()-allDeadlines.size() -1);
-		}	
+		}
 	}
 
 	private void display() {
@@ -265,7 +256,7 @@ public class Logic {
 			fillFloatings();
 		} else{
 			System.out.println("Incorrect Search string");
-		}		
+		}
 	}
 
 	private boolean redo() {
@@ -380,7 +371,7 @@ public class Logic {
 			updateRespectiveGUICol(undoUpdate.getCurrentTask().getClass().getName());
 			updateRespectiveGUICol(undoUpdate.getUpdateTask().getClass().getName());
 			break;
-		case DONE : 
+		case DONE :
 			undoDone(undoCommand);
 			redoCommandHistory.push(undoCommand);
 			updateRespectiveGUICol("ALL");
@@ -412,7 +403,7 @@ public class Logic {
 			fileStorage.writeTask(currentTask);
 			updateTaskLists();
 		}
-		
+
 		updateRespectiveGUICol("ALL");
 	}
 
@@ -455,7 +446,7 @@ public class Logic {
 		case "main.Floating":
 			if(processUpdate.hasStartDate()){
 				((Event) taskToUpdate).setStartDate(processUpdate.getStartDate());
-			}	
+			}
 			if(processUpdate.hasEndDate()){
 				((Deadline) taskToUpdate).setEndDate(processUpdate.getEndDate());
 			}

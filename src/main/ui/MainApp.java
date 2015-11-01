@@ -94,6 +94,7 @@ public class MainApp extends Application {
 		this.primaryStage.setTitle("Vodo");
 
 		logic = Logic.getInstance();
+		logic.setMainApp(this);
 		logic.setTasks(events, deadlines, floatings);
 
 		showMainLayout();

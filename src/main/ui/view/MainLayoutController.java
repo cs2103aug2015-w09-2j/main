@@ -112,7 +112,6 @@ public class MainLayoutController {
 				while (aChange.next()) {
 					customizeDeadlineCellFactory();
 					customizeFloatingCellFactory();
-					break;
 				}
 			}
 		});
@@ -122,7 +121,6 @@ public class MainLayoutController {
 			public void onChanged(Change <? extends Task> aChange) {
 				while (aChange.next()) {
 					customizeFloatingCellFactory();
-					break;
 				}
 			}
 		});
