@@ -32,6 +32,7 @@
 .titled-pane > .title > .text {
 	-fx-fill: #000000;
 	-fx-font-weight: 700;
+	-fx-font-size: 16px;
 }
 
 .task-pane > .content {
