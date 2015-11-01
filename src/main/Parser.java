@@ -676,7 +676,7 @@ public class Parser {
 
 	private Command parseExitCommand(String strCommand) {
 		// TODO Auto-generated method stub
-		return null;
+		return new Exit();
 	}
 
 	private boolean isAnExitCommand(String strCommand) {
