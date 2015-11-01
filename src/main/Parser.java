@@ -616,7 +616,7 @@ public class Parser {
 		for(String str : strSplit){
 			str = str.replaceAll(" ", ""); //remove all white spaces
 			
-			if(str.matches("\\d-\\d")){
+			if(str.matches("\\d+-\\d+")){
 				int firstDigit = Integer.valueOf(str.split("-")[0]);
 				int secondDigit = Integer.valueOf(str.split("-")[1]);
 				
@@ -676,7 +676,7 @@ public class Parser {
 		Parser p = new Parser();
 		
 		//String command = "update new swimming -d swimming";
-		String command = "add meeting with potential clients at tomorrow";
+		String command = "done 1,2,4-5";
 		Command t = p.parse(command);
 		
 		
