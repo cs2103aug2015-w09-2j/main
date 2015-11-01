@@ -664,6 +664,8 @@ public class Parser {
 			parsedCommand = parseDeleteCommand(strCommand);
 		} else if (isADoneCommand(strCommand)){
 			parsedCommand = parseDoneCommand(strCommand);
+		}else if (isAnExitCommand(strCommand)){
+			parsedCommand = parseExitCommand(strCommand);
 		}else{
 			parsedCommand = null;
 		}
@@ -671,6 +673,21 @@ public class Parser {
 		return parsedCommand;
 	}
 
+
+	private Command parseExitCommand(String strCommand) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private boolean isAnExitCommand(String strCommand) {
+		//If the first word is update
+		String strFirstWord = getWord(0, strCommand);
+		if(strFirstWord.equals("update")){
+			return true;
+		}
+		return false;
+
+	}
 
 	public static void main(String[] args) throws NoSuchFieldException, ParseException{
 		Parser p = new Parser();
