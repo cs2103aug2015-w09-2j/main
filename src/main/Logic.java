@@ -241,12 +241,33 @@ public class Logic {
 		Search searchCommand = (Search) inputCommand;
 		ArrayList<String> searchCriterias = searchCommand.getSearchStrings();
 		if (searchCriterias.size() == 1) {
+			if(searchCriterias.get(0).equals("done")){
+				ArrayList<Task> doneTasks = fileStorage.readDoneTask();
+				allEvents.clear();
+				allDeadlines.clear();
+				allFloatingTasks.clear();
+				for(Task currentTask: doneTasks){
+					switch(currentTask.getClass().getName()){
+					case "main.Floating":
+						allFloatingTasks.add(currentTask);
+						break;
+					case "main.Deadline":
+						allDeadlines.add(currentTask);
+						break;
+					case "main.Event":
+						allEvents.add(currentTask);
+						break;
+					}
+					updateRespectiveGUICol("ALL");
+				}
+				
+			}else{
 			allEvents = fileStorage.searchEventTask(searchCriterias.get(0));
 			fillEvents();
 			allDeadlines = fileStorage.searchDeadlineTask(searchCriterias.get(0));
 			fillDeadlines();
 			allFloatingTasks = fileStorage.searchFloatingTask(searchCriterias.get(0));
-			fillFloatings();
+			fillFloatings();}
 		} else if (searchCriterias.size() > 1) {
 			allEvents = fileStorage.searchEventTask(searchCriterias.get(0), searchCriterias.get(1));
 			fillEvents();
@@ -415,7 +436,7 @@ public class Logic {
 		Task taskToUpdate;
 		taskToUpdate = fileStorage.absoluteSearch(processUpdate.getSearchString()).get(0);
 		fileStorage.deleteTask(taskToUpdate);
-		
+
 		updateRespectiveGUICol(taskToUpdate.getClass().getName());
 		Task updatedTask;
 		if (processUpdate.hasStartDate()) {
@@ -437,7 +458,7 @@ public class Logic {
 		updateTaskLists();
 		updateRespectiveGUICol("ALL");
 		undoCommandHistory.push(output);
-		
+
 	}
 
 	/*
