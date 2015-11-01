@@ -197,9 +197,14 @@ public class Parser {
 	
 	private boolean isADeadlineCommand(String strCommand){
 		//If strCommand has "by", its a deadline!
-		if(strCommand.contains("by") || strCommand.contains("in") || strCommand.contains("due")){
-			return true;
+		String[] splitWords = strCommand.split(" ");
+		
+		for(int i = splitWords.length-1; i >=0; i--){
+			if(splitWords[i].equals("by") || splitWords[i].equals("in") || splitWords[i].equals("due")){
+				return true;
+			}
 		}
+		
 		return false;
 	}
 	
@@ -423,6 +428,9 @@ public class Parser {
 			if(endTime == null){
 				endTime = new TimeClass("2359");
 			}
+			if(startTime == null){
+				startTime = new TimeClass("0000");
+			}
 			strDescription = strCommand;
 			
 			//NO description found!
@@ -465,10 +473,20 @@ public class Parser {
 			 */
 			//<------------------Handling End Date and Time---------->
 			String strEndDateAndEndTime= null;
-			if(strCommand.contains("by"))
-				strEndDateAndEndTime = strCommand.substring(strCommand.lastIndexOf("by"));
-			else if (strCommand.contains("in"))
-				strEndDateAndEndTime = strCommand.substring(strCommand.lastIndexOf("in"));
+			String[] splitWords = strCommand.split(" ");
+			
+			for(int i = splitWords.length-1; i>=0; i--){
+				if(splitWords[i].equals("by")){
+					strEndDateAndEndTime = strCommand.substring(strCommand.lastIndexOf("by"));
+					break;
+				}else if(splitWords[i].equals("in")){
+					strEndDateAndEndTime = strCommand.substring(strCommand.lastIndexOf("in"));
+					break;
+				}else if(splitWords[i].equals("due")){
+					strEndDateAndEndTime = strCommand.substring(strCommand.lastIndexOf("due"));
+					break;
+				}
+			}
 			
 			
 			//PreProcess
@@ -658,7 +676,7 @@ public class Parser {
 		Parser p = new Parser();
 		
 		//String command = "update new swimming -d swimming";
-		String command = "add there is an event from 1/11 3pm  to next month";
+		String command = "add meeting with potential clients at tomorrow";
 		Command t = p.parse(command);
 		
 		
