@@ -2,7 +2,7 @@ package main.ui.util;
 
 public class CommandListener {
 
-	public static final String HELP_MAIN = "Available commands: add/delete/update/display/done/undo/redo/search/exit";
+	public static final String HELP_MAIN = "Available commands: add/delete/update/clear/display/done/undo/redo/search/exit";
 	private static final String HELP_ADD = "add <task description> [from/by/at] <date&time> [to] <date&time>";
 	private static final String HELP_DELETE = "delete <number>, delete <number> [,/-] <number>";
 	private static final String HELP_UPDATE = "update <number>, update <number> [,/-] <number>";

@@ -1,0 +1,84 @@
+/* .titled-pane > .title
+{
+-fx-background-color: #0288D1;
+-fx-background-insets: 0, 1, 2;
+-fx-background-radius: 5 5 0 0, 4 4 0 0, 3 3 0 0;
+-fx-padding: 0.166667em 0.833333em 0.25em 0.833333em;
+} */
+
+/*
+ * BROWN Primary
+ * 100 - task-pane content = #D7CCC8
+ * 300 - task-pane border = #A1887F
+ * 500 - main background = #795548
+ */
+
+.background {
+	-fx-background-color: #795548;
+}
+
+.task-list {
+	-fx-background-radius: 0 0 6px 6px;
+	-fx-border-width: 1px;
+	-fx-border-color: #A1887F;
+	-fx-border-radius: 0 0 6px 6px;
+}
+
+.task-pane > .title {
+	-fx-background-color: #A1887F;
+	-fx-border-width: 1px;
+}
+
+.task-pane > .title > .text {
+	-fx-text-fill: #FFFFFF;
+}
+
+.task-pane > .content {
+	-fx-background-color: #D7CCC8;
+	-fx-background-radius: 0 0 6px 6px;
+	-fx-border-width: 1px;
+	-fx-border-color: #A1887F;
+	-fx-border-radius: 0 0 6px 6px;
+}
+
+/* -------- CELL STYLING ----------- */
+/*
+ * RED Accent
+ * A100 - time-label = #FF8A80
+ * A400 - task-cell-filled = #FF1744
+ */
+
+ .task-cell-empty {
+ 	-fx-background-color: #D7CCC8;
+ }
+
+.task-cell-filled {
+	-fx-background-color: #FF1744;
+	-fx-background-radius: 6px;
+	-fx-background-insets: 2px;
+}
+
+.index-label {
+	-fx-text-fill: #FFFFFF;
+	-fx-font-weight: bold;
+
+}
+
+.time-label {
+	-fx-background-color: #FF8A80;
+	-fx-background-radius: 4px;
+	-fx-padding: 0 2px 0 2px;
+}
+
+.description-label {
+	-fx-text-fill: #FFFFFF;
+}
+/* --------------------------------- */
+#help-box {
+	-fx-background-color: #EFEBE9;
+	-fx-background-radius: 6px;
+}
+
+#help-text {
+	-fx-text-fill: #000000;
+}

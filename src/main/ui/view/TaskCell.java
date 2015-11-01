@@ -31,6 +31,7 @@ public class TaskCell {
 			if (empty || item == null) {
 				setText(null);
 				setGraphic(null);
+				getStyleClass().add("task-cell-empty");
 			} else {
 				String startDay = ((Event) item).getStartDate().getStrDay();
 				String startMonth = ((Event) item).getStartDate().getStrMonth();
@@ -48,19 +49,23 @@ public class TaskCell {
 
 				indexLabel.setText(this.getIndex()+1 + "");
 				indexLabel.setPrefWidth(USE_COMPUTED_SIZE);
-				indexLabel.setTextFill(Color.WHITE);
+				indexLabel.setMinWidth(USE_PREF_SIZE);
+				indexLabel.getStyleClass().add("index-label");
+				// indexLabel.setTextFill(Color.WHITE);
 
 				if (startDay.equals(endDay)) {
 					timeLabel.setText(startDay + " " + startTime + "-" + endTime);
 				} else
 					timeLabel.setText(startDay + " " + startTime + " - " + endDay + " " + endTime);
 				timeLabel.setWrapText(true);
-				timeLabel.setPadding(new Insets(0, 2, 0, 2));
-				timeLabel.setBackground(new Background(new BackgroundFill(Color.web("#69f0ae"), new CornerRadii(4), Insets.EMPTY)));
+				timeLabel.getStyleClass().add("time-label");
+				// timeLabel.setPadding(new Insets(0, 2, 0, 2));
+				// timeLabel.setBackground(new Background(new BackgroundFill(Color.web("#69f0ae"), new CornerRadii(4), Insets.EMPTY)));
 
 				descriptionLabel.setText(item.getDescription());
 				descriptionLabel.setWrapText(true);
-				descriptionLabel.setTextFill(Color.WHITE);
+				descriptionLabel.getStyleClass().add("description-label");
+				// descriptionLabel.setTextFill(Color.WHITE);
 
 				aVBox.getChildren().addAll(timeLabel, descriptionLabel);
 				anHBox.getChildren().addAll(indexLabel, aVBox);
@@ -70,7 +75,8 @@ public class TaskCell {
 				setMaxWidth(200);
 				setMinWidth(200);
 				setGraphic(anHBox);
-				setBackground(new Background(new BackgroundFill(Color.web("#303f9f"), new CornerRadii(4), new Insets(1))));
+				getStyleClass().add("task-cell-filled");
+				// setBackground(new Background(new BackgroundFill(Color.web("#303f9f"), new CornerRadii(4), new Insets(1))));
 			}
 		}
 	}
@@ -85,6 +91,7 @@ public class TaskCell {
 			if (empty || item == null) {
 				setText(null);
 				setGraphic(null);
+				getStyleClass().add("task-cell-empty");
 			} else {
 				String day = ((Deadline) item).getEndDate().getStrDay();
 				String month = ((Deadline) item).getEndDate().getStrMonth();
@@ -98,10 +105,16 @@ public class TaskCell {
 
 				indexLabel.setText(startIndex+this.getIndex()+1 + "");
 				indexLabel.setPrefWidth(USE_COMPUTED_SIZE);
+				indexLabel.setMinWidth(USE_PREF_SIZE);
+				indexLabel.getStyleClass().add("index-label");
+
 				timeLabel.setText(day + " " + time);
 				timeLabel.setWrapText(true);
+				timeLabel.getStyleClass().add("time-label");
+
 				descriptionLabel.setText(item.getDescription());
 				descriptionLabel.setWrapText(true);
+				descriptionLabel.getStyleClass().add("description-label");
 
 				aVBox.getChildren().addAll(timeLabel, descriptionLabel);
 				anHBox.getChildren().addAll(indexLabel, aVBox);
@@ -111,6 +124,7 @@ public class TaskCell {
 				setMaxWidth(200);
 				setMinWidth(200);
 				setGraphic(anHBox);
+				getStyleClass().add("task-cell-filled");
 			}
 		}
 
@@ -126,6 +140,7 @@ public class TaskCell {
 			if (empty || item == null) {
 				setText(null);
 				setGraphic(null);
+				getStyleClass().add("task-cell-empty");
 			} else {
 				item = (Floating) item;
 
@@ -136,8 +151,11 @@ public class TaskCell {
 				indexLabel.setText(startIndex+this.getIndex()+1 + "");
 				indexLabel.setPrefWidth(USE_COMPUTED_SIZE);
 				indexLabel.setMinWidth(Control.USE_PREF_SIZE);
+				indexLabel.getStyleClass().add("index-label");
+
 				descriptionLabel.setText(item.getDescription());
 				descriptionLabel.setWrapText(true);
+				descriptionLabel.getStyleClass().add("description-label");
 
 				anHBox.getChildren().addAll(indexLabel, descriptionLabel);
 
@@ -146,6 +164,7 @@ public class TaskCell {
 				setMaxWidth(200);
 				setMinWidth(200);
 				setGraphic(anHBox);
+				getStyleClass().add("task-cell-filled");
 			}
 		}
 
