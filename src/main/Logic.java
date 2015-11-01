@@ -3,8 +3,7 @@ package main;
 import java.text.ParseException;
 import java.util.*;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.collections.*;
 
 import main.ui.MainApp;
 
@@ -43,9 +42,10 @@ public class Logic {
 	}
 
 	private static Parser parser = new Parser();
-	//private static UserInterface UI = new UserInterface(); // [teddy] this will
-															// be deleted once
-															// we shift to GUI
+	// private static UserInterface UI = new UserInterface(); // [teddy] this
+	// will
+	// be deleted once
+	// we shift to GUI
 	private FileStorage fileStorage = new FileStorage();
 	// private static Command.CommandType command;
 	// private static Command.CommandType undoCommand =
@@ -178,55 +178,55 @@ public class Logic {
 	}
 
 	private void clearAllTask(Command inputCommand) {
-		Clear clearAllTask = (Clear)inputCommand;
+		Clear clearAllTask = (Clear) inputCommand;
 		ArrayList<Task> taskCleared = new ArrayList<Task>();
-		for(Task currentTask : allEvents){
+		for (Task currentTask : allEvents) {
 			fileStorage.deleteTask(currentTask);
 			taskCleared.add(currentTask);
 		}
-		for(Task currentTask : allDeadlines){
+		for (Task currentTask : allDeadlines) {
 			fileStorage.deleteTask(currentTask);
 			taskCleared.add(currentTask);
 		}
-		for(Task currentTask : allFloatingTasks){
+		for (Task currentTask : allFloatingTasks) {
 			fileStorage.deleteTask(currentTask);
 			taskCleared.add(currentTask);
 		}
 		updateTaskLists();
 		updateRespectiveGUICol("ALL");
-		((Clear)inputCommand).setTaskCleared(taskCleared);
-		undoCommandHistory.push(inputCommand);
+		clearAllTask.setTaskCleared(taskCleared);
+		undoCommandHistory.push(clearAllTask);
 	}
 
 	private void done(Command inputCommand) {
 		updateTaskLists();
-		Set<Integer> tasksDone = ((Done)inputCommand).getTaskIDs();
+		Set<Integer> tasksDone = ((Done) inputCommand).getTaskIDs();
 		ArrayList<Task> tasksSetDone = new ArrayList<Task>();
-		for(Integer i : tasksDone){
+		for (Integer i : tasksDone) {
 			tasksSetDone.add(markDone(i));
 		}
 		updateTaskLists();
 		updateRespectiveGUICol("ALL");
-		undoCommandHistory.push(new Done(tasksDone,tasksSetDone));
+		undoCommandHistory.push(new Done(tasksDone, tasksSetDone));
 		System.out.println(Arrays.toString(tasksDone.toArray()));
 	}
 
 	private Task markDone(Integer i) {
-		if(i<=allEvents.size()){
-			fileStorage.writeDoneTask(allEvents.get(i-1));
-			fileStorage.deleteTask(allEvents.get(i-1));
+		if (i <= allEvents.size()) {
+			fileStorage.writeDoneTask(allEvents.get(i - 1));
+			fileStorage.deleteTask(allEvents.get(i - 1));
 			System.out.println("from event");
-			return allEvents.get(i-1);
-		}else if(i<= allEvents.size() + allDeadlines.size()){
-			fileStorage.writeDoneTask(allDeadlines.get(i-allEvents.size()-1));
-			fileStorage.deleteTask(allDeadlines.get(i-allEvents.size()-1));
+			return allEvents.get(i - 1);
+		} else if (i <= allEvents.size() + allDeadlines.size()) {
+			fileStorage.writeDoneTask(allDeadlines.get(i - allEvents.size() - 1));
+			fileStorage.deleteTask(allDeadlines.get(i - allEvents.size() - 1));
 			System.out.println("from deadline");
-			return allDeadlines.get(i- allEvents.size()-1);
-		}else{
-			fileStorage.writeDoneTask(allFloatingTasks.get(i-allEvents.size()-allDeadlines.size()-1));
-			fileStorage.deleteTask(allFloatingTasks.get(i-allEvents.size()- allDeadlines.size()-1));
+			return allDeadlines.get(i - allEvents.size() - 1);
+		} else {
+			fileStorage.writeDoneTask(allFloatingTasks.get(i - allEvents.size() - allDeadlines.size() - 1));
+			fileStorage.deleteTask(allFloatingTasks.get(i - allEvents.size() - allDeadlines.size() - 1));
 			System.out.println("from floatings");
-			return allFloatingTasks.get(i - allEvents.size()-allDeadlines.size() -1);
+			return allFloatingTasks.get(i - allEvents.size() - allDeadlines.size() - 1);
 		}
 	}
 
@@ -248,13 +248,13 @@ public class Logic {
 			allFloatingTasks = fileStorage.searchFloatingTask(searchCriterias.get(0));
 			fillFloatings();
 		} else if (searchCriterias.size() > 1) {
-			allEvents = fileStorage.searchEventTask(searchCriterias.get(0),searchCriterias.get(1));
+			allEvents = fileStorage.searchEventTask(searchCriterias.get(0), searchCriterias.get(1));
 			fillEvents();
 			allDeadlines = fileStorage.searchDeadlineTask(searchCriterias.get(0), searchCriterias.get(1));
 			fillDeadlines();
 			allFloatingTasks = fileStorage.searchFloatingTask(searchCriterias.get(0), searchCriterias.get(1));
 			fillFloatings();
-		} else{
+		} else {
 			System.out.println("Incorrect Search string");
 		}
 	}
@@ -316,17 +316,17 @@ public class Logic {
 	}
 
 	private void redoClear(Command redoCommand) {
-		Clear redoClear = ((Clear)redoCommand);
+		Clear redoClear = ((Clear) redoCommand);
 		ArrayList<Task> taskCleared = redoClear.getTaskCleared();
-		for(Task currentTask : taskCleared){
+		for (Task currentTask : taskCleared) {
 			fileStorage.deleteTask(currentTask);
 		}
 		updateTaskLists();
 	}
 
 	private void redoDone(Command redoCommand) {
-		ArrayList<Task> redoDoneTask = ((Done)redoCommand).getTasksSetDone();
-		for(Task currentTask : redoDoneTask){
+		ArrayList<Task> redoDoneTask = ((Done) redoCommand).getTasksSetDone();
+		for (Task currentTask : redoDoneTask) {
 			fileStorage.writeDoneTask(currentTask);
 			fileStorage.deleteTask(currentTask);
 			updateTaskLists();
@@ -363,15 +363,17 @@ public class Logic {
 			redoCommandHistory.push(redoUpdate);
 			// redoCommandHistory.push(undoUpdate);
 			// fileStorage.deleteTask(undoUpdate.getUpdateTask());
+			// undoUpdate.getCurrentTask().toString();
+			System.out.println("Current " + undoUpdate.getCurrentTask().toString());
+			System.out.println("update " + undoUpdate.getUpdateTask().toString());
 			fileStorage.writeTask(undoUpdate.getCurrentTask());
 			fileStorage.deleteTask(undoUpdate.getUpdateTask());
-			System.out.println(undoUpdate.getCurrentTask().toString());
-			System.out.println(undoUpdate.getUpdateTask().toString());
+			// System.out.println(undoUpdate.getCurrentTask().toString());
+			// System.out.println(undoUpdate.getUpdateTask().toString());
 			updateTaskLists();
-			updateRespectiveGUICol(undoUpdate.getCurrentTask().getClass().getName());
-			updateRespectiveGUICol(undoUpdate.getUpdateTask().getClass().getName());
+			updateRespectiveGUICol("ALL");
 			break;
-		case DONE :
+		case DONE:
 			undoDone(undoCommand);
 			redoCommandHistory.push(undoCommand);
 			updateRespectiveGUICol("ALL");
@@ -388,22 +390,21 @@ public class Logic {
 	}
 
 	private void undoClear(Command undoCommand) {
-		Clear undoClear = ((Clear)undoCommand);
+		Clear undoClear = ((Clear) undoCommand);
 		ArrayList<Task> taskCleared = undoClear.getTaskCleared();
-		for(Task currentTask : taskCleared){
+		for (Task currentTask : taskCleared) {
 			fileStorage.writeTask(currentTask);
 		}
 		updateTaskLists();
 	}
 
 	private void undoDone(Command undoCommand) {
-		Done doneCommand = ((Done)undoCommand);
-		for(Task currentTask : doneCommand.getTasksSetDone()){
+		Done doneCommand = ((Done) undoCommand);
+		for (Task currentTask : doneCommand.getTasksSetDone()) {
 			fileStorage.deleteDoneTask(currentTask);
 			fileStorage.writeTask(currentTask);
 			updateTaskLists();
 		}
-
 		updateRespectiveGUICol("ALL");
 	}
 
@@ -416,49 +417,6 @@ public class Logic {
 		fileStorage.deleteTask(taskToUpdate);
 		updateRespectiveGUICol(taskToUpdate.getClass().getName());
 		Task updatedTask;
-		String taskType = taskToUpdate.getClass().getName();
-		System.out.println(taskType);
-		switch(taskType){
-		case "main.Event" :
-			if(processUpdate.hasStartDate()){
-				((Event) taskToUpdate).setStartDate(processUpdate.getStartDate());
-			}
-			if(processUpdate.hasEndDate()){
-				((Event) taskToUpdate).setEndDate(processUpdate.getEndDate());
-			}
-			if(processUpdate.hasDescription()){
-				((Event) taskToUpdate).setDescription(processUpdate.getDescription());
-			}
-			updatedTask = taskToUpdate;
-			break;
-		case "main.Deadline":
-			if(processUpdate.hasStartDate()){
-				((Event) taskToUpdate).setStartDate(processUpdate.getStartDate());
-			}
-			if(processUpdate.hasEndDate()){
-				((Deadline) taskToUpdate).setEndDate(processUpdate.getEndDate());
-			}
-			if(processUpdate.hasDescription()){
-				taskToUpdate.setDescription(processUpdate.getDescription());
-			}
-			updatedTask = taskToUpdate;
-			break;
-		case "main.Floating":
-			if(processUpdate.hasStartDate()){
-				((Event) taskToUpdate).setStartDate(processUpdate.getStartDate());
-			}
-			if(processUpdate.hasEndDate()){
-				((Deadline) taskToUpdate).setEndDate(processUpdate.getEndDate());
-			}
-			if(processUpdate.hasDescription()){
-				taskToUpdate.setDescription(processUpdate.getDescription());
-			}
-			updatedTask = taskToUpdate;
-			break;
-		default:
-			updatedTask = taskToUpdate;
-			break;
-		}/*
 		if (processUpdate.hasStartDate()) {
 			updatedTask = new Event(processUpdate.getDescription(), processUpdate.getStartDate(),
 					processUpdate.getStartTime(), processUpdate.getEndDate(), processUpdate.getEndTime());
@@ -467,15 +425,68 @@ public class Logic {
 					processUpdate.getEndTime());
 		} else {
 			updatedTask = new Floating(processUpdate.getDescription());
-		}*/
+		}
 		Update output = new Update(taskToUpdateTask(taskToUpdate), taskToUpdateTask(updatedTask));
 		output.setCurrentTask(taskToUpdate);
 		output.setUpdateTask(updatedTask);
 		fileStorage.writeTask(updatedTask);
 		updateTaskLists();
-		updateRespectiveGUICol(updatedTask.getClass().getName());
+		updateRespectiveGUICol("ALL");
 		undoCommandHistory.push(output);
+		
 	}
+
+	/*
+	 * private void update(Command inputCommand) { Update updateCommand =
+	 * (Update) inputCommand; UpdateTask processUpdate = (UpdateTask)
+	 * updateCommand.getTaskToUpdate();
+	 * System.out.println(processUpdate.getSearchString()); Task taskToUpdate;
+	 * taskToUpdate =
+	 * fileStorage.absoluteSearch(processUpdate.getSearchString()).get(0);
+	 * fileStorage.deleteTask(taskToUpdate); Task updatedTask ; String taskType
+	 * = taskToUpdate.getClass().getName(); System.out.println(taskType);
+	 * System.out.println("To update " + taskToUpdate.toString());
+	 * switch(taskType){ case "main.Event" : updatedTask = taskToUpdate;
+	 * System.out.println("To update " + taskToUpdate.toString() +
+	 * "Task updated " + updatedTask.toString());
+	 * if(processUpdate.hasStartDate()){ ((Event)
+	 * updatedTask).setStartDate(processUpdate.getStartDate()); }
+	 * if(processUpdate.hasEndDate()){ ((Event)
+	 * updatedTask).setEndDate(processUpdate.getEndDate()); }
+	 * if(processUpdate.hasDescription()){ ((Event)
+	 * updatedTask).setDescription(processUpdate.getDescription()); }
+	 * 
+	 * //updatedTask = taskToUpdate; break; case "main.Deadline": updatedTask =
+	 * taskToUpdate; if(processUpdate.hasStartDate()){ ((Event)
+	 * updatedTask).setStartDate(processUpdate.getStartDate()); }
+	 * if(processUpdate.hasEndDate()){ System.out.println("has end date");
+	 * ((Deadline) updatedTask).setEndDate(processUpdate.getEndDate()); }
+	 * if(processUpdate.hasDescription()){
+	 * updatedTask.setDescription(processUpdate.getDescription()); }
+	 * //updatedTask = taskToUpdate; System.out.println("To update " +
+	 * taskToUpdate.toString() + "Task updated " + updatedTask.toString());
+	 * break; case "main.Floating": updatedTask = taskToUpdate;
+	 * if(processUpdate.hasStartDate()){ ((Event)
+	 * updatedTask).setStartDate(processUpdate.getStartDate()); }
+	 * if(processUpdate.hasEndDate()){ ((Deadline)
+	 * updatedTask).setEndDate(processUpdate.getEndDate()); }
+	 * if(processUpdate.hasDescription()){
+	 * updatedTask.setDescription(processUpdate.getDescription()); }
+	 * //updatedTask = taskToUpdate; System.out.println("To update " +
+	 * taskToUpdate.toString() + "Task updated " + updatedTask.toString() +
+	 * "within floaitng"); break; default: updatedTask = taskToUpdate; break; }
+	 * 
+	 * System.out.println("To update " + taskToUpdate.toString() +
+	 * "Task updated " + updatedTask.toString() + "diff"); Update output = new
+	 * Update(taskToUpdateTask(taskToUpdate), taskToUpdateTask(updatedTask));
+	 * System.out.println("To update " + taskToUpdate.toString() +
+	 * "Task updated " + updatedTask.toString());
+	 * output.setCurrentTask(taskToUpdate);
+	 * 
+	 * output.setUpdateTask(updatedTask); fileStorage.writeTask(updatedTask);
+	 * updateTaskLists(); updateRespectiveGUICol("ALL");
+	 * undoCommandHistory.push(output); }
+	 */
 
 	private UpdateTask taskToUpdateTask(Task current) {
 		UpdateTask convertedTask = new UpdateTask(current.getDescription());
@@ -608,7 +619,7 @@ public class Logic {
 	}
 
 	public void fillFloatings() {
-		 //floatings.setAll(fileStorage.readFloatingTask());
+		// floatings.setAll(fileStorage.readFloatingTask());
 		floatings.setAll(allFloatingTasks);
 	}
 
