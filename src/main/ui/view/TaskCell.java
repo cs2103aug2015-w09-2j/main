@@ -26,9 +26,13 @@ public class TaskCell {
 				setText(null);
 				setGraphic(null);
 			} else {
-				String day = ((Event) item).getStartDate().getStrDay();
-				String month = ((Event) item).getStartDate().getStrMonth();
-				String time = ((Event) item).getStartTime().to12HourFormat();
+				String startDay = ((Event) item).getStartDate().getStrDay();
+				String startMonth = ((Event) item).getStartDate().getStrMonth();
+				String startTime = ((Event) item).getStartTime().to12HourFormat();
+
+				String endDay = ((Event) item).getEndDate().getStrDay();
+				String endMonth = ((Event) item).getEndDate().getStrMonth();
+				String endTime = ((Event) item).getEndTime().to12HourFormat();
 
 				HBox anHBox = new HBox(2);
 				VBox aVBox = new VBox(2);
@@ -38,7 +42,10 @@ public class TaskCell {
 
 				indexLabel.setText(this.getIndex()+1 + "");
 				indexLabel.setPrefWidth(USE_COMPUTED_SIZE);
-				timeLabel.setText(day + " " + time);
+				if (startDay.equals(endDay)) {
+					timeLabel.setText(startDay + " " + startTime + "-" + endTime);
+				} else
+					timeLabel.setText(startDay + " " + startTime + " - " + endDay + " " + endTime);
 				timeLabel.setWrapText(true);
 				descriptionLabel.setText(item.getDescription());
 				descriptionLabel.setWrapText(true);
