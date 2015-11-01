@@ -157,6 +157,9 @@ public class Logic {
 			deleteTask(inputCommand);
 			success = true;
 			break;
+		case CLEAR:
+			clearAllTask(inputCommand);
+			break;
 		case SEARCH:
 			search(inputCommand);
 			success = true;
@@ -181,6 +184,27 @@ public class Logic {
 			break;
 		}
 		return success;
+	}
+
+	private void clearAllTask(Command inputCommand) {
+		Clear clearAllTask = (Clear)inputCommand;
+		ArrayList<Task> taskCleared = new ArrayList<Task>();
+		for(Task currentTask : allEvents){
+			fileStorage.deleteTask(currentTask);
+			taskCleared.add(currentTask);
+		}
+		for(Task currentTask : allDeadlines){
+			fileStorage.deleteTask(currentTask);
+			taskCleared.add(currentTask);
+		}
+		for(Task currentTask : allFloatingTasks){
+			fileStorage.deleteTask(currentTask);
+			taskCleared.add(currentTask);
+		}
+		updateTaskLists();
+		updateRespectiveGUICol("ALL");
+		((Clear)inputCommand).setTaskCleared(taskCleared);
+		undoCommandHistory.push(inputCommand);
 	}
 
 	private void done(Command inputCommand) {
@@ -288,11 +312,25 @@ public class Logic {
 			undoCommandHistory.push(redoCommand);
 			updateRespectiveGUICol("ALL");
 			break;
+		case CLEAR:
+			redoClear(redoCommand);
+			undoCommandHistory.push(redoCommand);
+			updateRespectiveGUICol("ALL");
+			break;
 		default:
 			break;
 		}
 
 		return false;
+	}
+
+	private void redoClear(Command redoCommand) {
+		Clear redoClear = ((Clear)redoCommand);
+		ArrayList<Task> taskCleared = redoClear.getTaskCleared();
+		for(Task currentTask : taskCleared){
+			fileStorage.deleteTask(currentTask);
+		}
+		updateTaskLists();
 	}
 
 	private void redoDone(Command redoCommand) {
@@ -347,10 +385,24 @@ public class Logic {
 			redoCommandHistory.push(undoCommand);
 			updateRespectiveGUICol("ALL");
 			break;
+		case CLEAR:
+			undoClear(undoCommand);
+			redoCommandHistory.push(undoCommand);
+			updateRespectiveGUICol("ALL");
+			break;
 		default:
 			break;
 		}
 		return true;
+	}
+
+	private void undoClear(Command undoCommand) {
+		Clear undoClear = ((Clear)undoCommand);
+		ArrayList<Task> taskCleared = undoClear.getTaskCleared();
+		for(Task currentTask : taskCleared){
+			fileStorage.writeTask(currentTask);
+		}
+		updateTaskLists();
 	}
 
 	private void undoDone(Command undoCommand) {
