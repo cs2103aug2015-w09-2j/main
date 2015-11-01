@@ -50,12 +50,12 @@
  * A400 - task-cell-filled = #FF1744
  */
 
- .task-cell-empty {
+ .task-cell:empty {
  	-fx-background-color: #D7CCC8;
  }
 
-.task-cell-filled {
-	-fx-background-color: #FF1744;
+.task-cell:filled {
+	-fx-background-color: #FF5252;
 	-fx-background-radius: 6px;
 	-fx-background-insets: 2px;
 }

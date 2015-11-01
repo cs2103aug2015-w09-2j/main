@@ -28,10 +28,11 @@ public class TaskCell {
 		protected void updateItem(Task item, boolean empty) {
 			super.updateItem(item, empty);
 
+			getStyleClass().add("task-cell");
 			if (empty || item == null) {
 				setText(null);
 				setGraphic(null);
-				getStyleClass().add("task-cell-empty");
+				// getStyleClass().add("task-cell-empty");
 			} else {
 				String startDay = ((Event) item).getStartDate().getStrDay();
 				String startMonth = ((Event) item).getStartDate().getStrMonth();
@@ -75,7 +76,7 @@ public class TaskCell {
 				setMaxWidth(200);
 				setMinWidth(200);
 				setGraphic(anHBox);
-				getStyleClass().add("task-cell-filled");
+				// getStyleClass().add("task-cell-filled");
 				// setBackground(new Background(new BackgroundFill(Color.web("#303f9f"), new CornerRadii(4), new Insets(1))));
 			}
 		}
@@ -88,10 +89,11 @@ public class TaskCell {
 		protected void updateItem(Task item, boolean empty) {
 			super.updateItem(item, empty);
 
+			getStyleClass().add("task-cell");
 			if (empty || item == null) {
 				setText(null);
 				setGraphic(null);
-				getStyleClass().add("task-cell-empty");
+				// getStyleClass().add("task-cell-empty");
 			} else {
 				String day = ((Deadline) item).getEndDate().getStrDay();
 				String month = ((Deadline) item).getEndDate().getStrMonth();
@@ -124,7 +126,7 @@ public class TaskCell {
 				setMaxWidth(200);
 				setMinWidth(200);
 				setGraphic(anHBox);
-				getStyleClass().add("task-cell-filled");
+				// getStyleClass().add("task-cell-filled");
 			}
 		}
 
@@ -137,10 +139,11 @@ public class TaskCell {
 		protected void updateItem(Task item, boolean empty) {
 			super.updateItem(item, empty);
 
+			getStyleClass().add("task-cell");
 			if (empty || item == null) {
 				setText(null);
 				setGraphic(null);
-				getStyleClass().add("task-cell-empty");
+				// getStyleClass().add("task-cell-empty");
 			} else {
 				item = (Floating) item;
 
@@ -164,7 +167,7 @@ public class TaskCell {
 				setMaxWidth(200);
 				setMinWidth(200);
 				setGraphic(anHBox);
-				getStyleClass().add("task-cell-filled");
+				// getStyleClass().add("task-cell-filled");
 			}
 		}
 
