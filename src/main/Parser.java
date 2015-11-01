@@ -682,7 +682,7 @@ public class Parser {
 	private boolean isAnExitCommand(String strCommand) {
 		//If the first word is update
 		String strFirstWord = getWord(0, strCommand);
-		if(strFirstWord.equals("update")){
+		if(strFirstWord.equals("exit")){
 			return true;
 		}
 		return false;
