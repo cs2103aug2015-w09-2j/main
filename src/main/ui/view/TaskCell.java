@@ -4,11 +4,17 @@
  */
 package main.ui.view;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import main.Task;
 import main.Event;
 import main.Deadline;
@@ -42,13 +48,19 @@ public class TaskCell {
 
 				indexLabel.setText(this.getIndex()+1 + "");
 				indexLabel.setPrefWidth(USE_COMPUTED_SIZE);
+				indexLabel.setTextFill(Color.WHITE);
+
 				if (startDay.equals(endDay)) {
 					timeLabel.setText(startDay + " " + startTime + "-" + endTime);
 				} else
 					timeLabel.setText(startDay + " " + startTime + " - " + endDay + " " + endTime);
 				timeLabel.setWrapText(true);
+				timeLabel.setPadding(new Insets(0, 2, 0, 2));
+				timeLabel.setBackground(new Background(new BackgroundFill(Color.web("#69f0ae"), new CornerRadii(4), Insets.EMPTY)));
+
 				descriptionLabel.setText(item.getDescription());
 				descriptionLabel.setWrapText(true);
+				descriptionLabel.setTextFill(Color.WHITE);
 
 				aVBox.getChildren().addAll(timeLabel, descriptionLabel);
 				anHBox.getChildren().addAll(indexLabel, aVBox);
@@ -58,6 +70,7 @@ public class TaskCell {
 				setMaxWidth(200);
 				setMinWidth(200);
 				setGraphic(anHBox);
+				setBackground(new Background(new BackgroundFill(Color.web("#303f9f"), new CornerRadii(4), new Insets(1))));
 			}
 		}
 	}
