@@ -241,13 +241,13 @@ public class Logic {
 		Search searchCommand = (Search) inputCommand;
 		ArrayList<String> searchCriterias = searchCommand.getSearchStrings();
 		if (searchCriterias.size() == 1) {
-			if(searchCriterias.get(0).equals("done")){
+			if (searchCriterias.get(0).equals("done")) {
 				ArrayList<Task> doneTasks = fileStorage.readDoneTask();
 				allEvents.clear();
 				allDeadlines.clear();
 				allFloatingTasks.clear();
-				for(Task currentTask: doneTasks){
-					switch(currentTask.getClass().getName()){
+				for (Task currentTask : doneTasks) {
+					switch (currentTask.getClass().getName()) {
 					case "main.Floating":
 						allFloatingTasks.add(currentTask);
 						break;
@@ -260,14 +260,18 @@ public class Logic {
 					}
 					updateRespectiveGUICol("ALL");
 				}
-				
-			}else{
-			allEvents = fileStorage.searchEventTask(searchCriterias.get(0));
-			fillEvents();
-			allDeadlines = fileStorage.searchDeadlineTask(searchCriterias.get(0));
-			fillDeadlines();
-			allFloatingTasks = fileStorage.searchFloatingTask(searchCriterias.get(0));
-			fillFloatings();}
+
+			} else {
+				allEvents.clear();
+				allDeadlines.clear();
+				allFloatingTasks.clear();
+				allEvents = fileStorage.searchEventTask(searchCriterias.get(0));
+				fillEvents();
+				allDeadlines = fileStorage.searchDeadlineTask(searchCriterias.get(0));
+				fillDeadlines();
+				allFloatingTasks = fileStorage.searchFloatingTask(searchCriterias.get(0));
+				fillFloatings();
+			}
 		} else if (searchCriterias.size() > 1) {
 			allEvents = fileStorage.searchEventTask(searchCriterias.get(0), searchCriterias.get(1));
 			fillEvents();
@@ -278,6 +282,7 @@ public class Logic {
 		} else {
 			System.out.println("Incorrect Search string");
 		}
+		System.out.println("Sizes after search: " + "Events" + allEvents.size() + "Deadlines" + allDeadlines.size() + "floatings" + allFloatingTasks.size());
 	}
 
 	private boolean redo() {
@@ -535,7 +540,7 @@ public class Logic {
 	private void deleteTask(Command inputCommand) {
 		Delete deleteCommand = ((Delete) inputCommand);
 		Task taskToDelete = null;
-		updateTaskLists();
+		//updateTaskLists();
 		if (deleteCommand.hasTaskID()) {
 			if (deleteCommand.getTaskID() <= allEvents.size()) {
 				String taskDesc = allEvents.get(deleteCommand.getTaskID() - 1).getDescription();
@@ -564,7 +569,7 @@ public class Logic {
 		updateTaskLists();
 		updateRespectiveGUICol(deleteTaskType);
 		undoCommandHistory.push(deleteCommand);
-		updateRespectiveGUICol(taskToDelete.getClass().getName());
+		updateRespectiveGUICol("ALL");
 		updateTaskLists();
 	}
 
