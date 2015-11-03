@@ -6,7 +6,7 @@ public class Search extends Command {
 	
 	private String strSearchString;
 	private DateClass firstDate, secondDate;
-	private boolean before,after,between;
+	private boolean before,after,between, on;
 	
 	public String getStrSearchString() {
 		return strSearchString;
@@ -15,7 +15,11 @@ public class Search extends Command {
 	public boolean isBefore() {
 		return before;
 	}
-
+	
+	public boolean isOn() {
+		return on;
+	}
+	
 	public boolean isAfter() {
 		return after;
 	}
@@ -28,6 +32,10 @@ public class Search extends Command {
 		this.before = before;
 	}
 
+	public void setOn(boolean on) {
+		this.on = on;
+	}
+	
 	public void setAfter(boolean after) {
 		this.after = after;
 	}

@@ -574,22 +574,20 @@ public class Parser {
 			}
 			
 			//else find for dates
-			if(strSearchString.matches("after .+")){
+			if(strSearchString.matches("after .+") || strSearchString.matches("before .+") || strSearchString.matches("on .+")){
+				String firstWord =  getWord(0, strSearchString);
 				strSearchString = removeNWords(1, strSearchString);
 				DateClass firstDate = parseDate(strSearchString);
 				
 				Search search = new Search(enclosedString, firstDate);
-				search.setAfter(true);
+				if(firstWord.equals("after")){
+					search.setAfter(true);
+				} else if (firstWord.equals("before")){
+					search.setBefore(true);
+				} else {
+					search.setOn(true);
+				}
 				return search;
-			} else if (strSearchString.matches("before .+")){
-				
-				strSearchString = removeNWords(1, strSearchString);
-				DateClass firstDate = parseDate(strSearchString);
-				
-				Search search = new Search(enclosedString, firstDate);
-				search.setBefore(true);
-				return search;
-				
 			} else if (strSearchString.matches("from .+ to .+")){
 				
 				int indexOfTo = strSearchString.lastIndexOf("to");
