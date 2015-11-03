@@ -82,6 +82,14 @@
 	-fx-background-radius: 6px;
 }
 
-#help-text {
+#help-label {
 	-fx-text-fill: #000000;
+}
+
+#status-bar {
+	-fx-background-color: rgba(239,235,233, 0.7);
+}
+
+#status-label {
+
 }

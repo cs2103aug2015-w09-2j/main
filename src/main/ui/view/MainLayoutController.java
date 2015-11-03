@@ -40,6 +40,8 @@ public class MainLayoutController {
 	private TextField commandBox;
 	@FXML
 	private Label helpDialog;
+	@FXML
+	private Label displayState;
 
 
 	public MainLayoutController() {

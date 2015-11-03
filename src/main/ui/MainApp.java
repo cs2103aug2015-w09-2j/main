@@ -71,9 +71,9 @@ public class MainApp extends Application {
 			mainLayoutController.setMainApp(this); // pass tasks to controller
 
 			// Show the scene containing the main layout
-			Scene scene = new Scene(mainLayout, 900, 600);
+			Scene scene = new Scene(mainLayout);
 			primaryStage.setScene(scene);
-			// primaryStage.setResizable(false);
+			primaryStage.setResizable(false);
 			primaryStage.show();
 
 			mainLayoutController.focusCommandBox();
