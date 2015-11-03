@@ -106,6 +106,18 @@ public class DateClass implements Comparable<DateClass> {
 		}
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof DateClass) {
+			DateClass date = (DateClass) obj;
+			return (this.getIntYear() == date.getIntYear())
+					&& (this.getIntMonth() == date.getIntMonth()
+					&& (this.getIntDay() == date.getIntDay()));
+		} else {
+			return false;
+		}
+	}
+
 	public boolean isToday() {
 		int currDate = DateHandler.getIntDayNow();
 		int currMonth = DateHandler.getIntMonthNow();

@@ -80,4 +80,15 @@ public class TimeClass implements Comparable<TimeClass>{
 			return this.getIntHour() - time.getIntHour();
 		}
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof TimeClass) {
+			TimeClass time = (TimeClass) obj;
+			return (this.getIntHour() == time.getIntHour())
+					&& (this.getIntMin() == time.getIntMin());
+		} else {
+			return false;
+		}
+	}
 }
