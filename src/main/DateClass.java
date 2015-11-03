@@ -15,6 +15,9 @@ import java.text.ParseException;
 
 public class DateClass implements Comparable<DateClass> {
 
+	// added by Teddy
+	private int[] numOfDays = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; // number of days in non-leap year
+
 	private int intDay;
 	private int intMonth;
 	private int intYear;
@@ -86,6 +89,10 @@ public class DateClass implements Comparable<DateClass> {
 		return intDay + "/" + intMonth + "/" + intYear;
 	}
 
+	/*
+	 * Codes added by Teddy to support GUI
+	 */
+
 	@Override
 	public int compareTo(DateClass date) {
 		if (this.getIntYear() == date.getIntYear()) {
@@ -97,5 +104,67 @@ public class DateClass implements Comparable<DateClass> {
 		} else {
 			return this.getIntYear() - date.getIntYear();
 		}
+	}
+
+	public boolean isToday() {
+		int currDate = DateHandler.getIntDayNow();
+		int currMonth = DateHandler.getIntMonthNow();
+		int currYear = DateHandler.getIntYearNow();
+
+		return (currDate == intDay) && (currMonth == intMonth) && (currYear == intYear);
+	}
+
+	public boolean isTomorrow() {
+		int currDate = DateHandler.getIntDayNow();
+		int currMonth = DateHandler.getIntMonthNow();
+		int currYear = DateHandler.getIntYearNow();
+
+		if (intYear != currYear)
+			return false;
+		else if (currMonth != intMonth) {
+			if (intMonth < currMonth) {
+				return false;
+			} else {
+				int currMonthDays = numOfDays[currMonth];
+
+				if (currMonth == 2 && isLeapYear(currYear))
+					currMonthDays++;
+
+				return currDate + intDay - currMonthDays == 1;
+			}
+		} else if (intDay != (currDate +1)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public boolean isWithinAWeek() {
+		int currDate = DateHandler.getIntDayNow();
+		int currMonth = DateHandler.getIntMonthNow();
+		int currYear = DateHandler.getIntYearNow();
+
+		if (intYear != currYear)
+			return false;
+		else if (currMonth != intMonth) {
+			if (intMonth < currMonth || intMonth - currMonth > 1) {
+				return false;
+			} else {
+				int currMonthDays = numOfDays[currMonth];
+
+				if (currMonth == 2 && isLeapYear(currYear))
+					currMonthDays++;
+
+				return intDay + currMonthDays - currDate <= 7;
+			}
+		} else if (intDay - currDate > 7) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	private boolean isLeapYear(int year) {
+		return (year %4 == 0 && year % 100 > 0) || (year % 400 == 0);
 	}
 }
