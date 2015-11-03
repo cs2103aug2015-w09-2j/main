@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import main.Task;
 import main.Event;
+import main.DateClass;
 import main.Deadline;
 import main.Floating;
 
@@ -34,12 +35,13 @@ public class TaskCell {
 				setGraphic(null);
 				// getStyleClass().add("task-cell-empty");
 			} else {
-				String startDay = ((Event) item).getStartDate().getStrDay();
-				String startMonth = ((Event) item).getStartDate().getStrMonth();
-				String startTime = ((Event) item).getStartTime().to12HourFormat();
+				DateClass startDate = ((Event) item).getStartDate();
+				DateClass endDate = ((Event) item).getEndDate();
 
-				String endDay = ((Event) item).getEndDate().getStrDay();
-				String endMonth = ((Event) item).getEndDate().getStrMonth();
+				String startDay, startMonth = null;
+				String endDay, endMonth = null;
+
+				String startTime = ((Event) item).getStartTime().to12HourFormat();
 				String endTime = ((Event) item).getEndTime().to12HourFormat();
 
 				HBox anHBox = new HBox(2);
@@ -54,10 +56,43 @@ public class TaskCell {
 				indexLabel.getStyleClass().add("index-label");
 				// indexLabel.setTextFill(Color.WHITE);
 
-				if (startDay.equals(endDay)) {
+				if (startDate.isToday()) {
+					startDay = "Today";
+				} else if (startDate.isTomorrow()) {
+					startDay = "Tomorrow";
+				} else if (startDate.isWithinAWeek()) {
+					startDay = startDate.getStrDay();
+				} else {
+					startDay = String.valueOf(startDate.getIntDay());
+					startMonth = startDate.getStrMonth();
+					startMonth = startDate.getStrMonth().substring(0,3);
+					startMonth = startMonth.substring(0,1) + startMonth.substring(1,3).toLowerCase();
+				}
+
+				if (endDate.isToday()) {
+					endDay = "Today";
+				} else if (endDate.isTomorrow()) {
+					endDay = "Tomorrow";
+				} else if (endDate.isWithinAWeek()) {
+					endDay = endDate.getStrDay();
+				} else {
+					endDay = String.valueOf(endDate.getIntDay());
+					endMonth = endDate.getStrMonth().substring(0,3);
+					endMonth = endMonth.substring(0,1) + endMonth.substring(1,3).toLowerCase();
+				}
+
+				if (startDay.equals(endDay) && (startMonth == null)) {
 					timeLabel.setText(startDay + " " + startTime + "-" + endTime);
-				} else
-					timeLabel.setText(startDay + " " + startTime + " - " + endDay + " " + endTime);
+				} else if (!startDay.equals(endDay) && startMonth == null) {
+					if (endMonth == null) {
+						timeLabel.setText(startDay + " " + startTime + " - " + endDay + " " + endTime);
+					} else {
+						timeLabel.setText(startDay + " " + startTime + " - " + endDay + " " + endMonth + " " + endTime);
+					}
+				} else {
+					timeLabel.setText(startDay + " " + startMonth + " " + startTime + " - " + endDay + " " + endMonth + " " + endTime);
+				}
+
 				timeLabel.setWrapText(true);
 				timeLabel.getStyleClass().add("time-label");
 				// timeLabel.setPadding(new Insets(0, 2, 0, 2));
@@ -95,8 +130,8 @@ public class TaskCell {
 				setGraphic(null);
 				// getStyleClass().add("task-cell-empty");
 			} else {
-				String day = ((Deadline) item).getEndDate().getStrDay();
-				String month = ((Deadline) item).getEndDate().getStrMonth();
+				DateClass date = ((Deadline) item).getEndDate();
+				String day, month = null;
 				String time = ((Deadline) item).getEndTime().to12HourFormat();
 
 				HBox anHBox = new HBox(2);
@@ -110,7 +145,25 @@ public class TaskCell {
 				indexLabel.setMinWidth(USE_PREF_SIZE);
 				indexLabel.getStyleClass().add("index-label");
 
-				timeLabel.setText(day + " " + time);
+				if (date.isToday()) {
+					day = "Today";
+				} else if (date.isTomorrow()) {
+					day = "Tomorrow";
+				} else if (date.isWithinAWeek()) {
+					day = date.getStrDay();
+				} else {
+					day = String.valueOf(date.getIntDay());
+					month = date.getStrMonth();
+					month = date.getStrMonth().substring(0,3);
+					month = month.substring(0,1) + month.substring(1,3).toLowerCase();
+				}
+
+				if (month == null) {
+					timeLabel.setText(day + " " + time);
+				} else {
+					timeLabel.setText(day + " " + month + " " + time);
+				}
+
 				timeLabel.setWrapText(true);
 				timeLabel.getStyleClass().add("time-label");
 

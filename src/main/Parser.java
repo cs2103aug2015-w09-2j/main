@@ -13,6 +13,13 @@ import main.Command.CommandType;
 
 public class Parser {
 
+	private ParserUtils putils;
+	
+	public Parser(){
+		putils = new ParserUtils();
+	}
+	
+	
 	/*** Util METHODS ***/
 
 	private String getWord(int intIndex, String strText) {
@@ -220,6 +227,16 @@ public class Parser {
 		return false;
 	}
 
+	private boolean isAnExitCommand(String strCommand) {
+		// If the first word is update
+		String strFirstWord = getWord(0, strCommand);
+		if (strFirstWord.equals("exit")) {
+			return true;
+		}
+		return false;
+
+	}
+	
 	private boolean isASearchCommand(String strCommand) {
 		// If the first word is update
 		String strFirstWord = getWord(0, strCommand);
@@ -584,6 +601,22 @@ public class Parser {
 
 	private Command parseDeleteCommand(String strCommand) {
 		strCommand = removeNWords(1, strCommand);
+		
+		String enclosedDescription = putils.getEnclosedDescription(strCommand);
+		
+		//Delete has "xxx" description
+		if(enclosedDescription != null){
+			return new Delete(enclosedDescription);
+		}
+		
+		Set<Integer> taskIDs =  putils.getRangeSet(strCommand);
+		
+		//Has task ids
+		if(taskIDs != null){
+			return new Delete(taskIDs);
+		}
+		
+		//Else if no task ids and no "xx", treat them as desc
 		return new Delete(strCommand);
 	}
 
@@ -650,7 +683,7 @@ public class Parser {
 			parsedCommand = parseClearCommand(strCommand);
 		} else if (isASaveCommand(strCommand)) {
 			parsedCommand = parseSaveCommand(strCommand);
-		}else {
+		} else {
 			parsedCommand = null;
 		}
 
@@ -661,30 +694,12 @@ public class Parser {
 		strCommand = removeNWords(1, strCommand);
 		return new Save(strCommand);
 	}
-
-	private boolean isASaveCommand(String strCommand) {
-		String strFirstWord = getWord(0, strCommand);
-		if (strFirstWord.equals("save")) {
-			return true;
-		}
-		return false;
-	}
-
+	
 	private Command parseExitCommand(String strCommand) {
-		// TODO Auto-generated method stub
 		return new Exit();
 	}
-
-	private boolean isAnExitCommand(String strCommand) {
-		// If the first word is update
-		String strFirstWord = getWord(0, strCommand);
-		if (strFirstWord.equals("exit")) {
-			return true;
-		}
-		return false;
-
-	}
-
+	
+	
 	private Command parseClearCommand(String strCommand) {
 		// TODO Auto-generated method stub
 		return new Clear();
@@ -700,11 +715,20 @@ public class Parser {
 
 	}
 
+	private boolean isASaveCommand(String strCommand) {
+		String strFirstWord = getWord(0, strCommand);
+		if (strFirstWord.equals("save")) {
+			return true;
+		}
+		return false;
+	}
+
+	
 	public static void main(String[] args) throws NoSuchFieldException, ParseException {
 		Parser p = new Parser();
 
 		// String command = "update new swimming -d swimming";
-		String command = "done 1,2,4-5";
+		String command = "delete \"1,2,4-5 wtf\"";
 		Command t = p.parse(command);
 
 		System.out.println(((Event) t.getTask()).getEndTime().to12HourFormat());
