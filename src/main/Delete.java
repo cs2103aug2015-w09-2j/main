@@ -1,26 +1,24 @@
 package main;
 
+import java.util.Set;
+
 public class Delete extends Command{
 
 	String strDeleteString;
-	Integer intTaskID;
+	Set<Integer> taskIDs;
 	Task taskDeleted;
 	
 	public Delete(String input){
 		super(CommandType.DELETE);
-		
-		if(input == null || input.equals("")){
-			this.strDeleteString = null;
-			intTaskID = null;
-		}else{
-			
-			try{
-				intTaskID = Integer.valueOf(input);
-			}catch(NumberFormatException nexp){
-				intTaskID = null;
-				strDeleteString = input;
-			}
-		}
+		strDeleteString = input;
+		taskDeleted = null;
+		taskIDs = null;
+	}
+	
+	public Delete(Set<Integer> taskIDs){
+		super(CommandType.DELETE);
+		this.taskIDs = taskIDs;
+		strDeleteString = null;
 		taskDeleted = null;
 	}
 	
@@ -36,12 +34,12 @@ public class Delete extends Command{
 		return taskDeleted;
 	}
 	
-	public int getTaskID(){
-		return intTaskID;
+	public Set<Integer> getTaskIDs(){
+		return taskIDs;
 	}
 	
-	public boolean hasTaskID(){
-		return intTaskID != null;
+	public boolean hasTaskIDs(){
+		return taskIDs != null ;
 	}
 	
 	public boolean hasDeleteString(){
