@@ -13,25 +13,6 @@ import org.json.simple.JSONValue;
 
 public class JsonWrite {
 
-	/*
-	public void writeEventTask(String description, String startDate, String startTime, 
-			String endDate, String endTime){
-		String arr[] = {description, startDate, startTime, endDate, endTime};
-		writeToJsonFile("EVENT", arr);
-	}
-	
-	public void writeDeadlineTask(String description, String endDate ,String endTime){
-		String arr[] = {description, endDate, endTime};
-		writeToJsonFile("DEADLINE", arr);
-	}
-	
-	public void writeFloatingTask(String description){
-		String arr[] = {description};
-		writeToJsonFile("FLOATING", arr);
-		
-	}
-	*/
-	
 	public void writeEventTask(String description, String startDate, String startTime, 
 			String endDate, String endTime, String fileType){
 		String arr[] = {description, startDate, startTime, endDate, endTime};
@@ -48,70 +29,6 @@ public class JsonWrite {
 		writeToJsonFile("FLOATING", arr, fileType);
 		
 	}
-	
-	/*
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private static void writeToJsonFile(String taskType, String arr[]){
-		
-		JsonFile jsonFile = new JsonFile();
-		JsonArray jsonArray = new JsonArray();
-		Map obj =new LinkedHashMap();
-		
-		ArrayList<JSONArray> contentList = jsonFile.getJsonFileContent();
-		
-		JSONArray eventArray =  jsonArray.eventJsonArray(contentList.get(0));
-		JSONArray deadlineArray =  jsonArray.deadlineJsonArray(contentList.get(1));
-		JSONArray floatingArray =  jsonArray.floatingJsonArray(contentList.get(2));
-		
-		//System.out.println("Write:" + eventArray.toJSONString());
-		
-		switch(taskType){
-			case "EVENT":
-				eventArray.add(newEvent(arr));		
-				break;
-			case "DEADLINE":
-				deadlineArray.add(newDeadline(arr));		
-				break;
-			case "FLOATING":
-				floatingArray.add(newFloating(arr));		
-				break;
-			default:
-				System.out.println("Error");
-		}
-		
-		obj.put("EVENT", eventArray);
-		obj.put("DEADLINE", deadlineArray);
-		obj.put("FLOATING", floatingArray);
-		
-		
-		//System.out.println("obj: " + obj);
-		
-		StringWriter out = new StringWriter();
-		
-		try {
-			JSONValue.writeJSONString(obj, out);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		String jsonText = out.toString().replace("\\", "");
-		
-		try {
-			FileStorage fs = new FileStorage();
-			String filePath = fs.getFilePath();
-			FileWriter file = new FileWriter(filePath);//"test.txt");
-			file.write(jsonText);
-			file.flush();
-			file.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-	}
-	*/
-	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static void writeToJsonFile(String taskType, String arr[], String fileType){
 		
@@ -220,5 +137,86 @@ public class JsonWrite {
 		return floatingMap;
 	}
 	
+	/*
+	public void writeEventTask(String description, String startDate, String startTime, 
+			String endDate, String endTime){
+		String arr[] = {description, startDate, startTime, endDate, endTime};
+		writeToJsonFile("EVENT", arr);
+	}
+	
+	public void writeDeadlineTask(String description, String endDate ,String endTime){
+		String arr[] = {description, endDate, endTime};
+		writeToJsonFile("DEADLINE", arr);
+	}
+	
+	public void writeFloatingTask(String description){
+		String arr[] = {description};
+		writeToJsonFile("FLOATING", arr);
+		
+	}
+	*/
+	
+	/*
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private static void writeToJsonFile(String taskType, String arr[]){
+		
+		JsonFile jsonFile = new JsonFile();
+		JsonArray jsonArray = new JsonArray();
+		Map obj =new LinkedHashMap();
+		
+		ArrayList<JSONArray> contentList = jsonFile.getJsonFileContent();
+		
+		JSONArray eventArray =  jsonArray.eventJsonArray(contentList.get(0));
+		JSONArray deadlineArray =  jsonArray.deadlineJsonArray(contentList.get(1));
+		JSONArray floatingArray =  jsonArray.floatingJsonArray(contentList.get(2));
+		
+		//System.out.println("Write:" + eventArray.toJSONString());
+		
+		switch(taskType){
+			case "EVENT":
+				eventArray.add(newEvent(arr));		
+				break;
+			case "DEADLINE":
+				deadlineArray.add(newDeadline(arr));		
+				break;
+			case "FLOATING":
+				floatingArray.add(newFloating(arr));		
+				break;
+			default:
+				System.out.println("Error");
+		}
+		
+		obj.put("EVENT", eventArray);
+		obj.put("DEADLINE", deadlineArray);
+		obj.put("FLOATING", floatingArray);
+		
+		
+		//System.out.println("obj: " + obj);
+		
+		StringWriter out = new StringWriter();
+		
+		try {
+			JSONValue.writeJSONString(obj, out);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		String jsonText = out.toString().replace("\\", "");
+		
+		try {
+			FileStorage fs = new FileStorage();
+			String filePath = fs.getFilePath();
+			FileWriter file = new FileWriter(filePath);//"test.txt");
+			file.write(jsonText);
+			file.flush();
+			file.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	*/
 	
 }

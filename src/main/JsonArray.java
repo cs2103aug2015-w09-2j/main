@@ -10,9 +10,14 @@ import org.json.simple.parser.JSONParser;
 
 public class JsonArray {
 
+	/**
+	 * Arrange and sort the JSONArray in the format of {"task", "start-date", "start-time", "end-date", "end-time"} 
+	 * and remove the '\' appending in front of '/'
+	 * @param event the JSONArray to be formatted
+	 * @return a JSONArray in the format of {"task", "start-date", "start-time", "end-date", "end-time"}
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public JSONArray eventJsonArray(JSONArray event){
-		
 		
 		JSONArray eventArray = new JSONArray();
 			
@@ -22,21 +27,15 @@ public class JsonArray {
 			for(int i=0; i<event.size(); i++){
 				JSONObject jsonObject = (JSONObject) jsonParser.parse(event.get(i).toString().replace("\\", ""));
 				
-			
-				//Solved
 				Map eventMap =new LinkedHashMap();
 				eventMap.put("task", jsonObject.get("task"));
 				eventMap.put("start-date", jsonObject.get("start-date"));
 				eventMap.put("start-time", jsonObject.get("start-time"));
 				eventMap.put("end-date", jsonObject.get("end-date"));
 				eventMap.put("end-time", jsonObject.get("end-time"));
-				
-				
-				
-				eventArray.add(eventMap);
-				
-			}
-			
+								
+				eventArray.add(eventMap);				
+			}		
 		}catch (NullPointerException ex) {
 			ex.printStackTrace();
 		} catch (org.json.simple.parser.ParseException e) {
@@ -47,6 +46,12 @@ public class JsonArray {
 		return eventArray;
 	}
 	
+	/**
+	 * Arrange and sort the JSONArray in the format of {"task", "end-date", "end-time"} 
+	 * and remove the '\' appending in front of '/'
+	 * @param deadline the JSONArray to be formatted
+	 * @return a JSONArray in the format of {"task", "end-date", "end-time"}
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public JSONArray deadlineJsonArray(JSONArray deadline){
 		
@@ -76,6 +81,11 @@ public class JsonArray {
 		return deadlineArray;
 	}
 	
+	/**
+	 * Arrange and sort the JSONArray in the format of {"task"} and remove the '\' appending in front of '/'
+	 * @param floating the JSONArray to be formatted
+	 * @return a JSONArray in the format of {"task"}
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public JSONArray floatingJsonArray(JSONArray floating){
 		
