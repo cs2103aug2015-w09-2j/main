@@ -15,6 +15,11 @@ import org.json.simple.parser.ParseException;
 
 public class JsonDelete {
 
+	/**
+	 * Delete a task from storage, done or overdue file
+	 * @param task a task to be deleted
+	 * @param fileType a STORAGE_FILE, DONE_FILE, OVERDUE_FILE
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void deleteTask(Task task, String fileType){
 		JsonArray jsonArray = new JsonArray();
@@ -40,19 +45,19 @@ public class JsonDelete {
 				endDate = ((Event)task).getEndDate().toString();
 				endTime = ((Event)task).getEndTime().toString();		
 				strTask = description + " " + startDate + " " + startTime + " " + endDate + " " + endTime;
-				//System.out.println(strTask);
+				
 				eventArray = deleteEventTask(eventArray, strTask);
 				break;
 			case "DEADLINE":
 				endDate = ((Deadline)task).getEndDate().toString();
 				endTime = ((Deadline)task).getEndTime().toString();
 				strTask = description  + " " + endDate + " " + endTime;
-				//System.out.println(strTask);
+			
 				deadlineArray = deleteDeadlineTask(deadlineArray, strTask);
 				break;
 			case "FLOATING":
 				strTask = description;
-				//System.out.println(strTask);
+				
 				floatingArray = deleteFloatingTask(floatingArray, strTask);
 				break;
 			default:
@@ -63,10 +68,7 @@ public class JsonDelete {
 		obj.put("EVENT", eventArray);
 		obj.put("DEADLINE", deadlineArray);
 		obj.put("FLOATING", floatingArray);
-		
-		
-		
-		
+				
 		 StringWriter out = new StringWriter();
 		   try {
 			JSONValue.writeJSONString(obj, out);
@@ -75,7 +77,7 @@ public class JsonDelete {
 			e1.printStackTrace();
 		}
 		   String jsonText = out.toString().replace("\\", "");
-		   //System.out.println(jsonText);
+		   
 		try {
 			FileStorage fs = new FileStorage();
 			String filePath = "";
@@ -93,7 +95,7 @@ public class JsonDelete {
 					System.out.println("writeToJsonFile(String taskType, String arr[], String fileType)" +
 							" has a empty filePath");
 			}
-			FileWriter file = new FileWriter(filePath);//"test.txt");
+			FileWriter file = new FileWriter(filePath);
 			file.write(jsonText);
 			file.flush();
 			file.close();
@@ -104,6 +106,11 @@ public class JsonDelete {
 		
 	}
 	
+	/**
+	 * Determine if the task is an event, floating or deadline task
+	 * @param task the task to be check
+	 * @return the type of the task, either event, floating or deadline
+	 */
 	private String determineTaskType(Task task){
 		
 		String taskType = task.getClass().toString().substring(11).toUpperCase();
@@ -112,9 +119,14 @@ public class JsonDelete {
 			
 	}
 
+	/**
+	 * Delete an event task from the storage file
+	 * @param array JSONArray of event task
+	 * @param deleteTask task to be deleted
+	 * @return the JSONArray of the event task not deleted from the storage file
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private JSONArray deleteEventTask(JSONArray array, String deleteTask){
-		//concept in eventTaskArray, deadlineTaskArray, floatingTaskArray
 		
 		JSONArray eventArray = new JSONArray();
 		JSONParser jsonParser = new JSONParser();
@@ -133,9 +145,7 @@ public class JsonDelete {
 		for(int i=0; i<array.size(); i++){
 			
 			try{
-				
-				//System.out.println(eArray.toJSONString().substring(1, eArray.toJSONString().length()-1));
-				
+							
 				JSONObject obj = (JSONObject) jsonParser.parse(contentArr[i]);
 				
 				
@@ -144,9 +154,7 @@ public class JsonDelete {
 				String endDate = obj.get("end-date").toString();
 				String startTime = obj.get("start-time").toString();
 				String endTime = obj.get("end-time").toString();
-			
-				
-				
+						
 				String strTask = description + " " + startDate + " " + startTime + " " + endDate + " " + endTime;
 				
 				
@@ -161,10 +169,8 @@ public class JsonDelete {
 					
 					eventArray.add(eventMap);
 				}
-			
-				//If strTask == deletetask dun include in the new JSONArray
-				
-		
+	
+					
 			}catch (ParseException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -174,9 +180,14 @@ public class JsonDelete {
 		return eventArray;
 	}
 	
+	/**
+	 * Delete a deadline task from the storage file
+	 * @param array JSONArray of deadline task
+	 * @param deleteTask task to be deleted
+	 * @return the JSONArray of the deadline task not deleted from the storage file
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private JSONArray deleteDeadlineTask(JSONArray array, String deleteTask){
-		//concept in eventTaskArray, deadlineTaskArray, floatingTaskArray
 		
 		JSONArray deadlineArray = new JSONArray();
 		JSONParser jsonParser = new JSONParser();
@@ -194,10 +205,7 @@ public class JsonDelete {
 		
 		for(int i=0; i<array.size(); i++){
 			
-			try{
-				
-				//System.out.println(eArray.toJSONString().substring(1, eArray.toJSONString().length()-1));
-				
+			try{			
 				JSONObject obj = (JSONObject) jsonParser.parse(contentArr[i]);
 				
 				
@@ -205,8 +213,7 @@ public class JsonDelete {
 				String endDate = obj.get("end-date").toString();
 				String endTime = obj.get("end-time").toString();
 			
-				
-				
+							
 				String strTask = description + " " + endDate + " " + endTime;
 				
 				if(!strTask.equals(deleteTask)){
@@ -218,9 +225,6 @@ public class JsonDelete {
 					
 					deadlineArray.add(deadlineMap);
 				}
-			
-				//If strTask == deletetask dun include in the new JSONArray
-				
 		
 			}catch (ParseException e1) {
 				// TODO Auto-generated catch block
@@ -231,9 +235,14 @@ public class JsonDelete {
 		return deadlineArray;
 	}
 	
+	/**
+	 * Delete a floating task from the storage file
+	 * @param array JSONArray of floating task
+	 * @param deleteTask task to be deleted
+	 * @return the JSONArray of the floating task not deleted from the storage file
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private JSONArray deleteFloatingTask(JSONArray array, String deleteTask){
-		//concept in eventTaskArray, deadlineTaskArray, floatingTaskArray
 		
 		JSONArray floatingArray = new JSONArray();
 		JSONParser jsonParser = new JSONParser();
@@ -252,9 +261,7 @@ public class JsonDelete {
 		for(int i=0; i<array.size(); i++){
 			
 			try{
-				
-				//System.out.println(eArray.toJSONString().substring(1, eArray.toJSONString().length()-1));
-				
+							
 				JSONObject obj = (JSONObject) jsonParser.parse(contentArr[i]);
 				
 				
@@ -269,10 +276,7 @@ public class JsonDelete {
 					floatingMap.put("task", description);
 					
 					floatingArray.add(floatingMap);
-				}
-			
-				//If strTask == deletetask dun include in the new JSONArray
-				
+				}			
 		
 			}catch (ParseException e1) {
 				// TODO Auto-generated catch block

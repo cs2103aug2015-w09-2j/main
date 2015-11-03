@@ -13,22 +13,50 @@ import org.json.simple.JSONValue;
 
 public class JsonWrite {
 
+	/**
+	 * Write an event task into the storage file
+	 * @param description description of the event task
+	 * @param startDate start date of the event task
+	 * @param startTime start time of the event task
+	 * @param endDate end date of the event task
+	 * @param endTime end time of the event task
+	 * @param fileType STORAGE, DONE or OVERDUE file
+	 */
 	public void writeEventTask(String description, String startDate, String startTime, 
 			String endDate, String endTime, String fileType){
 		String arr[] = {description, startDate, startTime, endDate, endTime};
 		writeToJsonFile("EVENT", arr, fileType);
 	}
 	
+	/**
+	 * Write a deadline task to the storage file
+	 * @param description description of the deadline task
+	 * @param endDate end date of the deadline task
+	 * @param endTime end time of the deadline task
+	 * @param fileType STORAGE, DONE or OVERDUE file
+	 */
 	public void writeDeadlineTask(String description, String endDate ,String endTime, String fileType){
 		String arr[] = {description, endDate, endTime};
 		writeToJsonFile("DEADLINE", arr, fileType);
 	}
 	
+	/**
+	 * Write a floating task to the storage file
+	 * @param description description of the floating task
+	 * @param fileType STORAGE, DONE or OVERDUE file
+	 */
 	public void writeFloatingTask(String description, String fileType){
 		String arr[] = {description};
 		writeToJsonFile("FLOATING", arr, fileType);
 		
 	}
+	
+	/**
+	 * Write a task to the storage file
+	 * @param taskType type of the task event, deadline or floating
+	 * @param arr array of string containing the details of each section of a task
+	 * @param fileType STORAGE, DONE or OVERDUE file
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static void writeToJsonFile(String taskType, String arr[], String fileType){
 		
@@ -42,7 +70,6 @@ public class JsonWrite {
 		JSONArray deadlineArray =  jsonArray.deadlineJsonArray(contentList.get(1));
 		JSONArray floatingArray =  jsonArray.floatingJsonArray(contentList.get(2));
 		
-		//System.out.println("Write:" + eventArray.toJSONString());
 		
 		switch(taskType){
 			case "EVENT":
@@ -61,10 +88,7 @@ public class JsonWrite {
 		obj.put("EVENT", eventArray);
 		obj.put("DEADLINE", deadlineArray);
 		obj.put("FLOATING", floatingArray);
-		
-		
-		//System.out.println("obj: " + obj);
-		
+			
 		StringWriter out = new StringWriter();
 		
 		try {
@@ -103,6 +127,11 @@ public class JsonWrite {
 		}
 		
 	}
+	/**
+	 * Create a event task an input it in JSON format
+	 * @param arr array of string containing each section of a task
+	 * @return Map which contains the JSON format {"task", "start-date", "start-time", "end-date", "end-time"}
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static Map newEvent(String arr[]){
 		Map eventMap = new LinkedHashMap();
@@ -116,6 +145,11 @@ public class JsonWrite {
 		return eventMap;
 	}
 	
+	/**
+	 * Create a deadline task an input it in JSON format
+	 * @param arr array of string containing each section of a task
+	 * @return Map which contains the JSON format {"task", "end-date", "end-time"}
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static Map newDeadline(String arr[]){
 		Map deadlineMap = new LinkedHashMap();
@@ -128,6 +162,11 @@ public class JsonWrite {
 		return deadlineMap;
 	}
 	
+	/**
+	 * Create a floating task an input it in JSON format
+	 * @param arr array of string containing each section of a task
+	 * @return Map which contains the JSON format {"task"}
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static Map newFloating(String arr[]){
 		Map floatingMap = new LinkedHashMap();

@@ -10,6 +10,11 @@ import org.ocpsoft.prettytime.shade.edu.emory.mathcs.backport.java.util.Collecti
 
 public class JsonTask {
 
+	/**
+	 * Covert a JSONArray to an ArrayList<Task>
+	 * @param event JSONArray of event task to be converted
+	 * @return ArrayList<Task> of event tasks
+	 */
 	public ArrayList<Task> eventTaskArray(JSONArray event){
 		
 		ArrayList<Task> eventTaskList = new ArrayList<Task>();
@@ -17,13 +22,9 @@ public class JsonTask {
 		
 		for(int i=0; i<event.size(); i++){
 			
-			try{
-				//System.out.println("raw: " + event.get(i).toString());
-				
+			try{			
 				JSONObject obj = (JSONObject) jsonParser.parse(event.get(i).toString().replace("\\", ""));
-				
-				//System.out.println("obj: " + obj);
-				
+							
 				String strStartDate = obj.get("start-date").toString();
 				String strEndDate = obj.get("end-date").toString();
 				String strStartTime = obj.get("start-time").toString();
@@ -54,6 +55,11 @@ public class JsonTask {
 		return eventTaskList;
 	}
 	
+	/**
+	 * Covert a JSONArray to an ArrayList<Task>
+	 * @param deadline JSONArray of deadline task to be converted
+	 * @return ArrayList<Task> of deadline tasks
+	 */
 	public ArrayList<Task> deadlineTaskArray(JSONArray deadline){
 		
 		ArrayList<Task> deadlineTaskList = new ArrayList<Task>();
@@ -91,6 +97,11 @@ public class JsonTask {
 		return deadlineTaskList;
 	}
 	
+	/**
+	 * Covert a JSONArray to an ArrayList<Task>
+	 * @param floating JSONArray of event task to be converted
+	 * @return ArrayList<Task> of floating tasks
+	 */
 	public ArrayList<Task> floatingTaskArray(JSONArray event){
 		ArrayList<Task> floatingTaskList = new ArrayList<Task>();
 		JSONParser jsonParser = new JSONParser();
@@ -116,6 +127,11 @@ public class JsonTask {
 		
 	}
 	
+	/**
+	 * Convert all JSONArray event, deadline, floating to an ArrayList<Task>
+	 * @param content ArrayList<JSONArray> contain event, deadline, floating JSONArray
+	 * @return ArrayList<Task> of event, deadline and floating tasks
+	 */
 	public ArrayList<Task> allTaskArray(ArrayList<JSONArray> content){
 		
 		ArrayList<Task> event = eventTaskArray(content.get(0));

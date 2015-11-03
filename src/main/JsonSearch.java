@@ -7,6 +7,15 @@ public class JsonSearch {
 
 	private static final String STORAGE_FILE = "STORAGE_FILE";
 	
+	/**
+	 * Search for a list of event task which matches the keywords
+	 * Return task if task contains at least one of the word in keyword1
+	 * Return task if task contains all the words in keyword2
+	 * @param keyword1 contains a list of keyword 
+	 * @param keyword2 contains a keyword
+	 * @param event JSONArray of event task
+	 * @return ArrayList<Task> of event task which matches the keyword
+	 */
 	public ArrayList<Task> searchEvent(String keyword1, String keyword2, JSONArray event){
 		
 		JsonTask jsonTask = new JsonTask();
@@ -46,6 +55,15 @@ public class JsonSearch {
 		return searchList;
 	}
   	
+	/**
+	 * Search for a list of deadline task which matches the keywords
+	 * Return task if task contains at least one of the word in keyword1
+	 * Return task if task contains all the words in keyword2
+	 * @param keyword1 contains a list of keyword 
+	 * @param keyword2 contains a keyword
+	 * @param deadline JSONArray of deadline task
+	 * @return ArrayList<Task> of deadline task which matches the keyword
+	 */
 	public ArrayList<Task> searchDeadline(String keyword1, String keyword2, JSONArray deadline){
 		JsonTask jsonTask = new JsonTask();
 		String description,endDate, endTime;
@@ -80,6 +98,15 @@ public class JsonSearch {
 		return searchList;
 	}
 	
+	/**
+	 * Search for a list of floating task which matches the keywords
+	 * Return task if task contains at least one of the word in keyword1
+	 * Return task if task contains all the words in keyword2
+	 * @param keyword1 contains a list of keyword 
+	 * @param keyword2 contains a keyword
+	 * @param floating JSONArray of floating task
+	 * @return ArrayList<Task> of floating task which matches the keyword
+	 */
 	public ArrayList<Task> searchFloating(String keyword1, String keyword2, JSONArray floating){
 		JsonTask jsonTask = new JsonTask();
 		String description;
@@ -112,6 +139,12 @@ public class JsonSearch {
 		return searchList;
 	}
 	
+	/**
+	 * Search for the task in event, deadline and floating which matches the taskDetails and taskInfo
+	 * @param taskDetails description of a task
+	 * @param taskInfo either start time, start date, end time, end date of the task
+	 * @return an ArrayList<task> of event, deadline and floating tasks which matches taskDetails and taskInfo
+	 */
 	public ArrayList<Task> absoluteSearchDescription(String taskDetails, String taskInfo){
 		JsonTask jsonTask = new JsonTask();
 		String description,startDate, startTime, endDate, endTime;
@@ -177,6 +210,14 @@ public class JsonSearch {
 		return searchList;
 	}
 	
+	/**
+	 * Search for a list of event, deadline and floating task which matches the keywords
+	 * Return task if task contains at least one of the word in keyword1
+	 * Return task if task contains all the words in keyword2
+	 * @param keyword1 contains a list of keyword 
+	 * @param keyword2 contains a keyword
+	 * @return ArrayList<Task> of event, deadline and floating task which matches the keyword
+	 */
 	public ArrayList<Task> searchAll(String keyword1, String keyword2){
 		JsonFile jsonFile = new JsonFile();
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
@@ -198,6 +239,12 @@ public class JsonSearch {
 		return allTasks;
 	}
 	
+	/**
+	 * Search for all event task before a specific end date
+	 * @param date end date
+	 * @param event JSONArray of event task
+	 * @return an ArrayList<Task> of event tasks which ends before the specific end date
+	 */
 	public ArrayList<Task> searchEventTaskBeforeDate(DateClass date, JSONArray event){
 		JsonTask jsonTask = new JsonTask();
 
@@ -216,6 +263,12 @@ public class JsonSearch {
 		return searchList;
 	}
 	
+	/**
+	 * Search for all deadline task before a specific end date
+	 * @param date end date
+	 * @param deadline JSONArray of deadline task
+	 * @return an ArrayList<Task> of deadline tasks which ends before the specific end date
+	 */
 	public ArrayList<Task> searchDeadlineTaskBeforeDate(DateClass date, JSONArray deadline){
 		JsonTask jsonTask = new JsonTask();
 		
@@ -233,7 +286,11 @@ public class JsonSearch {
 		return searchList;
 	}
 
-	
+	/**
+	 * Search for all event and deadline task before a specific end date
+	 * @param date end date
+	 * @return an ArrayList<Task> of event and deadline tasks which ends before the specific end date
+	 */
 	public ArrayList<Task> searchAllTaskBeforeDate(DateClass date){
 		JsonFile jsonFile = new JsonFile();
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
