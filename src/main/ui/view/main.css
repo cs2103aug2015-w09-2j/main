@@ -67,7 +67,7 @@
 }
 
 .time-label {
-	-fx-background-color: #FF8A80;
+	-fx-background-color: #FFEAE0;
 	-fx-background-radius: 4px;
 	-fx-padding: 0 2px 0 2px;
 }
@@ -91,5 +91,6 @@
 }
 
 #status-label {
-
+	-fx-font-weight: bold;
+	-fx-font-size: 18px;
 }
