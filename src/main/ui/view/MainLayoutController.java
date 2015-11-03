@@ -3,6 +3,7 @@ package main.ui.view;
 import java.text.ParseException;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -50,6 +51,7 @@ public class MainLayoutController {
 
 
 	public MainLayoutController() {
+		displayState = new SimpleIntegerProperty();
 	}
 
 	/**
@@ -60,7 +62,11 @@ public class MainLayoutController {
 		customizeEventCellFactory();
 		customizeDeadlineCellFactory();
 		customizeFloatingCellFactory();
+
+		// initial help dialog is MAIN
 		helpLabel.setText(CommandListener.HELP_MAIN);
+
+		// initial status is ONGOING
 		displayState.setValue(StatusListener.Status.ONGOING.getCode());
 		displayStatusLabel.setText(StatusListener.getStatusText(displayState.getValue()));
 	}

@@ -78,7 +78,7 @@
             <Insets bottom="5.0" />
          </GridPane.margin>
          <children>
-            <Label id="status-label" fx:id="displayLabel" alignment="CENTER" prefHeight="37.0" prefWidth="898.0" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <Label id="status-label" fx:id="displayStatusLabel" alignment="CENTER" prefHeight="37.0" prefWidth="898.0" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
    </children>
