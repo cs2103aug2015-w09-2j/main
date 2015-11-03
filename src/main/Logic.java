@@ -156,6 +156,9 @@ public class Logic {
 			display();
 			success=true;
 			break;
+		case SAVE:
+			success = save(inputCommand);
+			 break;
 		case EXIT:
 			mainApp.exit();
 			success = true;
@@ -164,6 +167,11 @@ public class Logic {
 			break;
 		}
 		return success;
+	}
+
+	private boolean save(Command inputCommand) {
+		fileStorage.setFilePath(((Save)inputCommand).getPathLocation());
+		return true;
 	}
 
 	private void addFloating(Command inputCommand) {
