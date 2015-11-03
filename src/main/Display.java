@@ -9,6 +9,8 @@ public class Display extends Command{
 		
 		if(strDisplayString == null || strDisplayString.equals("")){
 			this.strDisplayString = null;
+		}else{
+			this.strDisplayString = strDisplayString;
 		}
 	}
 	

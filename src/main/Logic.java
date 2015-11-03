@@ -211,7 +211,7 @@ public class Logic {
 			break;
 		case DONE:
 			done(inputCommand);
-			displayStatusCode.set(1);
+			//displayStatusCode.set(1);
 			success = true;
 			break;
 		case DELETE:
@@ -233,8 +233,8 @@ public class Logic {
 			success = redo();
 			break;
 		case DISPLAY:
-			display();
-			displayStatusCode.set(0);
+			display(inputCommand);
+			// displayStatusCode.set(0);
 			success = true;
 			break;
 		case SAVE:
@@ -329,58 +329,88 @@ public class Logic {
 		}
 	}
 
-	private void display() {
-		updateTaskLists();
-		fillEvents();
-		fillFloatings();
-		fillDeadlines();
+	private void display(Command inputCommand) {
+		Display displayCommand = (Display) inputCommand;
+		if (displayCommand.getDisplayString().equals("all")) {
+			updateTaskLists();
+			fillEvents();
+			fillFloatings();
+			fillDeadlines();
+			displayStatusCode.set(0);
+		}else if(displayCommand.getDisplayString().equals("done")){
+			readDone();
+			displayStatusCode.set(1);
+		}else if(displayCommand.getDisplayString().equals("overdue")){
+			readOverdue();
+			displayStatusCode.set(2);
+		}
 	}
 
+	/*
+	 * private void search(Command inputCommand) { Search searchCommand =
+	 * (Search) inputCommand; ArrayList<String> searchCriterias =
+	 * searchCommand.getSearchStrings(); if (searchCriterias.size() == 1) { if
+	 * (searchCriterias.get(0).equals("done")) { searchDone(); } else {
+	 * searchForDescription(searchCriterias); } } else if
+	 * (searchCriterias.size() > 1) {
+	 * searchForDescriptionAndDate(searchCriterias); } else {
+	 * System.out.println("Incorrect Search string"); } System.out.println(
+	 * "Sizes after search: " + "Events" + allEvents.size() + "Deadlines" +
+	 * allDeadlines.size() + "floatings" + allFloatingTasks.size()); }
+	 */
 	private void search(Command inputCommand) {
 		Search searchCommand = (Search) inputCommand;
-		ArrayList<String> searchCriterias = searchCommand.getSearchStrings();
-		if (searchCriterias.size() == 1) {
-			if (searchCriterias.get(0).equals("done")) {
-				searchDone();
-			} else {
-				searchForDescription(searchCriterias);
-			}
-		} else if (searchCriterias.size() > 1) {
-			searchForDescriptionAndDate(searchCriterias);
+		if (searchCommand.isBetween()) {
+
+		} else if (searchCommand.isAfter()) {
+
+		} else if (searchCommand.isBefore()) {
+			searchForDescriptionBefore(searchCommand.getFirstDate());
+		} else if (searchCommand.isOn()) {
+			searchForDescriptionAndDate(searchCommand.getStrSearchString(), searchCommand.getFirstDate().toString());
 		} else {
-			System.out.println("Incorrect Search string");
+			searchForDescription(searchCommand.getStrSearchString());
 		}
-		System.out.println("Sizes after search: " + "Events" + allEvents.size() + "Deadlines" + allDeadlines.size()
-				+ "floatings" + allFloatingTasks.size());
 	}
 
-	private void searchForDescriptionAndDate(ArrayList<String> searchCriterias) {
+	private void searchForDescriptionBefore(DateClass beforeDate) {
+		allEvents.clear();
+		allDeadlines.clear();
+		// allFloatingTasks.clear();
+		searchKeyword = "before " + beforeDate.toString();
+		allEvents = fileStorage.searchEventTaskBeforeDate(beforeDate);
+		fillEvents();
+		allDeadlines = fileStorage.searchDeadlineTaskBeforeDate(beforeDate);
+		fillDeadlines();
+	}
+
+	private void searchForDescriptionAndDate(String searchString, String date) {
 		allEvents.clear();
 		allDeadlines.clear();
 		allFloatingTasks.clear();
-		searchKeyword = searchCriterias.get(1) + " on " + searchCriterias.get(0);
-		allEvents = fileStorage.searchEventTask(searchCriterias.get(0), searchCriterias.get(1));
+		searchKeyword = searchString + " on " + date;
+		allEvents = fileStorage.searchEventTask(date, searchString);
 		fillEvents();
-		allDeadlines = fileStorage.searchDeadlineTask(searchCriterias.get(0), searchCriterias.get(1));
+		allDeadlines = fileStorage.searchDeadlineTask(date, searchString);
 		fillDeadlines();
-		allFloatingTasks = fileStorage.searchFloatingTask(searchCriterias.get(0), searchCriterias.get(1));
+		allFloatingTasks = fileStorage.searchFloatingTask(date, searchString);
 		fillFloatings();
 	}
 
-	private void searchForDescription(ArrayList<String> searchCriterias) {
+	private void searchForDescription(String searchCriterias) {
 		allEvents.clear();
 		allDeadlines.clear();
 		allFloatingTasks.clear();
-		searchKeyword = searchCriterias.get(0);
-		allEvents = fileStorage.searchEventTask(searchCriterias.get(0));
+		searchKeyword = searchCriterias;
+		allEvents = fileStorage.searchEventTask(searchCriterias);
 		fillEvents();
-		allDeadlines = fileStorage.searchDeadlineTask(searchCriterias.get(0));
+		allDeadlines = fileStorage.searchDeadlineTask(searchCriterias);
 		fillDeadlines();
-		allFloatingTasks = fileStorage.searchFloatingTask(searchCriterias.get(0));
+		allFloatingTasks = fileStorage.searchFloatingTask(searchCriterias);
 		fillFloatings();
 	}
 
-	private void searchDone() {
+	private void readDone() {
 		ArrayList<Task> doneTasks = fileStorage.readDoneTask();
 		allEvents.clear();
 		allDeadlines.clear();
@@ -400,7 +430,26 @@ public class Logic {
 			updateRespectiveGUICol("ALL");
 		}
 	}
+	
+	private void readOverdue() {
+		ArrayList<Task> overdueTasks = fileStorage.readOverdueTask();
+		allEvents.clear();
+		allDeadlines.clear();
+		allFloatingTasks.clear();
+		for (Task currentTask : overdueTasks) {
+			switch (currentTask.getClass().getName()) {
+			case "main.Deadline":
+				allDeadlines.add(currentTask);
+				break;
+			case "main.Event":
+				allEvents.add(currentTask);
+				break;
+			}
+			updateRespectiveGUICol("ALL");
+		}
+	}
 
+	
 	private boolean redo() {
 		if (redoCommandHistory.size() == 0)
 			return false;
