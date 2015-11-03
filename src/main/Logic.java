@@ -107,6 +107,9 @@ public class Logic {
 		allEvents = fileStorage.readEventTask();
 		allDeadlines = fileStorage.readDeadlineTask();
 		allFloatingTasks = fileStorage.readFloatingTask();
+		Collections.sort(allEvents);
+		Collections.sort(allDeadlines);
+		Collections.sort(allFloatingTasks);
 		allTasks = fileStorage.readAllTask();
 	}
 
@@ -617,8 +620,12 @@ public class Logic {
 		Delete deleteCommand = ((Delete) inputCommand);
 		ArrayList<Task> taskToDelete = new ArrayList<Task>();
 		if (deleteCommand.hasTaskIDs()) {
+			System.out.println(Arrays.toString(deleteCommand.getTaskIDs().toArray()));
 			for (Integer i : deleteCommand.getTaskIDs()) {
-				taskToDelete.add(deleteSingleTask(i));
+				// System.out.print(i+" ");
+				Task a = deleteSingleTask(i);
+				System.out.println(i + " " + a.toString() + " ");
+				taskToDelete.add(a);
 			}
 		} else if (deleteCommand.hasDeleteString()) {
 			Task taskDelete = fileStorage.absoluteSearch(deleteCommand.getDeleteString()).get(0);
@@ -629,27 +636,18 @@ public class Logic {
 		updateTaskLists();
 		undoCommandHistory.push(deleteCommand);
 		updateRespectiveGUICol("ALL");
-		updateTaskLists();
 	}
 
 	private Task deleteSingleTask(int taskIndex) {
 		if (taskIndex <= allEvents.size()) {
-			System.out.println(Arrays.toString(allEvents.toArray()));
 			fileStorage.deleteTask(allEvents.get(taskIndex - 1));
-			return allEvents.get(taskIndex-1);
-		} else if (taskIndex <= allEvents.size() + allDeadlines.size()) {
+			return allEvents.get(taskIndex - 1);
+		} else if (taskIndex <= (allEvents.size() + allDeadlines.size())) {
 			int indexToDelete = taskIndex - allEvents.size() - 1;
-			// fileStorage.absoluteSearch(allDeadlines.get(indexToDelete).getDescription()).get(0);
-			// taskToDelete =
-			// fileStorage.searchAllTask(allDeadlines.get(indexToDelete).getDescription()).get(0);
 			fileStorage.deleteTask(allDeadlines.get(indexToDelete));
 			return allDeadlines.get(indexToDelete);
 		} else {
 			int indexToDelete = taskIndex - allEvents.size() - allDeadlines.size() - 1;
-			// taskToDelete =
-			// fileStorage.absoluteSearch(allFloatingTasks.get(indexToDelete).getDescription()).get(0);
-			// taskToDelete =
-			// fileStorage.searchAllTask(allFloatingTasks.get(indexToDelete).getDescription()).get(0);
 			fileStorage.deleteTask(allFloatingTasks.get(indexToDelete));
 			return allFloatingTasks.get(indexToDelete);
 		}
