@@ -176,10 +176,7 @@ public class Parser {
 	}
 
 	private boolean isAnEventCommand(String strCommand) {
-		// If strCommand has "from" and "to", its an event!
-		if (strCommand.contains("from") && strCommand.contains("to")) {
-			return true;
-		}
+		
 
 		// else find for "at" and make sure it comes before "by" which is for
 		// evenet
@@ -187,13 +184,17 @@ public class Parser {
 		String[] splitWords = strCommand.split(" ");
 
 		for (int i = splitWords.length - 1; i >= 0; i--) {
-			if (splitWords[i].equals("by") || splitWords[i].equals("in")) {
+			if (splitWords[i].equals("by") || splitWords[i].equals("in") || splitWords[i].equals("due")) {
 				return false;
 			} else if (splitWords[i].equals("at")) {
 				return true;
 			}
 		}
-
+		
+		// If strCommand has "from" and "to", its an event!
+		if (putils.containsWord("from", strCommand) &&  putils.containsWord("to", strCommand)) {
+			return true;
+		}
 		return false;
 	}
 
@@ -263,7 +264,7 @@ public class Parser {
 		}
 		return false;
 	}
-
+	
 	private boolean isADisplayCommand(String strCommand) {
 		// If the first word is update
 		String strFirstWord = getWord(0, strCommand);
@@ -272,7 +273,7 @@ public class Parser {
 		}
 		return false;
 	}
-
+	
 	private String replaceLast(String string, String substring, String replacement) {
 		int index = string.lastIndexOf(substring);
 		if (index == -1)
@@ -297,6 +298,8 @@ public class Parser {
 		}
 		return false;
 	}
+	
+	
 	/* Parsing Methods */
 
 	private Update parseUpdateCommand(String strCommand) {
@@ -557,35 +560,83 @@ public class Parser {
 
 	}
 
-	private Command parseSearchCommand(String strCommand) {
+	private Command parseSearchCommand(String strCommand){
 		// remove "search" word
 		String strSearchString = removeNWords(1, strCommand);
-		Search searchObj = new Search();
-
-		// Get all dates
-		while (strSearchString != null || strSearchString != "") {
-			DateClass date = getDate(strSearchString);
-
-			if (date != null) {
-				searchObj.addSearchString(date.toString());
-				strSearchString = removeDate(strSearchString);
-			} else {
-				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strSearchString);
-				date = prettyTime.getDate();
-
-				if (date == null) {
-					break;
-				} else {
-					searchObj.addSearchString(date.toString());
-					strSearchString = strSearchString.replace(prettyTime.getParsedDateGroup().get(0), "").trim();
-				}
+		
+		String enclosedString = putils.getEnclosedDescription(strSearchString);
+		
+		if(enclosedString != null){
+			strSearchString = strSearchString.substring(strSearchString.lastIndexOf("\"") + 1).trim();
+			
+			if(strSearchString == ""){
+				return new Search(enclosedString);
 			}
+			
+			//else find for dates
+			if(strSearchString.matches("after .+")){
+				strSearchString = removeNWords(1, strSearchString);
+				DateClass firstDate = parseDate(strSearchString);
+				
+				Search search = new Search(enclosedString, firstDate);
+				search.setAfter(true);
+				return search;
+			} else if (strSearchString.matches("before .+")){
+				
+				strSearchString = removeNWords(1, strSearchString);
+				DateClass firstDate = parseDate(strSearchString);
+				
+				Search search = new Search(enclosedString, firstDate);
+				search.setBefore(true);
+				return search;
+				
+			} else if (strSearchString.matches("from .+ to .+")){
+				
+				int indexOfTo = strSearchString.lastIndexOf("to");
+				String strTo = strSearchString.substring(indexOfTo).replace("to", "").trim();
+				
+				int indexOfFrom = strSearchString.lastIndexOf("from");
+				String strFrom = strSearchString.substring(indexOfFrom, indexOfTo).replace("from", "").trim();
+				
+				DateClass firstDate, secondDate;
+				firstDate = parseDate(strFrom);
+				secondDate = parseDate(strTo);
+				
+				if(firstDate == null || secondDate == null){
+					return null;
+				}
+				
+				Search search = new Search(enclosedString, firstDate, secondDate);
+				search.setBetween(true);
+				return search;
+			} else{
+				return null;
+			}
+			
 		}
-
-		searchObj.addSearchString(strSearchString);
-		return searchObj;
+		
+		return null;
 	}
-
+	
+	private DateClass parseDate(String text){
+		DateClass firstDate = null;
+		try {
+			String strFirstDate = DateHandler.tryParse(text);
+			firstDate = strFirstDate == null ? null : new DateClass(strFirstDate);
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		if(firstDate == null){
+			PrettyTimeWrapper ptw = new PrettyTimeWrapper(text);
+			firstDate = ptw.getDate();
+		}
+		
+		return firstDate == null ? null : firstDate;
+	}
+	
 	private Command parseUndoCommand(String strCommand) {
 		return new Undo();
 	}
@@ -701,7 +752,6 @@ public class Parser {
 	
 	
 	private Command parseClearCommand(String strCommand) {
-		// TODO Auto-generated method stub
 		return new Clear();
 	}
 
@@ -728,7 +778,7 @@ public class Parser {
 		Parser p = new Parser();
 
 		// String command = "update new swimming -d swimming";
-		String command = "delete \"1,2,4-5 wtf\"";
+		String command = "search \"do it\" from 20/11 to next week";
 		Command t = p.parse(command);
 
 		System.out.println(((Event) t.getTask()).getEndTime().to12HourFormat());
