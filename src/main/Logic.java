@@ -40,6 +40,7 @@ public class Logic {
 		updateTaskLists();
 		undoCommandHistory = new Stack<Command>();
 		redoCommandHistory = new Stack<Command>();
+
 	}
 
 	private static Parser parser = new Parser();
@@ -67,13 +68,17 @@ public class Logic {
 	private static ArrayList<Task> searchResultFloatingTasks;
 	private static ArrayList<Task> searchResultTasks;
 
-	// ------------------- To interact with GUI [added by teddy] ------------------
+	// ------------------- To interact with GUI [added by teddy]
+	// ------------------
 	private MainApp mainApp;
-	private IntegerProperty displayStatusCode; // represent current display status
-	private String searchKeyword; // represent search keyword -> change this whenever a search is done
+	private IntegerProperty displayStatusCode; // represent current display
+												// status
+	private String searchKeyword; // represent search keyword -> change this
+									// whenever a search is done
 	private ObservableList<Task> events;
 	private ObservableList<Task> deadlines;
 	private ObservableList<Task> floatings;
+
 	// ----------------------------------------------------------------------------
 	/**
 	 * Description Takes in the command as a string from the user input and
@@ -92,7 +97,7 @@ public class Logic {
 		if (command.getCommandType().equals(Command.CommandType.UNKNOWN)) {
 			return false;
 		} else {
-			//output = true;
+			// output = true;
 			output = executeCommand(command);
 			return output;
 		}
@@ -137,6 +142,7 @@ public class Logic {
 			break;
 		case DONE:
 			done(inputCommand);
+			displayStatusCode.set(1);
 			success = true;
 			break;
 		case DELETE:
@@ -148,6 +154,7 @@ public class Logic {
 			break;
 		case SEARCH:
 			search(inputCommand);
+			displayStatusCode.set(3);
 			success = true;
 			break;
 		case UNDO:
@@ -158,11 +165,12 @@ public class Logic {
 			break;
 		case DISPLAY:
 			display();
-			success=true;
+			displayStatusCode.set(0);
+			success = true;
 			break;
 		case SAVE:
 			success = save(inputCommand);
-			 break;
+			break;
 		case EXIT:
 			mainApp.exit();
 			success = true;
@@ -174,7 +182,7 @@ public class Logic {
 	}
 
 	private boolean save(Command inputCommand) {
-		fileStorage.setFilePath(((Save)inputCommand).getPathLocation());
+		fileStorage.setFilePath(((Save) inputCommand).getPathLocation());
 		return true;
 	}
 
@@ -273,10 +281,15 @@ public class Logic {
 		} else {
 			System.out.println("Incorrect Search string");
 		}
-		System.out.println("Sizes after search: " + "Events" + allEvents.size() + "Deadlines" + allDeadlines.size() + "floatings" + allFloatingTasks.size());
+		System.out.println("Sizes after search: " + "Events" + allEvents.size() + "Deadlines" + allDeadlines.size()
+				+ "floatings" + allFloatingTasks.size());
 	}
 
 	private void searchForDescriptionAndDate(ArrayList<String> searchCriterias) {
+		allEvents.clear();
+		allDeadlines.clear();
+		allFloatingTasks.clear();
+		searchKeyword = searchCriterias.get(1) + " on " + searchCriterias.get(0);
 		allEvents = fileStorage.searchEventTask(searchCriterias.get(0), searchCriterias.get(1));
 		fillEvents();
 		allDeadlines = fileStorage.searchDeadlineTask(searchCriterias.get(0), searchCriterias.get(1));
@@ -289,6 +302,7 @@ public class Logic {
 		allEvents.clear();
 		allDeadlines.clear();
 		allFloatingTasks.clear();
+		searchKeyword = searchCriterias.get(0);
 		allEvents = fileStorage.searchEventTask(searchCriterias.get(0));
 		fillEvents();
 		allDeadlines = fileStorage.searchDeadlineTask(searchCriterias.get(0));
@@ -374,9 +388,11 @@ public class Logic {
 
 	private void redoDeleteCommand(Command redoCommand) {
 		undoCommandHistory.push(redoCommand);
-		fileStorage.deleteTask(((Delete) redoCommand).getTaskDeleted());
+		for (Task currentTask : ((Delete) redoCommand).getTaskDeleted()) {
+			fileStorage.deleteTask(currentTask);
+		}
 		updateTaskLists();
-		updateRespectiveGUICol((((Delete) redoCommand).getTaskDeleted().getClass().getName()));
+		updateRespectiveGUICol("ALL");
 	}
 
 	private void redoAddCommand(Command redoCommand) {
@@ -460,9 +476,12 @@ public class Logic {
 
 	private void undoDeleteCommand(Command undoCommand) {
 		redoCommandHistory.push(undoCommand);
-		fileStorage.writeTask(((Delete) undoCommand).getTaskDeleted());
+		for (Task currentTask : ((Delete) undoCommand).getTaskDeleted()) {
+			fileStorage.writeTask(currentTask);
+		}
+		// fileStorage.writeTask(((Delete) undoCommand).getTaskDeleted());
 		updateTaskLists();
-		updateRespectiveGUICol((((Delete) undoCommand).getTaskDeleted().getClass().getName()));
+		updateRespectiveGUICol("ALL");
 	}
 
 	private void undoAddCommand(Command undoCommand) {
@@ -596,38 +615,44 @@ public class Logic {
 
 	private void deleteTask(Command inputCommand) {
 		Delete deleteCommand = ((Delete) inputCommand);
-		Task taskToDelete = null;
-		//updateTaskLists();
-		if (deleteCommand.hasTaskID()) {
-			if (deleteCommand.getTaskID() <= allEvents.size()) {
-				String taskDesc = allEvents.get(deleteCommand.getTaskID() - 1).getDescription();
-				System.out.println(Arrays.toString(allEvents.toArray()));
-				System.out.println(taskDesc);
-				// System.out.println(fileStorage.absoluteSearch(taskDesc).toString());
-				taskToDelete = fileStorage.absoluteSearch(taskDesc).get(0);
-				// taskToDelete = fileStorage.searchAllTask(taskDesc).get(0);
-			} else if (deleteCommand.getTaskID() <= allEvents.size() + allDeadlines.size()) {
-				int indexToDelete = deleteCommand.getTaskID() - allEvents.size() - 1;
-				taskToDelete = fileStorage.absoluteSearch(allDeadlines.get(indexToDelete).getDescription()).get(0);
-				// taskToDelete =
-				// fileStorage.searchAllTask(allDeadlines.get(indexToDelete).getDescription()).get(0);
-			} else {
-				int indexToDelete = deleteCommand.getTaskID() - allEvents.size() - allDeadlines.size() - 1;
-				taskToDelete = fileStorage.absoluteSearch(allFloatingTasks.get(indexToDelete).getDescription()).get(0);
-				// taskToDelete =
-				// fileStorage.searchAllTask(allFloatingTasks.get(indexToDelete).getDescription()).get(0);
+		ArrayList<Task> taskToDelete = new ArrayList<Task>();
+		if (deleteCommand.hasTaskIDs()) {
+			for (Integer i : deleteCommand.getTaskIDs()) {
+				taskToDelete.add(deleteSingleTask(i));
 			}
 		} else if (deleteCommand.hasDeleteString()) {
-			taskToDelete = fileStorage.absoluteSearch(deleteCommand.getDeleteString()).get(0);
+			Task taskDelete = fileStorage.absoluteSearch(deleteCommand.getDeleteString()).get(0);
+			fileStorage.deleteTask(taskDelete);
+			taskToDelete.add(taskDelete);
 		}
-		String deleteTaskType = taskToDelete.getClass().getName();
-		fileStorage.deleteTask(taskToDelete);
 		deleteCommand.setTaskDeleted(taskToDelete);
 		updateTaskLists();
-		updateRespectiveGUICol(deleteTaskType);
 		undoCommandHistory.push(deleteCommand);
 		updateRespectiveGUICol("ALL");
 		updateTaskLists();
+	}
+
+	private Task deleteSingleTask(int taskIndex) {
+		if (taskIndex <= allEvents.size()) {
+			System.out.println(Arrays.toString(allEvents.toArray()));
+			fileStorage.deleteTask(allEvents.get(taskIndex - 1));
+			return allEvents.get(taskIndex-1);
+		} else if (taskIndex <= allEvents.size() + allDeadlines.size()) {
+			int indexToDelete = taskIndex - allEvents.size() - 1;
+			// fileStorage.absoluteSearch(allDeadlines.get(indexToDelete).getDescription()).get(0);
+			// taskToDelete =
+			// fileStorage.searchAllTask(allDeadlines.get(indexToDelete).getDescription()).get(0);
+			fileStorage.deleteTask(allDeadlines.get(indexToDelete));
+			return allDeadlines.get(indexToDelete);
+		} else {
+			int indexToDelete = taskIndex - allEvents.size() - allDeadlines.size() - 1;
+			// taskToDelete =
+			// fileStorage.absoluteSearch(allFloatingTasks.get(indexToDelete).getDescription()).get(0);
+			// taskToDelete =
+			// fileStorage.searchAllTask(allFloatingTasks.get(indexToDelete).getDescription()).get(0);
+			fileStorage.deleteTask(allFloatingTasks.get(indexToDelete));
+			return allFloatingTasks.get(indexToDelete);
+		}
 	}
 
 	private void updateRespectiveGUICol(String taskType) {
@@ -651,8 +676,7 @@ public class Logic {
 	}
 
 	/**
-	 * Codes below are to interact with GUI
-	 * Added by teddy
+	 * Codes below are to interact with GUI Added by teddy
 	 */
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
@@ -660,8 +684,9 @@ public class Logic {
 
 	/**
 	 * Initialize the tasks
+	 * 
 	 * @param tasks
-	 * Added by teddy
+	 *            Added by teddy
 	 */
 
 	public void setTasks(ObservableList<Task> events, ObservableList<Task> deadlines, ObservableList<Task> floatings) {

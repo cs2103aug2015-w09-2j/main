@@ -1,12 +1,12 @@
 package main;
 
-import java.util.Set;
+import java.util.*;
 
 public class Delete extends Command{
 
-	String strDeleteString;
-	Set<Integer> taskIDs;
-	Task taskDeleted;
+	private String strDeleteString;
+	private Set<Integer> taskIDs;
+	private ArrayList<Task> taskDeleted;
 	
 	public Delete(String input){
 		super(CommandType.DELETE);
@@ -26,11 +26,11 @@ public class Delete extends Command{
 		return strDeleteString;
 	}
 	
-	public void setTaskDeleted(Task taskDeleted){
+	public void setTaskDeleted(ArrayList<Task> taskDeleted){
 		this.taskDeleted = taskDeleted;
 	}
 	
-	public Task getTaskDeleted(){
+	public ArrayList<Task> getTaskDeleted(){
 		return taskDeleted;
 	}
 	
