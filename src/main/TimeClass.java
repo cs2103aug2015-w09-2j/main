@@ -48,11 +48,11 @@ public class TimeClass implements Comparable<TimeClass>{
 	public String toString(){
 		return strHour + "" + strMin;
 	}
-	
+
 	public String to24HourFormat(){
 		return toString() + "h";
 	}
-	
+
 	public String to12HourFormat(){
 		String str24hour = strHour + ":" + strMin;
 		DateFormat df = new SimpleDateFormat("HH:mm");
@@ -62,7 +62,7 @@ public class TimeClass implements Comparable<TimeClass>{
 		} catch (ParseException e) {
 			return null;
 		}
-		
+
 		DateFormat df2 = new SimpleDateFormat("h:mma");
 		String asd = df2.format(date);
 		return asd;
@@ -74,7 +74,7 @@ public class TimeClass implements Comparable<TimeClass>{
 	 */
 	@Override
 	public int compareTo(TimeClass time) {
-		if (this.getIntMin() == time.getIntMin()) {
+		if (this.getIntHour() == time.getIntHour()) {
 			return this.getIntMin() - time.getIntMin();
 		} else {
 			return this.getIntHour() - time.getIntHour();
