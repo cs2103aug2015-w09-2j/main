@@ -2,6 +2,9 @@ package main.ui.view;
 
 import java.text.ParseException;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ListChangeListener.Change;
@@ -15,6 +18,8 @@ import javafx.scene.control.TextField;
 import javafx.util.Callback;
 import main.ui.MainApp;
 import main.ui.util.CommandListener;
+import main.ui.util.StatusListener;
+import main.ui.util.StatusListener.Status;
 import main.Task;
 import main.Event;
 import main.Deadline;
@@ -27,7 +32,7 @@ public class MainLayoutController {
 	private ObservableList<Task> events;
 	private ObservableList<Task> deadlines;
 	private ObservableList<Task> floatings;
-
+	private IntegerProperty displayState;
 
 	// Fields for binding to UI components
 	@FXML
@@ -39,9 +44,9 @@ public class MainLayoutController {
 	@FXML
 	private TextField commandBox;
 	@FXML
-	private Label helpDialog;
+	private Label helpLabel;
 	@FXML
-	private Label displayState;
+	private Label displayStatusLabel;
 
 
 	public MainLayoutController() {
@@ -55,7 +60,9 @@ public class MainLayoutController {
 		customizeEventCellFactory();
 		customizeDeadlineCellFactory();
 		customizeFloatingCellFactory();
-		helpDialog.setText(CommandListener.HELP_MAIN);
+		helpLabel.setText(CommandListener.HELP_MAIN);
+		displayState.setValue(StatusListener.Status.ONGOING.getCode());
+		displayStatusLabel.setText(StatusListener.getStatusText(displayState.getValue()));
 	}
 
 	/**
@@ -68,14 +75,15 @@ public class MainLayoutController {
 		setupListViews();
 		initialize();
 		setListeners();
+		mainApp.setDisplayState(displayState);
 	}
 
 	public void focusCommandBox() {
 		commandBox.requestFocus();
 	}
 
-	public void showHelpDialog(String helpDialog) {
-		System.out.println(helpDialog);
+	public void showhelpLabel(String helpLabel) {
+		System.out.println(helpLabel);
 	}
 
 	private void customizeEventCellFactory() {
@@ -126,6 +134,21 @@ public class MainLayoutController {
 				}
 			}
 		});
+
+		displayState.addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> displayState, Number oldValue, Number newValue) {
+				int newState = newValue.intValue();
+				String statusText = StatusListener.getStatusText(newState);
+				if (newState == StatusListener.Status.SEARCH.getCode()) {
+					displayStatusLabel.setText(String.format(statusText, mainApp.getSearchKeyword()));
+				} else {
+					displayStatusLabel.setText(statusText);
+				}
+			}
+
+		});
 	}
 
 	private void getTasks() {
@@ -152,7 +175,7 @@ public class MainLayoutController {
 	private void listenToKeyTyped() {
 		String textTyped = commandBox.getText();
 		String response = CommandListener.respondTo(textTyped);
-		helpDialog.setText(response);
+		helpLabel.setText(response);
 	}
 
 }

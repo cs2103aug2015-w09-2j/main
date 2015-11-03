@@ -6,6 +6,7 @@ import java.util.ArrayList; // remove later
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -16,7 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 
 import javafx.stage.Stage;
-
+import main.ui.util.StatusListener;
 import main.ui.view.MainLayoutController;
 import main.*; // remove later
 import main.Logic;
@@ -56,6 +57,13 @@ public class MainApp extends Application {
 		// response by giving a message to controller to display
 	}
 
+	public void setDisplayState(IntegerProperty statusCode) {
+		logic.setDisplayState(statusCode);
+	}
+
+	public String getSearchKeyword() {
+		return logic.getSearchKeyword();
+	}
 	/**
 	 * Initializes the scene and display the stage
 	 */

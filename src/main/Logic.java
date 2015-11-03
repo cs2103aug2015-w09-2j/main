@@ -3,6 +3,7 @@ package main;
 import java.text.ParseException;
 import java.util.*;
 
+import javafx.beans.property.IntegerProperty;
 import javafx.collections.*;
 
 import main.ui.MainApp;
@@ -65,12 +66,15 @@ public class Logic {
 	private static ArrayList<Task> searchResultDeadlines;
 	private static ArrayList<Task> searchResultFloatingTasks;
 	private static ArrayList<Task> searchResultTasks;
-	private MainApp mainApp; // [teddy] reference to UI
-	// private ObservableList<Task> tasks; // [teddy] just fill the tasks
+
+	// ------------------- To interact with GUI [added by teddy] ------------------
+	private MainApp mainApp;
+	private IntegerProperty displayStatusCode; // represent current display status
+	private String searchKeyword; // represent search keyword -> change this whenever a search is done
 	private ObservableList<Task> events;
 	private ObservableList<Task> deadlines;
 	private ObservableList<Task> floatings;
-
+	// ----------------------------------------------------------------------------
 	/**
 	 * Description Takes in the command as a string from the user input and
 	 * processes the command and executes the command if its in the correct
@@ -538,7 +542,7 @@ public class Logic {
 	 * updatedTask).setEndDate(processUpdate.getEndDate()); }
 	 * if(processUpdate.hasDescription()){ ((Event)
 	 * updatedTask).setDescription(processUpdate.getDescription()); }
-	 * 
+	 *
 	 * //updatedTask = taskToUpdate; break; case "main.Deadline": updatedTask =
 	 * taskToUpdate; if(processUpdate.hasStartDate()){ ((Event)
 	 * updatedTask).setStartDate(processUpdate.getStartDate()); }
@@ -558,14 +562,14 @@ public class Logic {
 	 * //updatedTask = taskToUpdate; System.out.println("To update " +
 	 * taskToUpdate.toString() + "Task updated " + updatedTask.toString() +
 	 * "within floaitng"); break; default: updatedTask = taskToUpdate; break; }
-	 * 
+	 *
 	 * System.out.println("To update " + taskToUpdate.toString() +
 	 * "Task updated " + updatedTask.toString() + "diff"); Update output = new
 	 * Update(taskToUpdateTask(taskToUpdate), taskToUpdateTask(updatedTask));
 	 * System.out.println("To update " + taskToUpdate.toString() +
 	 * "Task updated " + updatedTask.toString());
 	 * output.setCurrentTask(taskToUpdate);
-	 * 
+	 *
 	 * output.setUpdateTask(updatedTask); fileStorage.writeTask(updatedTask);
 	 * updateTaskLists(); updateRespectiveGUICol("ALL");
 	 * undoCommandHistory.push(output); }
@@ -647,11 +651,8 @@ public class Logic {
 	}
 
 	/**
-	 * Set the reference to MainApp
-	 *
-	 * @param mainApp
-	 *
-	 *            Added by teddy
+	 * Codes below are to interact with GUI
+	 * Added by teddy
 	 */
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
@@ -659,14 +660,8 @@ public class Logic {
 
 	/**
 	 * Initialize the tasks
-	 *
 	 * @param tasks
-	 *
-	 *            Added by teddy
-	 */
-	/*
-	 * public void setTasks(ObservableList<Task> tasks) { this.tasks = tasks;
-	 * fillTasks(); }
+	 * Added by teddy
 	 */
 
 	public void setTasks(ObservableList<Task> events, ObservableList<Task> deadlines, ObservableList<Task> floatings) {
@@ -686,11 +681,6 @@ public class Logic {
 	 * Added by Teddy Ravi, you can just call this method every time user
 	 * add/delete/edit the to-do list
 	 */
-
-	/*
-	 * public void fillTasks() { tasks.setAll(fileStorage.readAllTask()); }
-	 */
-
 	public void fillEvents() {
 		// events.setAll(fileStorage.readEventTask());
 		events.setAll(allEvents);
@@ -719,5 +709,22 @@ public class Logic {
 	public void fillFloatings(ArrayList<Task> searchResult) {
 		// floatings.setAll(fileStorage.readFloatingTask());
 		floatings.setAll(searchResult);
+	}
+
+	/*
+	 * displayStatusCode is an integer representing the state of the display:
+	 * State = {ONGOING, DONE, OVERDUE, SEARCH, EVENTS, DEADLINES, FLOATINGS}
+	 *
+	 * Change the displayStatusCode accordingly with the commands executed:
+	 * displayStatusCode.setValue(StatusListener.Status.<State>.getCode());
+	 *
+	 * Replace State by one of the state in the set above
+	 */
+	public void setDisplayState(IntegerProperty displayStatusCode) {
+		this.displayStatusCode = displayStatusCode;
+	}
+
+	public String getSearchKeyword() {
+		return searchKeyword;
 	}
 }
