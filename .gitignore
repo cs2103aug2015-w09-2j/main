@@ -10,3 +10,6 @@ done
 data
 overdue.json
 overdue
+build
+build.fxbuild
+/build/
