@@ -49,5 +49,17 @@ public class ParserUtils {
 		
 		return parsedIDs.size() == 0 ? null : parsedIDs; 
 	}
+
+	public boolean containsWord(String word, String text){
+		String[] splitWord = text.split(" ");
+		
+		for(String string : splitWord){
+			if(string.equals(word)){
+				return true;
+			}
+		}
+		
+		return false;
+	}
 	
 }

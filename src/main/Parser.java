@@ -566,6 +566,8 @@ public class Parser {
 		
 		String enclosedString = putils.getEnclosedDescription(strSearchString);
 		
+		enclosedString = enclosedString.equals("") == true ? null : enclosedString;
+		
 		if(enclosedString != null){
 			strSearchString = strSearchString.substring(strSearchString.lastIndexOf("\"") + 1).trim();
 			
@@ -578,6 +580,10 @@ public class Parser {
 				String firstWord =  getWord(0, strSearchString);
 				strSearchString = removeNWords(1, strSearchString);
 				DateClass firstDate = parseDate(strSearchString);
+				
+				if(firstDate == null){
+					return null;
+				}
 				
 				Search search = new Search(enclosedString, firstDate);
 				if(firstWord.equals("after")){
@@ -613,7 +619,67 @@ public class Parser {
 			
 		}
 		
-		return null;
+		//find to/after/before/on
+		String[] splitWords = strSearchString.split(" ");
+		String firstFoundWord = null;
+		
+		for(int i = splitWords.length -1; i >=0; i--){
+			if(splitWords[i].equals("to") || splitWords[i].equals("after") || splitWords[i].equals("before") || splitWords[i].equals("on")){
+				firstFoundWord = splitWords[i];
+				break;
+			}
+		}
+		
+		if(firstFoundWord == null){
+			return new Search(strSearchString);
+		} else if(firstFoundWord.equals("to")){
+			int indexOfTo = strSearchString.lastIndexOf("to");
+			String strTo = strSearchString.substring(indexOfTo).replace("to", "").trim();
+			
+			int indexOfFrom = strSearchString.lastIndexOf("from");
+			String strFrom = strSearchString.substring(indexOfFrom, indexOfTo).replace("from", "").trim();
+			
+			DateClass firstDate, secondDate;
+			firstDate = parseDate(strFrom);
+			secondDate = parseDate(strTo);
+			
+			if(firstDate == null || secondDate == null){
+				return null;
+			}
+			
+			strSearchString = strSearchString.substring(0,indexOfFrom).trim();
+			strSearchString = strSearchString.equals("") || strSearchString.equals("\"\"") ? null : strSearchString;
+			
+			Search search = new Search(strSearchString, firstDate, secondDate);
+			search.setBetween(true);
+			return search;
+		} else {//before//after//on
+			String[] strSplit =  strSearchString.split(firstFoundWord);
+			if(strSplit.length != 2){
+				return null;
+			}
+			
+			DateClass firstDate = parseDate(strSplit[1].trim());
+			
+			if(firstDate == null){
+				return null;
+			}
+			
+			strSearchString = strSplit[0].trim();
+			strSearchString = strSearchString.equals("") || strSearchString.equals("\"\"") ? null : strSearchString;
+			
+			Search search = new Search(strSearchString, firstDate);
+			if(firstFoundWord.equals("after")){
+				search.setAfter(true);
+			} else if (firstFoundWord.equals("before")){
+				search.setBefore(true);
+			} else {
+				search.setOn(true);
+			}
+			return search;
+		}
+		
+		
 	}
 	
 	private DateClass parseDate(String text){
@@ -776,9 +842,17 @@ public class Parser {
 		Parser p = new Parser();
 
 		// String command = "update new swimming -d swimming";
-		String command = "search \"do it\" from 20/11 to next week";
-		Command t = p.parse(command);
-
+		Command t;
+		String command;
+		command = "search \"\" from 20/11 to next week";
+		t = p.parse(command);
+		command = "search shit before 20/11";
+		t = p.parse(command);
+		command = "search shit after 20/11";
+		t = p.parse(command);
+		command = "search shit on 20/11";
+		t = p.parse(command);
+		
 		System.out.println(((Event) t.getTask()).getEndTime().to12HourFormat());
 
 	}
