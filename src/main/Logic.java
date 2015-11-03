@@ -331,7 +331,7 @@ public class Logic {
 
 	private void display(Command inputCommand) {
 		Display displayCommand = (Display) inputCommand;
-		if (displayCommand.getDisplayString().equals("all")) {
+		if (displayCommand.getDisplayString().equals("ongoing")) {
 			updateTaskLists();
 			fillEvents();
 			fillFloatings();
