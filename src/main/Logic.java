@@ -107,10 +107,76 @@ public class Logic {
 		allEvents = fileStorage.readEventTask();
 		allDeadlines = fileStorage.readDeadlineTask();
 		allFloatingTasks = fileStorage.readFloatingTask();
+		allEvents = filterOverdueTask(allEvents);
+		allDeadlines = filterOverdueTask(allDeadlines);
 		Collections.sort(allEvents);
 		Collections.sort(allDeadlines);
 		Collections.sort(allFloatingTasks);
 		allTasks = fileStorage.readAllTask();
+
+	}
+
+	private ArrayList<Task> filterOverdueTask(ArrayList<Task> tasks) {
+		ArrayList<Task> taskList = new ArrayList<Task>();
+		for (Task currentTask : tasks) {
+			switch (currentTask.getClass().getName()) {
+			case "main.Event":
+				int compareTo = 0;
+				try {
+					compareTo = ((Event) currentTask).getEndDate()
+							.compareTo(new DateClass(DateHandler.getIntDayNow(), DateHandler.getIntMonthNow()));
+				} catch (NoSuchFieldException e) {
+					e.printStackTrace();
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				if (compareTo > 0) {
+					taskList.add(currentTask);
+				} else if (compareTo == 0) {
+					compareTo = ((Event) currentTask).getEndTime()
+							.compareTo(new TimeClass(TimeHandler.getHourNow(), TimeHandler.getMinuteNow()));
+					if (compareTo > 0) {
+						taskList.add(currentTask);
+					} else {
+						fileStorage.writeOverdueTask(currentTask);
+						fileStorage.deleteTask(currentTask);
+					}
+				} else {
+					fileStorage.writeOverdueTask(currentTask);
+					fileStorage.deleteTask(currentTask);
+				}
+				break;
+			case "main.Deadline":
+				compareTo = 0;
+				try {
+					compareTo = ((Deadline) currentTask).getEndDate()
+							.compareTo(new DateClass(DateHandler.getIntDayNow(), DateHandler.getIntMonthNow()));
+				} catch (NoSuchFieldException e) {
+					e.printStackTrace();
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				if (compareTo > 0) {
+					taskList.add(currentTask);
+				} else if (compareTo == 0) {
+					compareTo = ((Deadline) currentTask).getEndTime()
+							.compareTo(new TimeClass(TimeHandler.getHourNow(), TimeHandler.getMinuteNow()));
+					if (compareTo > 0) {
+						taskList.add(currentTask);
+					} else {
+						fileStorage.writeOverdueTask(currentTask);
+						fileStorage.deleteTask(currentTask);
+					}
+				} else {
+					fileStorage.writeOverdueTask(currentTask);
+					fileStorage.deleteTask(currentTask);
+				}
+				break;
+			default:
+				break;
+			}
+		}
+		return taskList;
 	}
 
 	/**

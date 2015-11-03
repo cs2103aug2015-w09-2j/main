@@ -29,6 +29,15 @@ public class TimeClass implements Comparable<TimeClass>{
 		this.strMin = time.getStringMin();
 
 	}
+	//Added  by [Ravi] to check for overdue task
+	public TimeClass(int hourNow, int minuteNow) {
+		this.intHour = hourNow;
+		this.intMin = minuteNow;
+
+		this.strHour = hourNow + "";
+		this.strMin = minuteNow+ "";
+
+	}
 
 	public int getIntHour(){
 		return intHour;
