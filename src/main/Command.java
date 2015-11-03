@@ -6,6 +6,7 @@ public class Command {
 		ADD_DEADLINE("deadline"), ADD_FLOATING("floating"),ADD_EVENT("event"),
 		UPDATE("update"), DELETE("delete"), CLEAR("clear"), EXIT("exit"), 
 		DISPLAY("display"), SEARCH("search"),UNDO("undo"),REDO("redo"), DONE("done"),
+		SAVE("save"),
 		UNKNOWN("");
 
 		private String strCommand;

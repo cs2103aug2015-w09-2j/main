@@ -648,11 +648,26 @@ public class Parser {
 			parsedCommand = parseExitCommand(strCommand);
 		} else if (isAClearCommand(strCommand)) {
 			parsedCommand = parseClearCommand(strCommand);
-		} else {
+		} else if (isASaveCommand(strCommand)) {
+			parsedCommand = parseSaveCommand(strCommand);
+		}else {
 			parsedCommand = null;
 		}
 
 		return parsedCommand;
+	}
+
+	private Command parseSaveCommand(String strCommand) {
+		strCommand = removeNWords(1, strCommand);
+		return new Save(strCommand);
+	}
+
+	private boolean isASaveCommand(String strCommand) {
+		String strFirstWord = getWord(0, strCommand);
+		if (strFirstWord.equals("save")) {
+			return true;
+		}
+		return false;
 	}
 
 	private Command parseExitCommand(String strCommand) {
