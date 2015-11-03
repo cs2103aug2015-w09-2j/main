@@ -15,6 +15,8 @@ public class JsonSearch {
 		ArrayList<Task> eventList = jsonTask.eventTaskArray(event);
 		ArrayList<Task> searchList = new ArrayList<Task>();
 		
+		String[] keywordArr = keyword1.split(" ");
+		
 		for(int i=0; i<eventList.size(); i++){
 			Task task = eventList.get(i);
 			description = task.getDescription();
@@ -25,9 +27,18 @@ public class JsonSearch {
 			
 			String strTask = description + " " + startDate + " " + startTime + " " + endDate + " " + endTime;
 			
-			
-			if(strTask.contains(keyword1) && strTask.contains(keyword2)){
-				searchList.add(task);
+			for(int j=0; j<keywordArr.length; j++){
+				if(!keyword1.equals(keyword2)){
+					if(strTask.contains(keywordArr[j]) && strTask.contains(keyword2)){
+						searchList.add(task);
+						break;
+					}
+				}else{
+					if(strTask.contains(keywordArr[j])){
+						searchList.add(task);
+						break;
+					}
+				}
 			}
 			
 		}
@@ -41,6 +52,8 @@ public class JsonSearch {
 		ArrayList<Task> deadlineList = jsonTask.deadlineTaskArray(deadline);
 		ArrayList<Task> searchList = new ArrayList<Task>();
 		
+		String[] keywordArr = keyword1.split(" ");
+		
 		for(int i=0; i<deadlineList.size(); i++){
 			Task task = deadlineList.get(i);
 			description = task.getDescription();
@@ -49,8 +62,18 @@ public class JsonSearch {
 			
 			String strTask = description  + " " + endDate + " " + endTime;
 			
-			if(strTask.contains(keyword1) && strTask.contains(keyword2)){
-				searchList.add(task);
+			for(int j=0; j<keywordArr.length; j++){
+				if(!keyword1.equals(keyword2)){
+					if(strTask.contains(keywordArr[j]) && strTask.contains(keyword2)){
+						searchList.add(task);
+						break;
+					}
+				}else{
+					if(strTask.contains(keywordArr[j])){
+						searchList.add(task);
+						break;
+					}
+				}
 			}
 		}
 		
@@ -63,7 +86,7 @@ public class JsonSearch {
 		ArrayList<Task> floatingList = jsonTask.floatingTaskArray(floating);
 		ArrayList<Task> searchList = new ArrayList<Task>();
 		
-		
+		String[] keywordArr = keyword1.split(" ");
 		
 		for(int i=0; i<floatingList.size(); i++){
 			Task task = floatingList.get(i);
@@ -71,8 +94,18 @@ public class JsonSearch {
 			
 			String strTask = description;
 			
-			if(strTask.contains(keyword1) && strTask.contains(keyword2)){
-				searchList.add(task);
+			for(int j=0; j<keywordArr.length; j++){
+				if(!keyword1.equals(keyword2)){
+					if(strTask.contains(keywordArr[j]) && strTask.contains(keyword2)){
+						searchList.add(task);
+						break;
+					}
+				}else{
+					if(strTask.contains(keywordArr[j])){
+						searchList.add(task);
+						break;
+					}
+				}
 			}
 		}
 		
