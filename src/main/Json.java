@@ -19,6 +19,9 @@ public class Json {
 	private static final String STORAGE_FILE = "STORAGE_FILE";
 	private static final String DONE_FILE = "DONE_FILE";
 	private static final String OVERDUE_FILE = "OVERDUE_FILE";
+	private static final String BEFORE = "BEFORE";
+	private static final String ON = "ON";
+	private static final String AFTER = "AFTER";
 	
 	/**
 	 * The constructor initialize all the method
@@ -153,20 +156,9 @@ public class Json {
 	public ArrayList<Task> searchEventTask(String keyword){
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE); 
 		isFileEmpty();
-		return jsonSearch.searchEvent(keyword, keyword, content.get(0));
+		return jsonSearch.searchEventTask(keyword, content.get(0));
 	}
 	
-	/**
-	 * Search for all event task which contains both keywords
-	 * @param keyword1 keyword the string which contains words 
-	 * @param keyword2 keyword the string which contains words 
-	 * @return an ArrayList<Task> of event tasks which contains both keyword
-	 */
-	public ArrayList<Task> searchEventTask(String keyword1, String keyword2){
-		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE); 
-		isFileEmpty();
-		return jsonSearch.searchEvent(keyword1, keyword2, content.get(0));
-	}
 	
 	/**
 	 * Search for all deadline task which contains the words in the string of keyword
@@ -176,20 +168,9 @@ public class Json {
 	public ArrayList<Task> searchDeadlineTask(String keyword){
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		isFileEmpty();
-		return jsonSearch.searchDeadline(keyword, keyword, content.get(1));
+		return jsonSearch.searchDeadlineTask(keyword, content.get(1));
 	}
 	
-	/**
-	 * Search for all deadline task which contains both keywords
-	 * @param keyword1 keyword the string which contains words 
-	 * @param keyword2 keyword the string which contains words 
-	 * @return an ArrayList<Task> of deadline tasks which contains both keyword
-	 */
-	public ArrayList<Task> searchDeadlineTask(String keyword1, String keyword2){
-		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
-		isFileEmpty();
-		return jsonSearch.searchDeadline(keyword1, keyword2, content.get(1));
-	}
 	
 	/**
 	 * Search for all floating task which contains the words in the string of keyword
@@ -199,20 +180,9 @@ public class Json {
 	public ArrayList<Task> searchFloatingTask(String keyword){
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		isFileEmpty();
-		return jsonSearch.searchFloating(keyword, keyword, content.get(2));
+		return jsonSearch.searchFloatingTask(keyword, content.get(2));
 	}
 	
-	/**
-	 * Search for all floating task which contains both keywords
-	 * @param keyword1 keyword the string which contains words 
-	 * @param keyword2 keyword the string which contains words 
-	 * @return an ArrayList<Task> of floating tasks which contains both keyword
-	 */
-	public ArrayList<Task> searchFloatingTask(String keyword1, String keyword2){
-		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
-		isFileEmpty();
-		return jsonSearch.searchFloating(keyword1, keyword2, content.get(2));
-	}
 	
 	/**
 	 * Search for all event, deadline and floating task which contains the words in the string of keyword
@@ -221,19 +191,9 @@ public class Json {
 	 */
 	public ArrayList<Task> searchAllTask(String keyword){
 		isFileEmpty();
-		return jsonSearch.searchAll(keyword, keyword);
+		return jsonSearch.searchAllTask(keyword);
 	}
 	
-	/**
-	 * Search for all event, deadline and floating task which contains both keywords
-	 * @param keyword1 keyword the string which contains words 
-	 * @param keyword2 keyword the string which contains words 
-	 * @return an ArrayList<Task> of event, deadline and floating tasks which contains both keyword
-	 */
-	public ArrayList<Task> searchAllTask(String keyword1, String keyword2){
-		isFileEmpty();
-		return jsonSearch.searchAll(keyword1, keyword2);
-	}
 	
 	/**
 	 * Search for event, deadline and floating task which contains the exact task description of the task
@@ -264,7 +224,7 @@ public class Json {
 	public ArrayList<Task>searchEventTaskBeforeDate(DateClass date){
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		isFileEmpty();
-		return jsonSearch.searchEventTaskBeforeDate(date, content.get(0));
+		return jsonSearch.searchEventTaskByDate(date, content.get(0), BEFORE);
 	}
 	
 	/**
@@ -275,7 +235,7 @@ public class Json {
 	public ArrayList<Task>searchDeadlineTaskBeforeDate(DateClass date){
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		isFileEmpty();
-		return jsonSearch.searchDeadlineTaskBeforeDate(date, content.get(1));
+		return jsonSearch.searchDeadlineTaskByDate(date, content.get(1), BEFORE);
 	}
 	
 	/**
@@ -285,8 +245,111 @@ public class Json {
 	 */
 	public ArrayList<Task> searchAllTaskBeforeDate(DateClass date){
 		isFileEmpty();
-		return jsonSearch.searchAllTaskBeforeDate(date);
+		return jsonSearch.searchAllTaskByDate(date, BEFORE);
 	}
+	
+	///////////////////////////////////////////////////////////////////////
+	/**
+	 * Search for all event task on a specified end date
+	 * @param date a end date
+	 * @return an ArrayList<Task> of event task on a specified end date
+	 */
+	public ArrayList<Task>searchEventTaskOnDate(DateClass date){
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
+		isFileEmpty();
+		return jsonSearch.searchEventTaskByDate(date, content.get(0), ON);
+	}
+	
+	/**
+	 * Search for all deadline task on a specified end date
+	 * @param date a end date
+	 * @return an ArrayList<Task> of deadline task on a specified end date
+	 */
+	public ArrayList<Task>searchDeadlineTaskOnDate(DateClass date){
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
+		isFileEmpty();
+		return jsonSearch.searchDeadlineTaskByDate(date, content.get(1), ON);
+	}
+	
+	/**
+	 * Search for all event and deadline task on a specified end date
+	 * @param date a end date
+	 * @return an ArrayList<Task> of event and deadline task on a specified end date
+	 */
+	public ArrayList<Task> searchAllTaskOnDate(DateClass date){
+		isFileEmpty();
+		return jsonSearch.searchAllTaskByDate(date, ON);
+	}
+	
+	/**
+	 * Search for all event task after a specified end date
+	 * @param date a end date
+	 * @return an ArrayList<Task> of event task after a specified end date
+	 */
+	public ArrayList<Task>searchEventTaskAfterDate(DateClass date){
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
+		isFileEmpty();
+		return jsonSearch.searchEventTaskByDate(date, content.get(0), AFTER);
+	}
+	
+	/**
+	 * Search for all deadline task after a specified end date
+	 * @param date a end date
+	 * @return an ArrayList<Task> of deadline task after a specified end date
+	 */
+	public ArrayList<Task>searchDeadlineTaskAfterDate(DateClass date){
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
+		isFileEmpty();
+		return jsonSearch.searchDeadlineTaskByDate(date, content.get(1), AFTER);
+	}
+	
+	/**
+	 * Search for all event and deadline task after a specified end date
+	 * @param date a end date
+	 * @return an ArrayList<Task> of event and deadline task after a specified end date
+	 */
+	public ArrayList<Task> searchAllTaskAfterDate(DateClass date){
+		isFileEmpty();
+		return jsonSearch.searchAllTaskByDate(date, AFTER);
+	}
+	
+	/**
+	 * Search and return all event tasks which are from startDate to endDate
+	 * @param startDate the start date
+	 * @param endDate the end date
+	 * @return ArrayList<Task> of event tasks which are from startDate to endDate
+	 */
+	public ArrayList<Task>searchEventTaskBetweenDates(DateClass startDate, DateClass endDate){
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
+		isFileEmpty();
+		return jsonSearch.searchEventTaskBetweenDates(startDate, endDate, content.get(0));
+	}
+	
+	/**
+	 * Search and return all deadline tasks which are from startDate to endDate
+	 * @param startDate the start date
+	 * @param endDate the end date
+	 * @return ArrayList<Task> of deadline tasks which are from startDate to endDate
+	 */
+	public ArrayList<Task>searchDeadlineTaskBetweenDates(DateClass startDate, DateClass endDate){
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
+		isFileEmpty();
+		return jsonSearch.searchDeadlineTaskBetweenDates(startDate, endDate, content.get(1));
+	}
+	
+	/**
+	 * Search and return all event and deadline tasks which are from startDate to endDate
+	 * @param startDate the start date
+	 * @param endDate the end date
+	 * @return ArrayList<Task> of event and deadline tasks which are from startDate to endDate
+	 */
+	public ArrayList<Task>searchAllTaskBetweenDates(DateClass startDate, DateClass endDate){
+		isFileEmpty();
+		return jsonSearch.searchAllTaskBetweenDates(startDate, endDate);
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * Delete a specific task from the storage file
@@ -381,9 +444,60 @@ public class Json {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * Search for all event task which contains both keywords
+	 * @param keyword1 keyword the string which contains words 
+	 * @param keyword2 keyword the string which contains words 
+	 * @return an ArrayList<Task> of event tasks which contains both keyword
+	 */
+	/*
+	public ArrayList<Task> searchEventTask(String keyword1, String keyword2){
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE); 
+		isFileEmpty();
+		return jsonSearch.searchEvent(keyword1, keyword2, content.get(0));
+	}
+	*/
 	
+	/**
+	 * Search for all deadline task which contains both keywords
+	 * @param keyword1 keyword the string which contains words 
+	 * @param keyword2 keyword the string which contains words 
+	 * @return an ArrayList<Task> of deadline tasks which contains both keyword
+	 */
+	/*
+	public ArrayList<Task> searchDeadlineTask(String keyword1, String keyword2){
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
+		isFileEmpty();
+		return jsonSearch.searchDeadline(keyword1, keyword2, content.get(1));
+	}
+	*/
 	
+	/**
+	 * Search for all floating task which contains both keywords
+	 * @param keyword1 keyword the string which contains words 
+	 * @param keyword2 keyword the string which contains words 
+	 * @return an ArrayList<Task> of floating tasks which contains both keyword
+	 */
+	/*
+	public ArrayList<Task> searchFloatingTask(String keyword1, String keyword2){
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
+		isFileEmpty();
+		return jsonSearch.searchFloating(keyword1, keyword2, content.get(2));
+	}
+	*/
 	
+	/**
+	 * Search for all event, deadline and floating task which contains both keywords
+	 * @param keyword1 keyword the string which contains words 
+	 * @param keyword2 keyword the string which contains words 
+	 * @return an ArrayList<Task> of event, deadline and floating tasks which contains both keyword
+	 */
+	/*
+	public ArrayList<Task> searchAllTask(String keyword1, String keyword2){
+		isFileEmpty();
+		return jsonSearch.searchAll(keyword1, keyword2);
+	}
+	*/
 	
 
 	

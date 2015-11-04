@@ -9,14 +9,12 @@ public class JsonSearch {
 	
 	/**
 	 * Search for a list of event task which matches the keywords
-	 * Return task if task contains at least one of the word in keyword1
-	 * Return task if task contains all the words in keyword2
-	 * @param keyword1 contains a list of keyword 
-	 * @param keyword2 contains a keyword
+	 * Return task if task contains at least one of the word in keyword
+	 * @param keyword contains a list of keyword 
 	 * @param event JSONArray of event task
 	 * @return ArrayList<Task> of event task which matches the keyword
 	 */
-	public ArrayList<Task> searchEvent(String keyword1, String keyword2, JSONArray event){
+	public ArrayList<Task> searchEventTask(String keyword, JSONArray event){
 		
 		JsonTask jsonTask = new JsonTask();
 		String description,startDate, startTime, endDate, endTime;
@@ -24,7 +22,7 @@ public class JsonSearch {
 		ArrayList<Task> eventList = jsonTask.eventTaskArray(event);
 		ArrayList<Task> searchList = new ArrayList<Task>();
 		
-		String[] keywordArr = keyword1.split(" ");
+		String[] keywordArr = keyword.split(" ");
 		
 		for(int i=0; i<eventList.size(); i++){
 			Task task = eventList.get(i);
@@ -36,17 +34,10 @@ public class JsonSearch {
 			
 			String strTask = description + " " + startDate + " " + startTime + " " + endDate + " " + endTime;
 			
-			for(int j=0; j<keywordArr.length; j++){
-				if(!keyword1.equals(keyword2)){
-					if(strTask.contains(keywordArr[j]) && strTask.contains(keyword2)){
-						searchList.add(task);
-						break;
-					}
-				}else{
-					if(strTask.contains(keywordArr[j])){
-						searchList.add(task);
-						break;
-					}
+			for(int j=0; j<keywordArr.length; j++){				
+				if(strTask.contains(keywordArr[j])){
+					searchList.add(task);
+					break;
 				}
 			}
 			
@@ -57,20 +48,18 @@ public class JsonSearch {
   	
 	/**
 	 * Search for a list of deadline task which matches the keywords
-	 * Return task if task contains at least one of the word in keyword1
-	 * Return task if task contains all the words in keyword2
-	 * @param keyword1 contains a list of keyword 
-	 * @param keyword2 contains a keyword
+	 * Return task if task contains at least one of the word in keyword
+	 * @param keyword contains a list of keyword 
 	 * @param deadline JSONArray of deadline task
 	 * @return ArrayList<Task> of deadline task which matches the keyword
 	 */
-	public ArrayList<Task> searchDeadline(String keyword1, String keyword2, JSONArray deadline){
+	public ArrayList<Task> searchDeadlineTask(String keyword, JSONArray deadline){
 		JsonTask jsonTask = new JsonTask();
 		String description,endDate, endTime;
 		ArrayList<Task> deadlineList = jsonTask.deadlineTaskArray(deadline);
 		ArrayList<Task> searchList = new ArrayList<Task>();
 		
-		String[] keywordArr = keyword1.split(" ");
+		String[] keywordArr = keyword.split(" ");
 		
 		for(int i=0; i<deadlineList.size(); i++){
 			Task task = deadlineList.get(i);
@@ -81,16 +70,9 @@ public class JsonSearch {
 			String strTask = description  + " " + endDate + " " + endTime;
 			
 			for(int j=0; j<keywordArr.length; j++){
-				if(!keyword1.equals(keyword2)){
-					if(strTask.contains(keywordArr[j]) && strTask.contains(keyword2)){
-						searchList.add(task);
-						break;
-					}
-				}else{
-					if(strTask.contains(keywordArr[j])){
-						searchList.add(task);
-						break;
-					}
+				if(strTask.contains(keywordArr[j])){
+					searchList.add(task);
+					break;
 				}
 			}
 		}
@@ -100,20 +82,18 @@ public class JsonSearch {
 	
 	/**
 	 * Search for a list of floating task which matches the keywords
-	 * Return task if task contains at least one of the word in keyword1
-	 * Return task if task contains all the words in keyword2
-	 * @param keyword1 contains a list of keyword 
-	 * @param keyword2 contains a keyword
+	 * Return task if task contains at least one of the word in keyword
+	 * @param keyword contains a list of keyword 
 	 * @param floating JSONArray of floating task
 	 * @return ArrayList<Task> of floating task which matches the keyword
 	 */
-	public ArrayList<Task> searchFloating(String keyword1, String keyword2, JSONArray floating){
+	public ArrayList<Task> searchFloatingTask(String keyword, JSONArray floating){
 		JsonTask jsonTask = new JsonTask();
 		String description;
 		ArrayList<Task> floatingList = jsonTask.floatingTaskArray(floating);
 		ArrayList<Task> searchList = new ArrayList<Task>();
 		
-		String[] keywordArr = keyword1.split(" ");
+		String[] keywordArr = keyword.split(" ");
 		
 		for(int i=0; i<floatingList.size(); i++){
 			Task task = floatingList.get(i);
@@ -122,16 +102,9 @@ public class JsonSearch {
 			String strTask = description;
 			
 			for(int j=0; j<keywordArr.length; j++){
-				if(!keyword1.equals(keyword2)){
-					if(strTask.contains(keywordArr[j]) && strTask.contains(keyword2)){
-						searchList.add(task);
-						break;
-					}
-				}else{
-					if(strTask.contains(keywordArr[j])){
-						searchList.add(task);
-						break;
-					}
+				if(strTask.contains(keywordArr[j])){
+					searchList.add(task);
+					break;
 				}
 			}
 		}
@@ -139,6 +112,32 @@ public class JsonSearch {
 		return searchList;
 	}
 	
+	/**
+	 * Search for a list of event, deadline and floating task which matches the keywords
+	 * Return task if task contains at least one of the word in keyword
+	 * @param keyword contains a list of keyword 
+	 * @return ArrayList<Task> of event, deadline and floating task which matches the keyword
+	 */
+	public ArrayList<Task> searchAllTask(String keyword){
+		JsonFile jsonFile = new JsonFile();
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
+		ArrayList<Task> event = searchEventTask(keyword, content.get(0));
+		ArrayList<Task> deadline = searchDeadlineTask(keyword, content.get(1));
+		ArrayList<Task> floating = searchFloatingTask(keyword, content.get(2));
+		ArrayList<Task> allTasks = new ArrayList<Task>();
+		
+		for(int i=0; i<event.size(); i++){
+			allTasks.add(event.get(i));
+		}
+		for(int i=0; i<deadline.size(); i++){
+			allTasks.add(deadline.get(i));
+		}
+		for(int i=0; i<floating.size(); i++){
+			allTasks.add(floating.get(i));
+		}
+		
+		return allTasks;
+	}
 	/**
 	 * Search for the task in event, deadline and floating which matches the taskDetails and taskInfo
 	 * @param taskDetails description of a task
@@ -211,41 +210,12 @@ public class JsonSearch {
 	}
 	
 	/**
-	 * Search for a list of event, deadline and floating task which matches the keywords
-	 * Return task if task contains at least one of the word in keyword1
-	 * Return task if task contains all the words in keyword2
-	 * @param keyword1 contains a list of keyword 
-	 * @param keyword2 contains a keyword
-	 * @return ArrayList<Task> of event, deadline and floating task which matches the keyword
-	 */
-	public ArrayList<Task> searchAll(String keyword1, String keyword2){
-		JsonFile jsonFile = new JsonFile();
-		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
-		ArrayList<Task> event = searchEvent(keyword1, keyword2, content.get(0));
-		ArrayList<Task> deadline = searchDeadline(keyword1,keyword2, content.get(1));
-		ArrayList<Task> floating = searchFloating(keyword1, keyword2, content.get(2));
-		ArrayList<Task> allTasks = new ArrayList<Task>();
-		
-		for(int i=0; i<event.size(); i++){
-			allTasks.add(event.get(i));
-		}
-		for(int i=0; i<deadline.size(); i++){
-			allTasks.add(deadline.get(i));
-		}
-		for(int i=0; i<floating.size(); i++){
-			allTasks.add(floating.get(i));
-		}
-		
-		return allTasks;
-	}
-	
-	/**
 	 * Search for all event task before a specific end date
 	 * @param date end date
 	 * @param event JSONArray of event task
 	 * @return an ArrayList<Task> of event tasks which ends before the specific end date
 	 */
-	public ArrayList<Task> searchEventTaskBeforeDate(DateClass date, JSONArray event){
+	public ArrayList<Task> searchEventTaskByDate(DateClass date, JSONArray event, String option){
 		JsonTask jsonTask = new JsonTask();
 
 		ArrayList<Task> eventList = jsonTask.eventTaskArray(event);
@@ -254,9 +224,26 @@ public class JsonSearch {
 		for(int i=0; i<eventList.size(); i++){
 			Task task = eventList.get(i);
 			
-			if(((Event)task).getEndDate().compareTo(date) <= 0){
-				searchList.add(task);
+			switch(option){
+				case "BEFORE":
+					if(((Event)task).getEndDate().compareTo(date) < 0){
+						searchList.add(task);
+					}
+					break;
+				case "ON":
+					if(((Event)task).getEndDate().compareTo(date) == 0){
+						searchList.add(task);
+					}
+					break;
+				case "AFTER":
+					if(((Event)task).getEndDate().compareTo(date) > 0){
+						searchList.add(task);
+					}
+					break;
+				default:
+					break;
 			}
+			
 					
 		}
 		
@@ -269,7 +256,7 @@ public class JsonSearch {
 	 * @param deadline JSONArray of deadline task
 	 * @return an ArrayList<Task> of deadline tasks which ends before the specific end date
 	 */
-	public ArrayList<Task> searchDeadlineTaskBeforeDate(DateClass date, JSONArray deadline){
+	public ArrayList<Task> searchDeadlineTaskByDate(DateClass date, JSONArray deadline, String option){
 		JsonTask jsonTask = new JsonTask();
 		
 		ArrayList<Task> deadlineList = jsonTask.deadlineTaskArray(deadline);
@@ -278,8 +265,24 @@ public class JsonSearch {
 		for(int i=0; i<deadlineList.size(); i++){
 			Task task = deadlineList.get(i);
 	
-			if(((Deadline)task).getEndDate().compareTo(date) <= 0){
-				searchList.add(task);
+			switch(option){
+				case "BEFORE":
+					if(((Deadline)task).getEndDate().compareTo(date) < 0){
+						searchList.add(task);
+					}
+					break;
+				case "ON":
+					if(((Deadline)task).getEndDate().compareTo(date) == 0){
+						searchList.add(task);
+					}
+					break;
+				case "AFTER":
+					if(((Deadline)task).getEndDate().compareTo(date) > 0){
+						searchList.add(task);
+					}
+					break;
+				default:
+					break;
 			}
 		}
 		
@@ -291,11 +294,66 @@ public class JsonSearch {
 	 * @param date end date
 	 * @return an ArrayList<Task> of event and deadline tasks which ends before the specific end date
 	 */
-	public ArrayList<Task> searchAllTaskBeforeDate(DateClass date){
+	public ArrayList<Task> searchAllTaskByDate(DateClass date, String option){
 		JsonFile jsonFile = new JsonFile();
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
-		ArrayList<Task> event = searchEventTaskBeforeDate(date, content.get(0));
-		ArrayList<Task> deadline = searchDeadlineTaskBeforeDate(date, content.get(1));
+		ArrayList<Task> event = searchEventTaskByDate(date, content.get(0), option);
+		ArrayList<Task> deadline = searchDeadlineTaskByDate(date, content.get(1), option);
+		ArrayList<Task> allTasks = new ArrayList<Task>();
+		
+		for(int i=0; i<event.size(); i++){
+			allTasks.add(event.get(i));
+		}
+		for(int i=0; i<deadline.size(); i++){
+			allTasks.add(deadline.get(i));
+		}
+	
+		return allTasks;
+	}
+	
+	public ArrayList<Task> searchEventTaskBetweenDates(DateClass startDate, DateClass endDate, JSONArray event){
+		JsonTask jsonTask = new JsonTask();
+		
+		ArrayList<Task> eventList = jsonTask.eventTaskArray(event);
+		ArrayList<Task> searchList = new ArrayList<Task>();
+		
+		for(int i=0; i<eventList.size(); i++){
+			Task task = eventList.get(i);
+	
+			
+			if(((Event)task).getStartDate().compareTo(startDate) >= 0 && ((Event)task).getEndDate().compareTo(endDate) <= 0 ){
+				searchList.add(task);
+			}
+				
+		}
+		
+		return searchList;
+	}
+	
+	public ArrayList<Task> searchDeadlineTaskBetweenDates(DateClass startDate, DateClass endDate, JSONArray deadline){
+		JsonTask jsonTask = new JsonTask();
+		
+		ArrayList<Task> deadlineList = jsonTask.deadlineTaskArray(deadline);
+		ArrayList<Task> searchList = new ArrayList<Task>();
+		
+		for(int i=0; i<deadlineList.size(); i++){
+			Task task = deadlineList.get(i);
+	
+			
+			if(((Deadline)task).getEndDate().compareTo(startDate) >= 0 && ((Deadline)task).getEndDate().compareTo(endDate) <= 0 ){
+				searchList.add(task);
+			}
+				
+		}
+		
+		return searchList;
+	}
+	
+	public ArrayList<Task> searchAllTaskBetweenDates(DateClass startDate, DateClass endDate){
+		JsonFile jsonFile = new JsonFile();
+		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
+		ArrayList<Task> event = searchEventTaskBetweenDates(startDate, endDate, content.get(0));
+		ArrayList<Task> deadline = searchDeadlineTaskBetweenDates(startDate, endDate, content.get(1));
 		ArrayList<Task> allTasks = new ArrayList<Task>();
 		
 		for(int i=0; i<event.size(); i++){

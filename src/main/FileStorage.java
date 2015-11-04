@@ -135,17 +135,7 @@ public class FileStorage {
 	public ArrayList<Task>searchEventTask(String keyword){
 		return json.searchEventTask(keyword);
 	}
-	
-	/**
-	 * Search and return all events tasks which contains both keyword1 and keyword2
-	 * @param keyword1 first keyword of a task
-	 * @param keyword2 second keyword of a task
-	 * @return ArrayList<Task> of event tasks which contains both keyword1 and keyword2
-	 */
-	public ArrayList<Task>searchEventTask(String keyword1, String keyword2){
-		return json.searchEventTask(keyword1, keyword2);
-	}
-	
+		
 	/**
 	 * Search and return all deadline tasks which contains the keyword
 	 * @param keyword keyword of a task
@@ -153,15 +143,6 @@ public class FileStorage {
 	 */
 	public ArrayList<Task>searchDeadlineTask(String keyword){
 		return json.searchDeadlineTask(keyword);
-	}
-	/**
-	 * Search and return all deadline tasks which contains both keyword1 and keyword2
-	 * @param keyword1 first keyword of a task
-	 * @param keyword2 second keyword of a task
-	 * @return ArrayList<Task> of deadline tasks which contains both keyword1 and keyword2
-	 */
-	public ArrayList<Task>searchDeadlineTask(String keyword1, String keyword2){
-		return json.searchDeadlineTask(keyword1, keyword2);
 	}
 	
 	/**
@@ -174,32 +155,12 @@ public class FileStorage {
 	}
 	
 	/**
-	 * Search and return all floating tasks which contains both keyword1 and keyword2
-	 * @param keyword1 first keyword of a task
-	 * @param keyword2 second keyword of a task
-	 * @return ArrayList<Task> of floating tasks which contains both keyword1 and keyword2
-	 */
-	public ArrayList<Task>searchFloatingTask(String keyword1, String keyword2){
-		return json.searchFloatingTask(keyword1, keyword2);
-	}
-	
-	/**
 	 * Search and return all event, deadline and floating tasks which contains the keyword
 	 * @param keyword keyword of a task
 	 * @return ArrayList<Task> of event, deadline and floating tasks which contains the keyword
 	 */
 	public ArrayList<Task>searchAllTask(String keyword){
 		return json.searchAllTask(keyword);
-	}
-	
-	/**
-	 * Search and return all event, deadline and floating tasks which contains both keyword1 and keyword2
-	 * @param keyword1 first keyword of a task
-	 * @param keyword2 second keyword of a task
-	 * @return ArrayList<Task> of event, deadline and floating tasks which contains both keyword1 and keyword2
-	 */
-	public ArrayList<Task>searchAllTask(String keyword1, String keyword2){
-		return json.searchAllTask(keyword1, keyword2);
 	}
 	
 	/**
@@ -250,6 +211,94 @@ public class FileStorage {
 	public ArrayList<Task>searchAllTaskBeforeDate(DateClass date){
 		return json.searchAllTaskBeforeDate(date);
 	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////
+	/**
+	 * Search and return all event tasks which falls on the given date
+	 * @param date the date in DateClass
+	 * @return ArrayList<Task> of event tasks which falls on the given date
+	 */
+	public ArrayList<Task>searchEventTaskOnDate(DateClass date){
+		return json.searchEventTaskOnDate(date);
+	}
+	
+	/**
+	 * Search and return all deadline tasks which falls on the given date
+	 * @param date the date in DateClass
+	 * @return ArrayList<Task> of deadline tasks which falls the given date
+	 */
+	public ArrayList<Task>searchDeadlineTaskOnDate(DateClass date){
+		return json.searchDeadlineTaskOnDate(date);
+	}
+	
+	/**
+	 * Search and return all event and deadline tasks which falls on the given date
+	 * @param date the date in DateClass
+	 * @return ArrayList<Task> of event and deadline tasks which falls on the given date
+	 */
+	public ArrayList<Task>searchAllTaskOnDate(DateClass date){
+		return json.searchAllTaskOnDate(date);
+	}
+	
+	/**
+	 * Search and return all event tasks which are after the given date
+	 * @param date the date in DateClass
+	 * @return ArrayList<Task> of event tasks which are after the given date
+	 */
+	public ArrayList<Task>searchEventTaskAfterDate(DateClass date){
+		return json.searchEventTaskAfterDate(date);
+	}
+	
+	/**
+	 * Search and return all deadline tasks which are after the given date
+	 * @param date the date in DateClass
+	 * @return ArrayList<Task> of deadline tasks which are after the given date
+	 */
+	public ArrayList<Task>searchDeadlineTaskAfterDate(DateClass date){
+		return json.searchDeadlineTaskAfterDate(date);
+	}
+	
+	/**
+	 * Search and return all event and deadline tasks which are after the given date
+	 * @param date the date in DateClass
+	 * @return ArrayList<Task> of event and deadline tasks which are after the given date
+	 */
+	public ArrayList<Task>searchAllTaskAfterDate(DateClass date){
+		return json.searchAllTaskAfterDate(date);
+	}
+	
+	/**
+	 * Search and return all event tasks which are from startDate to endDate
+	 * @param startDate the start date
+	 * @param endDate the end date
+	 * @return ArrayList<Task> of event tasks which are from startDate to endDate
+	 */
+	public ArrayList<Task>searchEventTaskBetweenDates(DateClass startDate, DateClass endDate){
+		return json.searchEventTaskBetweenDates(startDate, endDate);
+	}
+	
+	/**
+	 * Search and return all deadline tasks which are from startDate to endDate
+	 * @param startDate the start date
+	 * @param endDate the end date
+	 * @return ArrayList<Task> of deadline tasks which are from startDate to endDate
+	 */
+	public ArrayList<Task>searchDeadlineTaskBetweenDates(DateClass startDate, DateClass endDate){
+		return json.searchDeadlineTaskBetweenDates(startDate, endDate);
+	}
+	
+	/**
+	 * Search and return all event and deadline tasks which are from startDate to endDate
+	 * @param startDate the start date
+	 * @param endDate the end date
+	 * @return ArrayList<Task> of event and deadline tasks which are from startDate to endDate
+	 */
+	public ArrayList<Task>searchAllTaskBetweenDates(DateClass startDate, DateClass endDate){
+		return json.searchAllTaskBetweenDates(startDate, endDate);
+	}
+	
+	
+	////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * Delete a task from the storage file
@@ -315,7 +364,6 @@ public class FileStorage {
 			//hideFolder(pathDir);
 			writeFile(defaultDataPath, pathDir + pathName, false, false);
 		}
-
 		filePath = readPath(pathDir + pathName);
 
 		return filePath;
@@ -407,6 +455,56 @@ public class FileStorage {
 
 		}
 	}
+	
+	
+	
+	/**
+	 * Search and return all events tasks which contains both keyword1 and keyword2
+	 * @param keyword1 first keyword of a task
+	 * @param keyword2 second keyword of a task
+	 * @return ArrayList<Task> of event tasks which contains both keyword1 and keyword2
+	 */
+	/*
+	public ArrayList<Task>searchEventTask(String keyword1, String keyword2){
+		return json.searchEventTask(keyword1, keyword2);
+	}
+	*/
+	
+	/**
+	 * Search and return all deadline tasks which contains both keyword1 and keyword2
+	 * @param keyword1 first keyword of a task
+	 * @param keyword2 second keyword of a task
+	 * @return ArrayList<Task> of deadline tasks which contains both keyword1 and keyword2
+	 */
+	/*
+	public ArrayList<Task>searchDeadlineTask(String keyword1, String keyword2){
+		return json.searchDeadlineTask(keyword1, keyword2);
+	}
+	*/
+	
+	/**
+	 * Search and return all event, deadline and floating tasks which contains both keyword1 and keyword2
+	 * @param keyword1 first keyword of a task
+	 * @param keyword2 second keyword of a task
+	 * @return ArrayList<Task> of event, deadline and floating tasks which contains both keyword1 and keyword2
+	 */
+	/*
+	public ArrayList<Task>searchAllTask(String keyword1, String keyword2){
+		return json.searchAllTask(keyword1, keyword2);
+	}
+	*/
+	
+	/**
+	 * Search and return all floating tasks which contains both keyword1 and keyword2
+	 * @param keyword1 first keyword of a task
+	 * @param keyword2 second keyword of a task
+	 * @return ArrayList<Task> of floating tasks which contains both keyword1 and keyword2
+	 */
+	/*
+	public ArrayList<Task>searchFloatingTask(String keyword1, String keyword2){
+		return json.searchFloatingTask(keyword1, keyword2);
+	}
+	*/
 	
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////OLD CODE NOT IN USE//////////////////////////////////////////////////
