@@ -109,10 +109,10 @@ public class Parser {
 		for(String word : splitWords){
 			if(word.equals("-d") || word.equals("-e"))
 				break;
-			sb.append(word);
+			sb.append(word + " ");
 		}
 		
-		return sb.toString();
+		return sb.toString().trim();
 	}
 	
 	private String getUpdateEndDateTimeString(String strCommand){
@@ -122,10 +122,10 @@ public class Parser {
 		for(String word : splitWords){
 			if(word.equals("-d") || word.equals("-s"))
 				break;
-			sb.append(word);
+			sb.append(word + " ");
 		}
 		
-		return sb.toString();
+		return sb.toString().trim();
 	}
 	private String removeDate(String strCommand) {
 		String parsedDate;
@@ -188,6 +188,25 @@ public class Parser {
 		}
 		return false;
 	}
+	
+	private boolean isAClearCommand(String strCommand) {
+		// If the first word is update
+		String strFirstWord = getWord(0, strCommand);
+		if (strFirstWord.equals("clear")) {
+			return true;
+		}
+		return false;
+
+	}
+
+	private boolean isASaveCommand(String strCommand) {
+		String strFirstWord = getWord(0, strCommand);
+		if (strFirstWord.equals("save")) {
+			return true;
+		}
+		return false;
+	}
+
 
 	private boolean isAnEventCommand(String strCommand) {
 		
@@ -900,24 +919,7 @@ public class Parser {
 		return new Clear();
 	}
 
-	private boolean isAClearCommand(String strCommand) {
-		// If the first word is update
-		String strFirstWord = getWord(0, strCommand);
-		if (strFirstWord.equals("clear")) {
-			return true;
-		}
-		return false;
-
-	}
-
-	private boolean isASaveCommand(String strCommand) {
-		String strFirstWord = getWord(0, strCommand);
-		if (strFirstWord.equals("save")) {
-			return true;
-		}
-		return false;
-	}
-
+	
 	
 	public static void main(String[] args) throws NoSuchFieldException, ParseException {
 		Parser p = new Parser();

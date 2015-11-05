@@ -108,6 +108,26 @@ public class ParserTest {
 		assertEquals(updateTask.getStartTime().toString(),"1105");
 	}
 
+	@Test
+	public void testParsingUndo(){
+		String strCommand;
+		Undo undo;
+		
+		/* If user just enters "undo" */
+		strCommand = "undo";
+		undo = (Undo) parser.parse(strCommand);
+		assertEquals(undo.getCommandType(), Command.CommandType.UNDO);
+		
+		/* If user just enters a spaceinfront */
+		strCommand = " undo";
+		undo = (Undo) parser.parse(strCommand);
+		assertEquals(undo, null);
+		
+		/* If user just enters characters to the back, its still ok!*/
+		strCommand = "undo asd";
+		undo = (Undo) parser.parse(strCommand);
+		assertEquals(undo.getCommandType(), Command.CommandType.UNDO);
+	}
 
 
 }
