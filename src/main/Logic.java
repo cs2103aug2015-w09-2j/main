@@ -3,6 +3,7 @@ package main;
 import java.text.ParseException;
 import java.util.*;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.collections.*;
 
@@ -71,8 +72,8 @@ public class Logic {
 	// ------------------- To interact with GUI [added by teddy]
 	// ------------------
 	private MainApp mainApp;
-	private IntegerProperty displayStatusCode; // represent current display
-												// status
+	private IntegerProperty displayStatusCode; // represent current display status
+	private BooleanProperty hasNewOverdueTask;
 	private String searchKeyword; // represent search keyword -> change this
 									// whenever a search is done
 	private ObservableList<Task> events;
@@ -430,7 +431,7 @@ public class Logic {
 			updateRespectiveGUICol("ALL");
 		}
 	}
-	
+
 	private void readOverdue() {
 		ArrayList<Task> overdueTasks = fileStorage.readOverdueTask();
 		allEvents.clear();
@@ -449,7 +450,7 @@ public class Logic {
 		}
 	}
 
-	
+
 	private boolean redo() {
 		if (redoCommandHistory.size() == 0)
 			return false;
@@ -797,7 +798,7 @@ public class Logic {
 
 	/**
 	 * Initialize the tasks
-	 * 
+	 *
 	 * @param tasks
 	 *            Added by teddy
 	 */
@@ -860,6 +861,10 @@ public class Logic {
 	 */
 	public void setDisplayState(IntegerProperty displayStatusCode) {
 		this.displayStatusCode = displayStatusCode;
+	}
+
+	public void setHasNewOverdueTask(BooleanProperty hasNewOverdueTask) {
+		this.hasNewOverdueTask = hasNewOverdueTask;
 	}
 
 	public String getSearchKeyword() {

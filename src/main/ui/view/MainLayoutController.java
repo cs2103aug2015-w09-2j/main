@@ -2,7 +2,9 @@ package main.ui.view;
 
 import java.text.ParseException;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -34,6 +36,7 @@ public class MainLayoutController {
 	private ObservableList<Task> deadlines;
 	private ObservableList<Task> floatings;
 	private IntegerProperty displayState;
+	private BooleanProperty hasNewOverdueTask;
 
 	// Fields for binding to UI components
 	@FXML
@@ -48,10 +51,13 @@ public class MainLayoutController {
 	private Label helpLabel;
 	@FXML
 	private Label displayStatusLabel;
+	@FXML
+	private Label overdueLabel;
 
 
 	public MainLayoutController() {
 		displayState = new SimpleIntegerProperty();
+		hasNewOverdueTask = new SimpleBooleanProperty();
 	}
 
 	/**
@@ -69,6 +75,9 @@ public class MainLayoutController {
 		// initial status is ONGOING
 		displayState.setValue(StatusListener.Status.ONGOING.getCode());
 		displayStatusLabel.setText(StatusListener.getStatusText(displayState.getValue()));
+
+		hasNewOverdueTask.setValue(false);
+		overdueLabel.setVisible(false);
 	}
 
 	/**
@@ -82,6 +91,7 @@ public class MainLayoutController {
 		initialize();
 		setListeners();
 		mainApp.setDisplayState(displayState);
+		mainApp.setHasNewOverdueTask(hasNewOverdueTask);
 	}
 
 	public void focusCommandBox() {

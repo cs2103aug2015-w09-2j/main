@@ -78,7 +78,15 @@
             <Insets bottom="5.0" />
          </GridPane.margin>
          <children>
-            <Label id="status-label" fx:id="displayStatusLabel" alignment="CENTER" prefHeight="37.0" prefWidth="898.0" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <Label id="status-label" fx:id="displayStatusLabel" alignment="CENTER" layoutX="298.0" prefHeight="36.0" prefWidth="298.0" textAlignment="CENTER" AnchorPane.leftAnchor="298.0" AnchorPane.topAnchor="0.0" />
+            <Label id="overdue-label" fx:id="overdueLabel" prefHeight="36.0" prefWidth="298.0" text="New overdue tasks" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <graphic>
+                  <ImageView fitHeight="22.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/exclamation.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Label>
          </children>
       </AnchorPane>
    </children>
