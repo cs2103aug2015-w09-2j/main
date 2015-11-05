@@ -158,6 +158,24 @@ public class JsonWrite {
 			    }
 			}
 			
+			index = sb.indexOf(",\"");
+			while (index >=0){
+				index = sb.indexOf(",\"", index+1);
+			    if(index != -1){
+			    	sb.insert(index+1, "\n\t\t\t");
+			    }
+			    
+			}
+			/*
+			index = sb.indexOf(",");
+			while (index >=0){
+				index = sb.indexOf(",", index+1);
+			    if(index != -1){
+			    	sb.insert(index+1, "\n\t\t");
+			    }
+			    
+			}
+			*/
 			
 			
 			index = sb.indexOf("\"}");
@@ -165,17 +183,11 @@ public class JsonWrite {
 				if(index != -1){
 			    	sb.insert(index+1, "\n\t\t");
 			    }
-				index = sb.indexOf("\"}", index+1);	    
+				index = sb.indexOf("\"}", index+1);	
+				
 			}
 			
-			index = sb.indexOf(",");
-			while (index >=0){
-				index = sb.indexOf(",", index+1);
-			    if(index != -1){
-			    	sb.insert(index+1, "\n\t\t\t");
-			    }
-			    
-			}
+			
 			
 			file.write(sb.toString());
 			file.flush();
