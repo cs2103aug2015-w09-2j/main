@@ -305,25 +305,39 @@ public class Parser {
 	private Update parseUpdateCommand(String strCommand) {
 
 		strCommand = removeNWords(1, strCommand);
-		String strSearchString = getSearchString(strCommand);
-
-		UpdateTask updateTask = new UpdateTask(strSearchString);
-
-		strCommand = removeNWords(getNumberOfWords(strSearchString), strCommand);
+		
+		
+		UpdateTask updateTask = new UpdateTask();
 
 		/*
-		 * Try to get date followed by time
+		 * get task id
 		 */
-
+		int taskID;
+		try{
+			taskID = Integer.valueOf(getWord(0, strCommand));
+		}catch(NumberFormatException n){
+			return null;
+		}
+		
+		updateTask.setTaskID(taskID);
+		
+		//remove taskID
+		strCommand = removeNWords(1, strCommand);
+		
 		while (!strCommand.equals("")) {
 			// Get delimiter
 			String delimiter = getWord(0, strCommand);
+		
+			if(putils.isDelimeter(delimiter) == false){
+				break;
+			}
+			
 			strCommand = removeNWords(1, strCommand);
 
 			switch (delimiter) {
 			case "-d":
 				String strDescription = removeDelimiters(getDescription(strCommand));
-				updateTask.setDescription(strDescription);
+				updateTask.setDescription(strDescription.equals("") ? null : strDescription);
 
 				strCommand = removeNWords(strDescription.split(" ").length, strCommand);
 				break;
@@ -345,9 +359,23 @@ public class Parser {
 				updateTask.setStartTime(startTime);
 
 				break;
+				
+			
 			}
 		}
-
+		
+		//Incorrect update format?? By this point should have parsed everything
+		if(strCommand.equals("") == false){
+			
+			//Check if it is a task id
+			return null;
+		}
+		
+		//parsed nothing!
+		if(strCommand.equals("") && updateTask.getDescription() == null && updateTask.getEndDate() == null && updateTask.getStartDate() == null){
+			return null;
+		}
+		
 		return new Update(updateTask);
 	}
 
@@ -844,9 +872,9 @@ public class Parser {
 		// String command = "update new swimming -d swimming";
 		Command t;
 		String command;
-		command = "search \"\" from 20/11 to next week";
+		command = "update -d hello";
 		t = p.parse(command);
-		command = "search shit before 20/11";
+		command = "update -d";
 		t = p.parse(command);
 		command = "search shit after 20/11";
 		t = p.parse(command);

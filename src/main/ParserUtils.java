@@ -62,4 +62,7 @@ public class ParserUtils {
 		return false;
 	}
 	
+	public boolean isDelimeter(String word){
+		return word.equals("-e") || word.equals("-s") || word.equals("-d");
+	}
 }

@@ -11,13 +11,11 @@ public class UpdateTask extends Task{
 	private DateClass[] dates;
 	private TimeClass[] time;
 	private String strDescription;
-	private String strSearchString;
-
+	private int taskId;
 	
-	public UpdateTask(String searchString){
+	public UpdateTask(){
 		super(null);
 		strDescription = null;
-		strSearchString = searchString;
 		dates = new DateClass[MAX_DATETIME_COUNT];
 		time = new TimeClass[MAX_DATETIME_COUNT];
 	}
@@ -114,6 +112,9 @@ public class UpdateTask extends Task{
 		time[END_TIME] = endTime;
 	}
 
+	public void setTaskID(int taskID){
+		this.taskId = taskID;
+	}
 
 	/**
 	 * @param strDescription
@@ -150,16 +151,12 @@ public class UpdateTask extends Task{
 		return time[END_TIME];
 	}
 
+	public int getTaskID(){
+		return taskId;
+	}
 	
 	public String getDescription() {
 		return strDescription;
-	}
-
-	/**
-	 * @return
-	 */
-	public String getSearchString(){
-		return strSearchString;
 	}
 
 	@Override
