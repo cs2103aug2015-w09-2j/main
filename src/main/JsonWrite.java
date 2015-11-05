@@ -1,5 +1,6 @@
 package main;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -8,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 
@@ -88,7 +90,7 @@ public class JsonWrite {
 		obj.put("EVENT", eventArray);
 		obj.put("DEADLINE", deadlineArray);
 		obj.put("FLOATING", floatingArray);
-			
+	
 		StringWriter out = new StringWriter();
 		
 		try {
@@ -100,7 +102,7 @@ public class JsonWrite {
 		
 		String jsonText = out.toString().replace("\\", "");
 		
-		try {
+		//try {
 			FileStorage fs = new FileStorage();
 			String filePath = "";
 			switch(fileType){
@@ -117,12 +119,86 @@ public class JsonWrite {
 					System.out.println("writeToJsonFile(String taskType, String arr[], String fileType)" +
 							" has a empty filePath");
 			}
-			FileWriter file = new FileWriter(filePath);//"test.txt");
-			file.write(jsonText);
+			JsonPrettyPrint(filePath, jsonText);
+			//FileWriter file = new FileWriter(filePath);//"test.txt");
+
+			//file.write(jsonText);
+			//file.flush();
+			//file.close();
+
+		//} //catch (IOException e) {
+		//	e.printStackTrace();
+		//}
+		
+	}
+	
+	private static void JsonPrettyPrint(String filePath, String jsonText){
+		try {
+			FileWriter file = new FileWriter(filePath, false);
+			//BufferedWriter bufferedWriter =new BufferedWriter(file);
+
+			StringBuilder sb = new StringBuilder(jsonText);
+
+			
+			sb.insert(sb.indexOf("\"EVENT\":["), "\n\t");
+			sb.insert(sb.indexOf("\"EVENT\":[")+9, "\n\t\t");
+			sb.insert(sb.indexOf("\"DEADLINE\":["), "\n\t");
+			sb.insert(sb.indexOf("\"DEADLINE\":[")+12, "\n\t\t");
+			sb.insert(sb.indexOf("\"FLOATING\":["), "\n\t");
+			sb.insert(sb.indexOf("\"FLOATING\":[")+12, "\n\t\t");
+			sb.insert(sb.length()-2,  "\n\t");
+			sb.insert(sb.length()-1,  "\n");
+			
+			int index = sb.indexOf("{");
+			
+			while (index >=0){
+				index = sb.indexOf("{", index+1);
+			    if(index != -1){
+			    	sb.insert(index+1, "\n\t\t\t");
+			    }
+			}
+			
+			
+			
+			index = sb.indexOf("\"}");
+			while (index >=0){
+				if(index != -1){
+			    	sb.insert(index+1, "\n\t\t");
+			    }
+				index = sb.indexOf("\"}", index+1);	    
+			}
+			
+			index = sb.indexOf(",");
+			while (index >=0){
+				index = sb.indexOf(",", index+1);
+			    if(index != -1){
+			    	sb.insert(index+1, "\n\t\t\t");
+			    }
+			    
+			}
+			
+			file.write(sb.toString());
 			file.flush();
 			file.close();
-
+			/*
+			String strArray[] = jsonText.split(",");
+			for(int k=0; k<strArray.length; k++){
+				
+				if(k== strArray.length-1){
+					bufferedWriter.write(strArray[k]);
+					bufferedWriter.newLine();
+				}
+				else{
+					bufferedWriter.write(strArray[k] + ",");
+					bufferedWriter.newLine();
+				}
+				
+			
+			}
+			bufferedWriter.close();
+			*/
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
