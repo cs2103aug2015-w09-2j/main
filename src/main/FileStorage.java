@@ -190,8 +190,8 @@ public class FileStorage {
 	 * @param date the date in DateClass
 	 * @return ArrayList<Task> of event tasks ends before the given date
 	 */
-	public ArrayList<Task>searchEventTaskBeforeDate(DateClass date){
-		return json.searchEventTaskBeforeDate(date);
+	public ArrayList<Task>searchEventTaskBeforeDate(String keyword, DateClass date){
+		return json.searchEventTaskBeforeDate(keyword, date);
 	}
 	
 	/**
@@ -199,8 +199,8 @@ public class FileStorage {
 	 * @param date the date in DateClass
 	 * @return ArrayList<Task> of deadline tasks ends before the given date
 	 */
-	public ArrayList<Task>searchDeadlineTaskBeforeDate(DateClass date){
-		return json.searchDeadlineTaskBeforeDate(date);
+	public ArrayList<Task>searchDeadlineTaskBeforeDate(String keyword, DateClass date){
+		return json.searchDeadlineTaskBeforeDate(keyword, date);
 	}
 	
 	/**
@@ -208,8 +208,8 @@ public class FileStorage {
 	 * @param date the date in DateClass
 	 * @return ArrayList<Task> of event, deadline and tasks ends before the given date
 	 */
-	public ArrayList<Task>searchAllTaskBeforeDate(DateClass date){
-		return json.searchAllTaskBeforeDate(date);
+	public ArrayList<Task>searchAllTaskBeforeDate(String keyword, DateClass date){
+		return json.searchAllTaskBeforeDate(keyword, date);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////
@@ -218,8 +218,8 @@ public class FileStorage {
 	 * @param date the date in DateClass
 	 * @return ArrayList<Task> of event tasks which falls on the given date
 	 */
-	public ArrayList<Task>searchEventTaskOnDate(DateClass date){
-		return json.searchEventTaskOnDate(date);
+	public ArrayList<Task>searchEventTaskOnDate(String keyword, DateClass date){
+		return json.searchEventTaskOnDate(keyword, date);
 	}
 	
 	/**
@@ -227,8 +227,8 @@ public class FileStorage {
 	 * @param date the date in DateClass
 	 * @return ArrayList<Task> of deadline tasks which falls the given date
 	 */
-	public ArrayList<Task>searchDeadlineTaskOnDate(DateClass date){
-		return json.searchDeadlineTaskOnDate(date);
+	public ArrayList<Task>searchDeadlineTaskOnDate(String keyword, DateClass date){
+		return json.searchDeadlineTaskOnDate(keyword, date);
 	}
 	
 	/**
@@ -236,8 +236,8 @@ public class FileStorage {
 	 * @param date the date in DateClass
 	 * @return ArrayList<Task> of event and deadline tasks which falls on the given date
 	 */
-	public ArrayList<Task>searchAllTaskOnDate(DateClass date){
-		return json.searchAllTaskOnDate(date);
+	public ArrayList<Task>searchAllTaskOnDate(String keyword, DateClass date){
+		return json.searchAllTaskOnDate(keyword, date);
 	}
 	
 	/**
@@ -245,8 +245,8 @@ public class FileStorage {
 	 * @param date the date in DateClass
 	 * @return ArrayList<Task> of event tasks which are after the given date
 	 */
-	public ArrayList<Task>searchEventTaskAfterDate(DateClass date){
-		return json.searchEventTaskAfterDate(date);
+	public ArrayList<Task>searchEventTaskAfterDate(String keyword, DateClass date){
+		return json.searchEventTaskAfterDate(keyword, date);
 	}
 	
 	/**
@@ -254,8 +254,8 @@ public class FileStorage {
 	 * @param date the date in DateClass
 	 * @return ArrayList<Task> of deadline tasks which are after the given date
 	 */
-	public ArrayList<Task>searchDeadlineTaskAfterDate(DateClass date){
-		return json.searchDeadlineTaskAfterDate(date);
+	public ArrayList<Task>searchDeadlineTaskAfterDate(String keyword, DateClass date){
+		return json.searchDeadlineTaskAfterDate(keyword, date);
 	}
 	
 	/**
@@ -263,8 +263,8 @@ public class FileStorage {
 	 * @param date the date in DateClass
 	 * @return ArrayList<Task> of event and deadline tasks which are after the given date
 	 */
-	public ArrayList<Task>searchAllTaskAfterDate(DateClass date){
-		return json.searchAllTaskAfterDate(date);
+	public ArrayList<Task>searchAllTaskAfterDate(String keyword, DateClass date){
+		return json.searchAllTaskAfterDate(keyword, date);
 	}
 	
 	/**
@@ -273,8 +273,8 @@ public class FileStorage {
 	 * @param endDate the end date
 	 * @return ArrayList<Task> of event tasks which are from startDate to endDate
 	 */
-	public ArrayList<Task>searchEventTaskBetweenDates(DateClass startDate, DateClass endDate){
-		return json.searchEventTaskBetweenDates(startDate, endDate);
+	public ArrayList<Task>searchEventTaskBetweenDates(String keyword, DateClass startDate, DateClass endDate){
+		return json.searchEventTaskBetweenDates(keyword, startDate, endDate);
 	}
 	
 	/**
@@ -283,8 +283,8 @@ public class FileStorage {
 	 * @param endDate the end date
 	 * @return ArrayList<Task> of deadline tasks which are from startDate to endDate
 	 */
-	public ArrayList<Task>searchDeadlineTaskBetweenDates(DateClass startDate, DateClass endDate){
-		return json.searchDeadlineTaskBetweenDates(startDate, endDate);
+	public ArrayList<Task>searchDeadlineTaskBetweenDates(String keyword, DateClass startDate, DateClass endDate){
+		return json.searchDeadlineTaskBetweenDates(keyword, startDate, endDate);
 	}
 	
 	/**
@@ -293,8 +293,8 @@ public class FileStorage {
 	 * @param endDate the end date
 	 * @return ArrayList<Task> of event and deadline tasks which are from startDate to endDate
 	 */
-	public ArrayList<Task>searchAllTaskBetweenDates(DateClass startDate, DateClass endDate){
-		return json.searchAllTaskBetweenDates(startDate, endDate);
+	public ArrayList<Task>searchAllTaskBetweenDates(String keyword, DateClass startDate, DateClass endDate){
+		return json.searchAllTaskBetweenDates(keyword, startDate, endDate);
 	}
 	
 	

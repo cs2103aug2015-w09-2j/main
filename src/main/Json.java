@@ -221,10 +221,10 @@ public class Json {
 	 * @param date a end date
 	 * @return an ArrayList<Task> of event task before a specified end date
 	 */
-	public ArrayList<Task>searchEventTaskBeforeDate(DateClass date){
+	public ArrayList<Task>searchEventTaskBeforeDate(String keyword, DateClass date){
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		isFileEmpty();
-		return jsonSearch.searchEventTaskByDate(date, content.get(0), BEFORE);
+		return jsonSearch.searchEventTaskByDate(keyword, date, content.get(0), BEFORE);
 	}
 	
 	/**
@@ -232,10 +232,10 @@ public class Json {
 	 * @param date a end date
 	 * @return an ArrayList<Task> of deadline task before a specified end date
 	 */
-	public ArrayList<Task>searchDeadlineTaskBeforeDate(DateClass date){
+	public ArrayList<Task>searchDeadlineTaskBeforeDate(String keyword, DateClass date){
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		isFileEmpty();
-		return jsonSearch.searchDeadlineTaskByDate(date, content.get(1), BEFORE);
+		return jsonSearch.searchDeadlineTaskByDate(keyword, date, content.get(1), BEFORE);
 	}
 	
 	/**
@@ -243,9 +243,9 @@ public class Json {
 	 * @param date a end date
 	 * @return an ArrayList<Task> of event and deadline task before a specified end date
 	 */
-	public ArrayList<Task> searchAllTaskBeforeDate(DateClass date){
+	public ArrayList<Task> searchAllTaskBeforeDate(String keyword, DateClass date){
 		isFileEmpty();
-		return jsonSearch.searchAllTaskByDate(date, BEFORE);
+		return jsonSearch.searchAllTaskByDate(keyword, date, BEFORE);
 	}
 	
 	///////////////////////////////////////////////////////////////////////
@@ -254,10 +254,10 @@ public class Json {
 	 * @param date a end date
 	 * @return an ArrayList<Task> of event task on a specified end date
 	 */
-	public ArrayList<Task>searchEventTaskOnDate(DateClass date){
+	public ArrayList<Task>searchEventTaskOnDate(String keyword, DateClass date){
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		isFileEmpty();
-		return jsonSearch.searchEventTaskByDate(date, content.get(0), ON);
+		return jsonSearch.searchEventTaskByDate(keyword, date, content.get(0), ON);
 	}
 	
 	/**
@@ -265,10 +265,10 @@ public class Json {
 	 * @param date a end date
 	 * @return an ArrayList<Task> of deadline task on a specified end date
 	 */
-	public ArrayList<Task>searchDeadlineTaskOnDate(DateClass date){
+	public ArrayList<Task>searchDeadlineTaskOnDate(String keyword, DateClass date){
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		isFileEmpty();
-		return jsonSearch.searchDeadlineTaskByDate(date, content.get(1), ON);
+		return jsonSearch.searchDeadlineTaskByDate(keyword, date, content.get(1), ON);
 	}
 	
 	/**
@@ -276,9 +276,9 @@ public class Json {
 	 * @param date a end date
 	 * @return an ArrayList<Task> of event and deadline task on a specified end date
 	 */
-	public ArrayList<Task> searchAllTaskOnDate(DateClass date){
+	public ArrayList<Task> searchAllTaskOnDate(String keyword, DateClass date){
 		isFileEmpty();
-		return jsonSearch.searchAllTaskByDate(date, ON);
+		return jsonSearch.searchAllTaskByDate(keyword, date, ON);
 	}
 	
 	/**
@@ -286,10 +286,10 @@ public class Json {
 	 * @param date a end date
 	 * @return an ArrayList<Task> of event task after a specified end date
 	 */
-	public ArrayList<Task>searchEventTaskAfterDate(DateClass date){
+	public ArrayList<Task>searchEventTaskAfterDate(String keyword, DateClass date){
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		isFileEmpty();
-		return jsonSearch.searchEventTaskByDate(date, content.get(0), AFTER);
+		return jsonSearch.searchEventTaskByDate(keyword, date, content.get(0), AFTER);
 	}
 	
 	/**
@@ -297,10 +297,10 @@ public class Json {
 	 * @param date a end date
 	 * @return an ArrayList<Task> of deadline task after a specified end date
 	 */
-	public ArrayList<Task>searchDeadlineTaskAfterDate(DateClass date){
+	public ArrayList<Task>searchDeadlineTaskAfterDate(String keyword, DateClass date){
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		isFileEmpty();
-		return jsonSearch.searchDeadlineTaskByDate(date, content.get(1), AFTER);
+		return jsonSearch.searchDeadlineTaskByDate(keyword, date, content.get(1), AFTER);
 	}
 	
 	/**
@@ -308,9 +308,9 @@ public class Json {
 	 * @param date a end date
 	 * @return an ArrayList<Task> of event and deadline task after a specified end date
 	 */
-	public ArrayList<Task> searchAllTaskAfterDate(DateClass date){
+	public ArrayList<Task> searchAllTaskAfterDate(String keyword, DateClass date){
 		isFileEmpty();
-		return jsonSearch.searchAllTaskByDate(date, AFTER);
+		return jsonSearch.searchAllTaskByDate(keyword, date, AFTER);
 	}
 	
 	/**
@@ -319,10 +319,10 @@ public class Json {
 	 * @param endDate the end date
 	 * @return ArrayList<Task> of event tasks which are from startDate to endDate
 	 */
-	public ArrayList<Task>searchEventTaskBetweenDates(DateClass startDate, DateClass endDate){
+	public ArrayList<Task>searchEventTaskBetweenDates(String keyword, DateClass startDate, DateClass endDate){
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		isFileEmpty();
-		return jsonSearch.searchEventTaskBetweenDates(startDate, endDate, content.get(0));
+		return jsonSearch.searchEventTaskBetweenDates(keyword, startDate, endDate, content.get(0));
 	}
 	
 	/**
@@ -331,10 +331,10 @@ public class Json {
 	 * @param endDate the end date
 	 * @return ArrayList<Task> of deadline tasks which are from startDate to endDate
 	 */
-	public ArrayList<Task>searchDeadlineTaskBetweenDates(DateClass startDate, DateClass endDate){
+	public ArrayList<Task>searchDeadlineTaskBetweenDates(String keyword, DateClass startDate, DateClass endDate){
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
 		isFileEmpty();
-		return jsonSearch.searchDeadlineTaskBetweenDates(startDate, endDate, content.get(1));
+		return jsonSearch.searchDeadlineTaskBetweenDates(keyword, startDate, endDate, content.get(1));
 	}
 	
 	/**
@@ -343,9 +343,9 @@ public class Json {
 	 * @param endDate the end date
 	 * @return ArrayList<Task> of event and deadline tasks which are from startDate to endDate
 	 */
-	public ArrayList<Task>searchAllTaskBetweenDates(DateClass startDate, DateClass endDate){
+	public ArrayList<Task>searchAllTaskBetweenDates(String keyword, DateClass startDate, DateClass endDate){
 		isFileEmpty();
-		return jsonSearch.searchAllTaskBetweenDates(startDate, endDate);
+		return jsonSearch.searchAllTaskBetweenDates(keyword, startDate, endDate);
 	}
 	
 	

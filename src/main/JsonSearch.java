@@ -215,10 +215,11 @@ public class JsonSearch {
 	 * @param event JSONArray of event task
 	 * @return an ArrayList<Task> of event tasks which ends before the specific end date
 	 */
-	public ArrayList<Task> searchEventTaskByDate(DateClass date, JSONArray event, String option){
-		JsonTask jsonTask = new JsonTask();
+	public ArrayList<Task> searchEventTaskByDate(String keyword, DateClass date, JSONArray event, String option){
+		//JsonTask jsonTask = new JsonTask();
 
-		ArrayList<Task> eventList = jsonTask.eventTaskArray(event);
+		//ArrayList<Task> eventList = jsonTask.eventTaskArray(event);
+		ArrayList<Task> eventList = searchEventTask(keyword, event);
 		ArrayList<Task> searchList = new ArrayList<Task>();
 		
 		for(int i=0; i<eventList.size(); i++){
@@ -256,10 +257,11 @@ public class JsonSearch {
 	 * @param deadline JSONArray of deadline task
 	 * @return an ArrayList<Task> of deadline tasks which ends before the specific end date
 	 */
-	public ArrayList<Task> searchDeadlineTaskByDate(DateClass date, JSONArray deadline, String option){
-		JsonTask jsonTask = new JsonTask();
+	public ArrayList<Task> searchDeadlineTaskByDate(String keyword, DateClass date, JSONArray deadline, String option){
+		//JsonTask jsonTask = new JsonTask();
 		
-		ArrayList<Task> deadlineList = jsonTask.deadlineTaskArray(deadline);
+		//ArrayList<Task> deadlineList = jsonTask.deadlineTaskArray(deadline);
+		ArrayList<Task> deadlineList = searchDeadlineTask(keyword, deadline);
 		ArrayList<Task> searchList = new ArrayList<Task>();
 		
 		for(int i=0; i<deadlineList.size(); i++){
@@ -294,11 +296,11 @@ public class JsonSearch {
 	 * @param date end date
 	 * @return an ArrayList<Task> of event and deadline tasks which ends before the specific end date
 	 */
-	public ArrayList<Task> searchAllTaskByDate(DateClass date, String option){
+	public ArrayList<Task> searchAllTaskByDate(String keyword, DateClass date, String option){
 		JsonFile jsonFile = new JsonFile();
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
-		ArrayList<Task> event = searchEventTaskByDate(date, content.get(0), option);
-		ArrayList<Task> deadline = searchDeadlineTaskByDate(date, content.get(1), option);
+		ArrayList<Task> event = searchEventTaskByDate(keyword, date, content.get(0), option);
+		ArrayList<Task> deadline = searchDeadlineTaskByDate(keyword, date, content.get(1), option);
 		ArrayList<Task> allTasks = new ArrayList<Task>();
 		
 		for(int i=0; i<event.size(); i++){
@@ -311,10 +313,11 @@ public class JsonSearch {
 		return allTasks;
 	}
 	
-	public ArrayList<Task> searchEventTaskBetweenDates(DateClass startDate, DateClass endDate, JSONArray event){
-		JsonTask jsonTask = new JsonTask();
+	public ArrayList<Task> searchEventTaskBetweenDates(String keyword, DateClass startDate, DateClass endDate, JSONArray event){
+		//JsonTask jsonTask = new JsonTask();
 		
-		ArrayList<Task> eventList = jsonTask.eventTaskArray(event);
+		//ArrayList<Task> eventList = jsonTask.eventTaskArray(event);
+		ArrayList<Task> eventList = searchEventTask(keyword, event);
 		ArrayList<Task> searchList = new ArrayList<Task>();
 		
 		for(int i=0; i<eventList.size(); i++){
@@ -330,10 +333,11 @@ public class JsonSearch {
 		return searchList;
 	}
 	
-	public ArrayList<Task> searchDeadlineTaskBetweenDates(DateClass startDate, DateClass endDate, JSONArray deadline){
-		JsonTask jsonTask = new JsonTask();
+	public ArrayList<Task> searchDeadlineTaskBetweenDates(String keyword, DateClass startDate, DateClass endDate, JSONArray deadline){
+		//JsonTask jsonTask = new JsonTask();
 		
-		ArrayList<Task> deadlineList = jsonTask.deadlineTaskArray(deadline);
+		//ArrayList<Task> deadlineList = jsonTask.deadlineTaskArray(deadline);
+		ArrayList<Task> deadlineList = searchDeadlineTask(keyword, deadline);
 		ArrayList<Task> searchList = new ArrayList<Task>();
 		
 		for(int i=0; i<deadlineList.size(); i++){
@@ -349,11 +353,11 @@ public class JsonSearch {
 		return searchList;
 	}
 	
-	public ArrayList<Task> searchAllTaskBetweenDates(DateClass startDate, DateClass endDate){
+	public ArrayList<Task> searchAllTaskBetweenDates(String keyword, DateClass startDate, DateClass endDate){
 		JsonFile jsonFile = new JsonFile();
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
-		ArrayList<Task> event = searchEventTaskBetweenDates(startDate, endDate, content.get(0));
-		ArrayList<Task> deadline = searchDeadlineTaskBetweenDates(startDate, endDate, content.get(1));
+		ArrayList<Task> event = searchEventTaskBetweenDates(keyword, startDate, endDate, content.get(0));
+		ArrayList<Task> deadline = searchDeadlineTaskBetweenDates(keyword, startDate, endDate, content.get(1));
 		ArrayList<Task> allTasks = new ArrayList<Task>();
 		
 		for(int i=0; i<event.size(); i++){
