@@ -6,6 +6,7 @@ import java.util.ArrayList; // remove later
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -59,6 +60,10 @@ public class MainApp extends Application {
 
 	public void setDisplayState(IntegerProperty statusCode) {
 		logic.setDisplayState(statusCode);
+	}
+
+	public void setHasNewOverdueTask(BooleanProperty hasNewOverdueTask) {
+		logic.setHasNewOverdueTask(hasNewOverdueTask);
 	}
 
 	public String getSearchKeyword() {

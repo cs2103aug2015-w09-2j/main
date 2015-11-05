@@ -10,6 +10,7 @@ public class LogicTest {
 	Logic myLogic = Logic.getInstance();
 	FileStorage fileStorage = new FileStorage();
 	Parser parser = new Parser();
+	
 	@Test
 	public final void testProcessCommand() {
 		// boundary case to detect if the function is able to detect that this

@@ -3,6 +3,7 @@ package main;
 import java.text.ParseException;
 import java.util.*;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.collections.*;
 
@@ -71,8 +72,8 @@ public class Logic {
 	// ------------------- To interact with GUI [added by teddy]
 	// ------------------
 	private MainApp mainApp;
-	private IntegerProperty displayStatusCode; // represent current display
-												// status
+	private IntegerProperty displayStatusCode; // represent current display status
+	private BooleanProperty hasNewOverdueTask;
 	private String searchKeyword; // represent search keyword -> change this
 									// whenever a search is done
 	private ObservableList<Task> events;
@@ -363,37 +364,48 @@ public class Logic {
 		if (searchCommand.isBetween()) {
 
 		} else if (searchCommand.isAfter()) {
-
+			searchForDescriptionAfter(searchCommand.getStrSearchString(),searchCommand.getFirstDate());
 		} else if (searchCommand.isBefore()) {
-			searchForDescriptionBefore(searchCommand.getFirstDate());
+			searchForDescriptionBefore(searchCommand.getStrSearchString(),searchCommand.getFirstDate());
 		} else if (searchCommand.isOn()) {
-			searchForDescriptionAndDate(searchCommand.getStrSearchString(), searchCommand.getFirstDate().toString());
+			searchForDescriptionOnDate(searchCommand.getStrSearchString(), searchCommand.getFirstDate());
 		} else {
 			searchForDescription(searchCommand.getStrSearchString());
 		}
 	}
 
-	private void searchForDescriptionBefore(DateClass beforeDate) {
+	private void searchForDescriptionAfter(String strSearchString, DateClass afterDate) {
+		allEvents.clear();
+		allDeadlines.clear();
+		// allFloatingTasks.clear();
+		searchKeyword = "after " + afterDate.toString();
+		allEvents = fileStorage.searchEventTaskAfterDate(strSearchString,afterDate);
+		fillEvents();
+		allDeadlines = fileStorage.searchDeadlineTaskAfterDate(strSearchString,afterDate);
+		fillDeadlines();
+	}
+
+	private void searchForDescriptionBefore(String searchString,DateClass beforeDate) {
 		allEvents.clear();
 		allDeadlines.clear();
 		// allFloatingTasks.clear();
 		searchKeyword = "before " + beforeDate.toString();
-		allEvents = fileStorage.searchEventTaskBeforeDate(beforeDate);
+		allEvents = fileStorage.searchEventTaskBeforeDate(searchString,beforeDate);
 		fillEvents();
-		allDeadlines = fileStorage.searchDeadlineTaskBeforeDate(beforeDate);
+		allDeadlines = fileStorage.searchDeadlineTaskBeforeDate(searchString,beforeDate);
 		fillDeadlines();
 	}
 
-	private void searchForDescriptionAndDate(String searchString, String date) {
+	private void searchForDescriptionOnDate(String searchString, DateClass date) {
 		allEvents.clear();
 		allDeadlines.clear();
 		allFloatingTasks.clear();
 		searchKeyword = searchString + " on " + date;
-		allEvents = fileStorage.searchEventTask(date, searchString);
+		allEvents = fileStorage.searchEventTaskOnDate(searchString,date);
 		fillEvents();
-		allDeadlines = fileStorage.searchDeadlineTask(date, searchString);
+		allDeadlines = fileStorage.searchDeadlineTaskOnDate(searchString,date);
 		fillDeadlines();
-		allFloatingTasks = fileStorage.searchFloatingTask(date, searchString);
+		allFloatingTasks = fileStorage.readFloatingTask();
 		fillFloatings();
 	}
 
@@ -430,7 +442,7 @@ public class Logic {
 			updateRespectiveGUICol("ALL");
 		}
 	}
-	
+
 	private void readOverdue() {
 		ArrayList<Task> overdueTasks = fileStorage.readOverdueTask();
 		allEvents.clear();
@@ -449,7 +461,7 @@ public class Logic {
 		}
 	}
 
-	
+
 	private boolean redo() {
 		if (redoCommandHistory.size() == 0)
 			return false;
@@ -797,7 +809,7 @@ public class Logic {
 
 	/**
 	 * Initialize the tasks
-	 * 
+	 *
 	 * @param tasks
 	 *            Added by teddy
 	 */
@@ -860,6 +872,10 @@ public class Logic {
 	 */
 	public void setDisplayState(IntegerProperty displayStatusCode) {
 		this.displayStatusCode = displayStatusCode;
+	}
+
+	public void setHasNewOverdueTask(BooleanProperty hasNewOverdueTask) {
+		this.hasNewOverdueTask = hasNewOverdueTask;
 	}
 
 	public String getSearchKeyword() {

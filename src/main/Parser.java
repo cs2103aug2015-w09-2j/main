@@ -3,6 +3,8 @@ package main;
 import java.text.ParseException;
 import java.util.*;
 
+import org.ocpsoft.prettytime.shade.com.joestelmach.natty.generated.DateParser.friendly_meridian_indicator_return;
+
 import main.Command.CommandType;
 
 /***
@@ -45,20 +47,7 @@ public class Parser {
 		return strText;
 	}
 
-	private String getSearchString(String strCommand) {
-		StringBuilder sb = new StringBuilder();
-
-		String word = getWord(0, strCommand);
-
-		while (!word.equals("-d") && !word.equals("-e") && !word.equals("-s")) {
-			sb.append(word + " ");
-			strCommand = removeNWords(1, strCommand);
-			word = getWord(0, strCommand);
-		}
-
-		return sb.toString().trim();
-	}
-
+	
 	private String getDescription(String strCommand) {
 		StringBuilder sb = new StringBuilder();
 		int intWordIndex = 0;
@@ -112,7 +101,32 @@ public class Parser {
 
 		return null;
 	}
-
+	
+	private String getUpdateStartDateTimeString(String strCommand){
+		String[] splitWords = strCommand.split(" ");
+		StringBuilder sb = new StringBuilder();
+		
+		for(String word : splitWords){
+			if(word.equals("-d") || word.equals("-e"))
+				break;
+			sb.append(word + " ");
+		}
+		
+		return sb.toString().trim();
+	}
+	
+	private String getUpdateEndDateTimeString(String strCommand){
+		String[] splitWords = strCommand.split(" ");
+		StringBuilder sb = new StringBuilder();
+		
+		for(String word : splitWords){
+			if(word.equals("-d") || word.equals("-s"))
+				break;
+			sb.append(word + " ");
+		}
+		
+		return sb.toString().trim();
+	}
 	private String removeDate(String strCommand) {
 		String parsedDate;
 		Stack<String> dateBuffer = new Stack<String>();
@@ -174,6 +188,25 @@ public class Parser {
 		}
 		return false;
 	}
+	
+	private boolean isAClearCommand(String strCommand) {
+		// If the first word is update
+		String strFirstWord = getWord(0, strCommand);
+		if (strFirstWord.equals("clear")) {
+			return true;
+		}
+		return false;
+
+	}
+
+	private boolean isASaveCommand(String strCommand) {
+		String strFirstWord = getWord(0, strCommand);
+		if (strFirstWord.equals("save")) {
+			return true;
+		}
+		return false;
+	}
+
 
 	private boolean isAnEventCommand(String strCommand) {
 		
@@ -305,49 +338,88 @@ public class Parser {
 	private Update parseUpdateCommand(String strCommand) {
 
 		strCommand = removeNWords(1, strCommand);
-		String strSearchString = getSearchString(strCommand);
-
-		UpdateTask updateTask = new UpdateTask(strSearchString);
-
-		strCommand = removeNWords(getNumberOfWords(strSearchString), strCommand);
+		
+		UpdateTask updateTask = new UpdateTask();
 
 		/*
-		 * Try to get date followed by time
+		 * get task id
 		 */
-
+		int taskID;
+		try{
+			taskID = Integer.valueOf(getWord(0, strCommand));
+		}catch(NumberFormatException n){
+			return null;
+		}
+		
+		updateTask.setTaskID(taskID);
+		
+		//remove taskID
+		strCommand = removeNWords(1, strCommand);
+		
 		while (!strCommand.equals("")) {
 			// Get delimiter
 			String delimiter = getWord(0, strCommand);
+		
+			if(putils.isDelimeter(delimiter) == false){
+				break;
+			}
+			
 			strCommand = removeNWords(1, strCommand);
 
 			switch (delimiter) {
 			case "-d":
 				String strDescription = removeDelimiters(getDescription(strCommand));
-				updateTask.setDescription(strDescription);
+				updateTask.setDescription(strDescription.equals("") ? null : strDescription);
 
 				strCommand = removeNWords(strDescription.split(" ").length, strCommand);
 				break;
 			case "-e":
-				DateClass endDate = getDate(strCommand);
-				strCommand = removeNWords(1, strCommand);
-				TimeClass endTime = getTime(strCommand);
-				strCommand = removeNWords(1, strCommand);
+				String strEndDateTime = getUpdateEndDateTimeString(strCommand).trim();
+				DateClass endDate = parseDate(strEndDateTime);
+				TimeClass endTime = parseTime(strEndDateTime);
+				
+				if(endDate == null || endTime == null){
+					return null;
+				}
+				
+				strCommand = strCommand.replace(strEndDateTime, "").trim();
+				
 				updateTask.setEndDate(endDate);
 				updateTask.setEndTime(endTime);
 
 				break;
 			case "-s":
-				DateClass startDate = getDate(strCommand);
-				strCommand = removeNWords(1, strCommand);
-				TimeClass startTime = getTime(strCommand);
-				strCommand = removeNWords(1, strCommand);
+				String strStartDateTime = getUpdateStartDateTimeString(strCommand).trim();
+				DateClass startDate = parseDate(strStartDateTime);
+				TimeClass startTime = parseTime(strStartDateTime);
+				
+				if(startDate == null || startTime == null){
+					return null;
+				}
+				
+				strCommand = strCommand.replace(strStartDateTime, "").trim();
+				
 				updateTask.setStartDate(startDate);
 				updateTask.setStartTime(startTime);
 
 				break;
+				
+			
 			}
 		}
-
+		
+		//Incorrect update format?? By this point should have parsed everything
+		if(strCommand.equals("") == false){
+			
+			//Check if it is a task id
+			return null;
+		}
+		
+		//parsed nothing!
+		if(strCommand.equals("") && updateTask.getDescription() == null && updateTask.getEndDate() == null && updateTask.getStartDate() == null){
+			return null;
+		}
+		
 		return new Update(updateTask);
 	}
 
@@ -684,13 +756,21 @@ public class Parser {
 	
 	private DateClass parseDate(String text){
 		DateClass firstDate = null;
-		try {
-			String strFirstDate = DateHandler.tryParse(text);
-			firstDate = strFirstDate == null ? null : new DateClass(strFirstDate);
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
+		String[] splitWords = text.split(" ");
+		
+		for(String word:splitWords){
+		
+			try {
+				String strFirstDate = DateHandler.tryParse(word);
+				firstDate = strFirstDate == null ? null : new DateClass(strFirstDate);
+			} catch (NoSuchFieldException e) {
+				e.printStackTrace();
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+			if(firstDate != null)
+				return firstDate;
 		}
 		
 		if(firstDate == null){
@@ -701,7 +781,27 @@ public class Parser {
 		return firstDate == null ? null : firstDate;
 	}
 	
-	private Command parseUndoCommand(String strCommand) {
+	private TimeClass parseTime(String text){
+		TimeClass time = null;
+		String[] splitWords = text.split(" ");
+		
+		for(String word:splitWords){
+		
+			time = TimeHandler.parse(word);
+				
+			if(time != null)
+				return time;
+		}
+		
+		if(time == null){
+			PrettyTimeWrapper ptw = new PrettyTimeWrapper(text);
+			time = ptw.getTime();
+		}
+		
+		return time == null ? null : time;
+	}
+	
+ 	private Command parseUndoCommand(String strCommand) {
 		return new Undo();
 	}
 
@@ -819,24 +919,7 @@ public class Parser {
 		return new Clear();
 	}
 
-	private boolean isAClearCommand(String strCommand) {
-		// If the first word is update
-		String strFirstWord = getWord(0, strCommand);
-		if (strFirstWord.equals("clear")) {
-			return true;
-		}
-		return false;
-
-	}
-
-	private boolean isASaveCommand(String strCommand) {
-		String strFirstWord = getWord(0, strCommand);
-		if (strFirstWord.equals("save")) {
-			return true;
-		}
-		return false;
-	}
-
+	
 	
 	public static void main(String[] args) throws NoSuchFieldException, ParseException {
 		Parser p = new Parser();
@@ -844,9 +927,9 @@ public class Parser {
 		// String command = "update new swimming -d swimming";
 		Command t;
 		String command;
-		command = "search \"\" from 20/11 to next week";
+		command = "update 1 -s tomorrow";
 		t = p.parse(command);
-		command = "search shit before 20/11";
+		command = "update -d";
 		t = p.parse(command);
 		command = "search shit after 20/11";
 		t = p.parse(command);
