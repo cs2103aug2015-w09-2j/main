@@ -364,37 +364,48 @@ public class Logic {
 		if (searchCommand.isBetween()) {
 
 		} else if (searchCommand.isAfter()) {
-
+			searchForDescriptionAfter(searchCommand.getStrSearchString(),searchCommand.getFirstDate());
 		} else if (searchCommand.isBefore()) {
-			searchForDescriptionBefore(searchCommand.getFirstDate());
+			searchForDescriptionBefore(searchCommand.getStrSearchString(),searchCommand.getFirstDate());
 		} else if (searchCommand.isOn()) {
-			searchForDescriptionAndDate(searchCommand.getStrSearchString(), searchCommand.getFirstDate().toString());
+			searchForDescriptionOnDate(searchCommand.getStrSearchString(), searchCommand.getFirstDate());
 		} else {
 			searchForDescription(searchCommand.getStrSearchString());
 		}
 	}
 
-	private void searchForDescriptionBefore(DateClass beforeDate) {
+	private void searchForDescriptionAfter(String strSearchString, DateClass afterDate) {
+		allEvents.clear();
+		allDeadlines.clear();
+		// allFloatingTasks.clear();
+		searchKeyword = "after " + afterDate.toString();
+		allEvents = fileStorage.searchEventTaskAfterDate(strSearchString,afterDate);
+		fillEvents();
+		allDeadlines = fileStorage.searchDeadlineTaskAfterDate(strSearchString,afterDate);
+		fillDeadlines();
+	}
+
+	private void searchForDescriptionBefore(String searchString,DateClass beforeDate) {
 		allEvents.clear();
 		allDeadlines.clear();
 		// allFloatingTasks.clear();
 		searchKeyword = "before " + beforeDate.toString();
-		allEvents = fileStorage.searchEventTaskBeforeDate(beforeDate);
+		allEvents = fileStorage.searchEventTaskBeforeDate(searchString,beforeDate);
 		fillEvents();
-		allDeadlines = fileStorage.searchDeadlineTaskBeforeDate(beforeDate);
+		allDeadlines = fileStorage.searchDeadlineTaskBeforeDate(searchString,beforeDate);
 		fillDeadlines();
 	}
 
-	private void searchForDescriptionAndDate(String searchString, String date) {
+	private void searchForDescriptionOnDate(String searchString, DateClass date) {
 		allEvents.clear();
 		allDeadlines.clear();
 		allFloatingTasks.clear();
 		searchKeyword = searchString + " on " + date;
-		allEvents = fileStorage.searchEventTask(date, searchString);
+		allEvents = fileStorage.searchEventTaskOnDate(searchString,date);
 		fillEvents();
-		allDeadlines = fileStorage.searchDeadlineTask(date, searchString);
+		allDeadlines = fileStorage.searchDeadlineTaskOnDate(searchString,date);
 		fillDeadlines();
-		allFloatingTasks = fileStorage.searchFloatingTask(date, searchString);
+		allFloatingTasks = fileStorage.readFloatingTask();
 		fillFloatings();
 	}
 
