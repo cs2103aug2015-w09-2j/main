@@ -119,7 +119,7 @@ public class UpdateTask extends Task{
 	/**
 	 * @param strDescription
 	 */
-	public void setDescription(String strDescription) {
+	public void setStrDescription(String strDescription) {
 		this.strDescription = strDescription;
 	}
 
@@ -155,7 +155,7 @@ public class UpdateTask extends Task{
 		return taskId;
 	}
 	
-	public String getDescription() {
+	public String getStrDescription() {
 		return strDescription;
 	}
 
@@ -163,6 +163,12 @@ public class UpdateTask extends Task{
 	public int compareTo(Task o) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	public String toString(){
+		String out ="";
+		
+		return out;
+		
 	}
 
 	
