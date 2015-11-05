@@ -165,6 +165,18 @@ public class MainLayoutController {
 			}
 
 		});
+
+		hasNewOverdueTask.addListener(new ChangeListener<Boolean>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Boolean> hasNewOverdueTask, Boolean oldValue, Boolean newValue) {
+				if (newValue.equals(Boolean.TRUE)) {
+					overdueLabel.setVisible(true);
+				} else {
+					overdueLabel.setVisible(false);
+				}
+			}
+		});
 	}
 
 	private void getTasks() {
