@@ -638,9 +638,10 @@ public class Parser {
 		
 		String enclosedString = putils.getEnclosedDescription(strSearchString);
 		
-		enclosedString = enclosedString.equals("") == true ? null : enclosedString;
+		
 		
 		if(enclosedString != null){
+			enclosedString = enclosedString.equals("") == true ? null : enclosedString;
 			strSearchString = strSearchString.substring(strSearchString.lastIndexOf("\"") + 1).trim();
 			
 			if(strSearchString == ""){
@@ -927,13 +928,7 @@ public class Parser {
 		// String command = "update new swimming -d swimming";
 		Command t;
 		String command;
-		command = "update 1 -s tomorrow";
-		t = p.parse(command);
-		command = "update -d";
-		t = p.parse(command);
-		command = "search shit after 20/11";
-		t = p.parse(command);
-		command = "search shit on 20/11";
+		command = "search meeting";
 		t = p.parse(command);
 		
 		System.out.println(((Event) t.getTask()).getEndTime().to12HourFormat());
