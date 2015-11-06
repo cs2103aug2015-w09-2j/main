@@ -86,6 +86,16 @@
 	-fx-text-fill: #000000;
 }
 
+#response-box-success {
+	-fx-background-color: #A5D6A7;
+	-fx-background-radius: 6px;
+}
+
+#response-box-fail {
+	-fx-background-color: #EF9A9A;
+	-fx-background-radius: 6px;
+}
+
 #status-bar {
 	-fx-background-color: rgba(239,235,233, 0.7);
 }
