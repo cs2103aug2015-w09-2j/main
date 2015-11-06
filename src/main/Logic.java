@@ -8,6 +8,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.collections.*;
 
 import main.ui.MainApp;
+import main.ui.util.StatusListener;
 
 /**
  * @author Ravi
@@ -229,8 +230,11 @@ public class Logic {
 			break;
 		case SEARCH:
 			success = search(inputCommand);
-			displayStatusCode.set(3);
-			success = true;
+			if (displayStatusCode.get() == StatusListener.Status.SEARCH.getCode()) {
+				displayStatusCode.set(StatusListener.Status.NEWSEARCH.getCode());
+			} else {
+				displayStatusCode.set(StatusListener.Status.SEARCH.getCode());
+			}
 			break;
 		case UNDO:
 			success = undo();
@@ -391,7 +395,7 @@ public class Logic {
 		allEvents.clear();
 		allDeadlines.clear();
 		// allFloatingTasks.clear();
-		searchKeyword = strSearchString + "between " + firstDate.toString() + " " + secondDate.toString();
+		searchKeyword = strSearchString + " between " + firstDate.toString() + " " + secondDate.toString();
 		allEvents = fileStorage.searchEventTaskBetweenDates(strSearchString, firstDate, secondDate);
 		fillEvents();
 		allDeadlines = fileStorage.searchDeadlineTaskBetweenDates(strSearchString, firstDate, secondDate);
@@ -403,7 +407,7 @@ public class Logic {
 		allEvents.clear();
 		allDeadlines.clear();
 		// allFloatingTasks.clear();
-		searchKeyword = "after " + afterDate.toString();
+		searchKeyword = strSearchString + " after " + afterDate.toString();
 		allEvents = fileStorage.searchEventTaskAfterDate(strSearchString, afterDate);
 		fillEvents();
 		allDeadlines = fileStorage.searchDeadlineTaskAfterDate(strSearchString, afterDate);
@@ -411,42 +415,42 @@ public class Logic {
 		return true;
 	}
 
-	private boolean searchForDescriptionBefore(String searchString, DateClass beforeDate) {
+	private boolean searchForDescriptionBefore(String strSearchString, DateClass beforeDate) {
 		allEvents.clear();
 		allDeadlines.clear();
 		// allFloatingTasks.clear();
-		searchKeyword = "before " + beforeDate.toString();
-		allEvents = fileStorage.searchEventTaskBeforeDate(searchString, beforeDate);
+		searchKeyword = strSearchString+ " before " + beforeDate.toString();
+		allEvents = fileStorage.searchEventTaskBeforeDate(strSearchString, beforeDate);
 		fillEvents();
-		allDeadlines = fileStorage.searchDeadlineTaskBeforeDate(searchString, beforeDate);
+		allDeadlines = fileStorage.searchDeadlineTaskBeforeDate(strSearchString, beforeDate);
 		fillDeadlines();
 		return true;
 	}
 
-	private boolean searchForDescriptionOnDate(String searchString, DateClass date) {
+	private boolean searchForDescriptionOnDate(String strSearchString, DateClass date) {
 		allEvents.clear();
 		allDeadlines.clear();
 		allFloatingTasks.clear();
-		searchKeyword = searchString + " on " + date;
-		allEvents = fileStorage.searchEventTaskOnDate(searchString, date);
+		searchKeyword = strSearchString + " on " + date.toString();
+		allEvents = fileStorage.searchEventTaskOnDate(strSearchString, date);
 		fillEvents();
-		allDeadlines = fileStorage.searchDeadlineTaskOnDate(searchString, date);
+		allDeadlines = fileStorage.searchDeadlineTaskOnDate(strSearchString, date);
 		fillDeadlines();
 		allFloatingTasks = fileStorage.readFloatingTask();
 		fillFloatings();
 		return true;
 	}
 
-	private boolean searchForDescription(String searchCriterias) {
+	private boolean searchForDescription(String strSearchString) {
 		allEvents.clear();
 		allDeadlines.clear();
 		allFloatingTasks.clear();
-		searchKeyword = searchCriterias;
-		allEvents = fileStorage.searchEventTask(searchCriterias);
+		searchKeyword = strSearchString;
+		allEvents = fileStorage.searchEventTask(strSearchString);
 		fillEvents();
-		allDeadlines = fileStorage.searchDeadlineTask(searchCriterias);
+		allDeadlines = fileStorage.searchDeadlineTask(strSearchString);
 		fillDeadlines();
-		allFloatingTasks = fileStorage.searchFloatingTask(searchCriterias);
+		allFloatingTasks = fileStorage.searchFloatingTask(strSearchString);
 		fillFloatings();
 		return true;
 	}
@@ -760,9 +764,7 @@ public class Logic {
 		Delete deleteCommand = ((Delete) inputCommand);
 		ArrayList<Task> taskToDelete = new ArrayList<Task>();
 		if (deleteCommand.hasTaskIDs()) {
-			System.out.println(Arrays.toString(deleteCommand.getTaskIDs().toArray()));
 			for (Integer i : deleteCommand.getTaskIDs()) {
-				// System.out.print(i+" ");
 				if (i <= (allEvents.size() + allDeadlines.size() + allFloatingTasks.size())) {
 					Task a = deleteSingleTask(i);
 					System.out.println(i + " " + a.toString() + " ");
@@ -823,11 +825,12 @@ public class Logic {
 		case FLOATINGTASKS:
 			fillFloatings();
 			break;
-		default:
+		case ALLCOLLUMS:
 			fillFloatings();
 			fillDeadlines();
 			fillEvents();
-			// System.out.println(taskType);
+			break;
+		default:
 			break;
 		}
 	}
