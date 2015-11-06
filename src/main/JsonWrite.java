@@ -1,6 +1,5 @@
 package main;
 
-import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -9,7 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 
@@ -110,10 +108,10 @@ public class JsonWrite {
 					filePath = fs.getFilePath();
 					break;
 				case "DONE_FILE":
-					filePath = "done.json";
+					filePath = fs.getDonePath();
 					break;
 				case "OVERDUE_FILE":
-					filePath = "overdue.json";
+					filePath = fs.getOverduePath();
 					break;
 				default:
 					System.out.println("writeToJsonFile(String taskType, String arr[], String fileType)" +
