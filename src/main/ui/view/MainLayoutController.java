@@ -67,7 +67,6 @@ public class MainLayoutController {
 
 	public MainLayoutController() {
 		displayState = new SimpleIntegerProperty();
-		hasNewOverdueTask = new SimpleBooleanProperty();
 	}
 
 	/**
@@ -85,9 +84,6 @@ public class MainLayoutController {
 		// initial status is ONGOING
 		displayState.setValue(StatusListener.Status.ONGOING.getCode());
 		displayStatusLabel.setText(StatusListener.getStatusText(displayState.getValue()));
-
-		hasNewOverdueTask.setValue(Boolean.FALSE);
-		overdueLabel.setVisible(false);
 	}
 
 	/**
@@ -99,9 +95,9 @@ public class MainLayoutController {
 		getTasks();
 		setupListViews();
 		initialize();
-		setListeners();
 		mainApp.setDisplayState(displayState);
 		this.hasNewOverdueTask = mainApp.getHasNewOverdueTask();
+		setListeners();
 	}
 
 	public void focusCommandBox() {
@@ -180,6 +176,7 @@ public class MainLayoutController {
 
 			@Override
 			public void changed(ObservableValue<? extends Boolean> hasNewOverdueTask, Boolean oldValue, Boolean newValue) {
+				System.out.println(newValue);
 				if (newValue.equals(Boolean.TRUE)) {
 					overdueLabel.setVisible(true);
 				} else {
