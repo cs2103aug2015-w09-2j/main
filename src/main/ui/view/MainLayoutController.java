@@ -157,7 +157,7 @@ public class MainLayoutController {
 			public void changed(ObservableValue<? extends Number> displayState, Number oldValue, Number newValue) {
 				int newState = newValue.intValue();
 				String statusText = StatusListener.getStatusText(newState);
-				if (newState == StatusListener.Status.SEARCH.getCode()) {
+				if (newState == StatusListener.Status.SEARCH.getCode() || newState == StatusListener.Status.NEWSEARCH.getCode()) {
 					displayStatusLabel.setText(String.format(statusText, mainApp.getSearchKeyword()));
 				} else {
 					displayStatusLabel.setText(statusText);

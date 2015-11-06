@@ -6,12 +6,10 @@ public class StatusListener {
 	public static final String OVERDUE = "Overdue tasks";
 	public static final String DONE = "Completed tasks";
 	public static final String SEARCH = "Search results for '%s'";
-	public static final String EVENTS = "All events";
-	public static final String DEADLINES = "All deadlines";
-	public static final String FLOATINGS = "All floatings";
+	public static final String NEWSEARCH = "Search results for '%s'";
 
 	public enum Status {
-		ONGOING(0), DONE(1), OVERDUE(2), SEARCH(3), EVENTS(4), DEADLINES(5), FLOATINGS(6);
+		ONGOING(0), DONE(1), OVERDUE(2), SEARCH(3), NEWSEARCH(4);
 
 		private int code;
 		Status(int code) {
@@ -40,13 +38,7 @@ public class StatusListener {
 			statusText = SEARCH;
 			break;
 		case 4 :
-			statusText = EVENTS;
-			break;
-		case 5 :
-			statusText =DEADLINES;
-			break;
-		case 6 :
-			statusText = FLOATINGS;
+			statusText = NEWSEARCH;
 			break;
 		default :
 			statusText = ONGOING;
