@@ -120,8 +120,10 @@ public class Logic {
 		allFloatingTasks = fileStorage.readFloatingTask();
 		allEvents = filterOverdueTask(allEvents);
 		allDeadlines = filterOverdueTask(allDeadlines);
+		System.out.println(fileStorage.readOverdueTask().size());
 		if (fileStorage.readOverdueTask().size() > 0) {
 			hasNewOverdueTask.setValue(Boolean.TRUE);
+			System.out.println(fileStorage.readOverdueTask().size() + " & state is" + hasNewOverdueTask.getValue());
 		}
 		Collections.sort(allEvents);
 		Collections.sort(allDeadlines);
@@ -368,8 +370,8 @@ public class Logic {
 			displayStatusCode.set(1);
 			return true;
 		} else if (displayCommand.getDisplayString().equals(DISPLAY_OVERDUE_TASKS)) {
-			hasNewOverdueTask.set(Boolean.FALSE);
 			readOverdue();
+			hasNewOverdueTask.set(Boolean.FALSE);
 			displayStatusCode.set(2);
 			return true;
 		} else {
