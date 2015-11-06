@@ -661,10 +661,11 @@ public class Logic {
 	private void update(Command inputCommand) {
 		Update updateCommand = (Update) inputCommand;
 		UpdateTask processUpdate = (UpdateTask) updateCommand.getTaskToUpdate();
-		System.out.println(processUpdate);
+		System.out.println(updateCommand.getTaskToUpdate().getDescription()+ " ");
+		//System.out.println(processUpdate);
 		Task taskToUpdate;
 		taskToUpdate = deleteSingleTask(processUpdate.getTaskID());
-		System.out.println(taskToUpdate.toString());
+		//System.out.println(taskToUpdate.toString());
 		Task updatedTask = null;
 		// updatedTask = taskToUpdate;
 		System.out.println(taskToUpdate.getClass().getName());
@@ -718,7 +719,7 @@ public class Logic {
 			}
 
 			break;
-		case "main.Flaoting":
+		case "main.Floating":
 			System.out.println(processUpdate.getDescription());
 			System.out.println(taskToUpdate.toString());
 			if (processUpdate.hasStartDate()) {

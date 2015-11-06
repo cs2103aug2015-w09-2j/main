@@ -119,7 +119,7 @@ public class UpdateTask extends Task{
 	/**
 	 * @param strDescription
 	 */
-	public void setStrDescription(String strDescription) {
+	public void setDescription(String strDescription) {
 		this.strDescription = strDescription;
 	}
 
@@ -155,7 +155,7 @@ public class UpdateTask extends Task{
 		return taskId;
 	}
 	
-	public String getStrDescription() {
+	public String getDescription() {
 		return strDescription;
 	}
 
