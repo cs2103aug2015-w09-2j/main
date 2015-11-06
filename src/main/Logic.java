@@ -48,7 +48,6 @@ public class Logic {
 	// private static UserInterface UI = new UserInterface(); // [teddy] this
 	// will
 	// be deleted once
-	// we shift to GUI
 	private FileStorage fileStorage = new FileStorage();
 	// private static Command.CommandType command;
 	// private static Command.CommandType undoCommand =
@@ -665,18 +664,18 @@ public class Logic {
 		System.out.println(processUpdate);
 		Task taskToUpdate;
 		taskToUpdate = deleteSingleTask(processUpdate.getTaskID());
-		//System.out.println(taskToUpdate.toString());
+		System.out.println(taskToUpdate.toString());
 		Task updatedTask = null;
 		// updatedTask = taskToUpdate;
 		System.out.println(taskToUpdate.getClass().getName());
-		//System.out.println(taskToUpdate.toString());
+		// System.out.println(taskToUpdate.toString());
 		switch (taskToUpdate.getClass().getName()) {
 		case "main.Event":
 			updatedTask = new Event(((Event) taskToUpdate).getDescription(), ((Event) taskToUpdate).getStartDate(),
 					((Event) taskToUpdate).getStartTime(), ((Event) taskToUpdate).getEndDate(),
 					((Event) taskToUpdate).getEndTime());
 			if (processUpdate.hasDescription())
-				updatedTask.setDescription(processUpdate.getStrDescription());
+				updatedTask.setDescription(processUpdate.getDescription());
 			if (processUpdate.hasEndDate())
 				((Event) updatedTask).setEndDate(processUpdate.getEndDate());
 			if (processUpdate.hasEndTime())
@@ -690,10 +689,10 @@ public class Logic {
 			if (processUpdate.hasStartDate()) {
 				if (processUpdate.hasDescription()) {
 					if (processUpdate.hasEndDate()) {
-						updatedTask = new Event(processUpdate.getStrDescription(), processUpdate.getStartDate(),
+						updatedTask = new Event(processUpdate.getDescription(), processUpdate.getStartDate(),
 								processUpdate.getStartTime(), processUpdate.getEndDate(), processUpdate.getEndTime());
 					} else {
-						updatedTask = new Event(processUpdate.getStrDescription(), processUpdate.getStartDate(),
+						updatedTask = new Event(processUpdate.getDescription(), processUpdate.getStartDate(),
 								processUpdate.getStartTime(), ((Event) taskToUpdate).getEndDate(),
 								((Event) taskToUpdate).getEndTime());
 					}
@@ -711,7 +710,7 @@ public class Logic {
 				updatedTask = new Deadline(((Deadline) taskToUpdate).getDescription(),
 						((Deadline) taskToUpdate).getEndDate(), ((Deadline) taskToUpdate).getEndTime());
 				if (processUpdate.hasDescription())
-					updatedTask.setDescription(processUpdate.getStrDescription());
+					updatedTask.setDescription(processUpdate.getDescription());
 				if (processUpdate.hasEndDate())
 					((Deadline) updatedTask).setEndDate(processUpdate.getEndDate());
 				if (processUpdate.hasEndTime())
@@ -720,38 +719,42 @@ public class Logic {
 
 			break;
 		case "main.Flaoting":
-			System.out.println(processUpdate.getStrDescription());
+			System.out.println(processUpdate.getDescription());
+			System.out.println(taskToUpdate.toString());
 			if (processUpdate.hasStartDate()) {
 				if (processUpdate.hasDescription()) {
-					updatedTask = new Event(processUpdate.getStrDescription(), processUpdate.getStartDate(),
+					updatedTask = new Event(processUpdate.getDescription(), processUpdate.getStartDate(),
 							processUpdate.getStartTime(), processUpdate.getEndDate(), processUpdate.getEndTime());
+					System.out.println(processUpdate.getDescription());
 				} else {
 					updatedTask = new Event(taskToUpdate.getDescription(), processUpdate.getStartDate(),
 							processUpdate.getStartTime(), processUpdate.getEndDate(), processUpdate.getEndTime());
 				}
 			} else if (processUpdate.hasEndDate()) {
 				if (processUpdate.hasDescription()) {
-					updatedTask = new Deadline(processUpdate.getStrDescription(), processUpdate.getEndDate(),
+					updatedTask = new Deadline(processUpdate.getDescription(), processUpdate.getEndDate(),
 							processUpdate.getEndTime());
+					System.out.println(processUpdate.getDescription());
 				} else {
 					updatedTask = new Deadline(taskToUpdate.getDescription(), processUpdate.getEndDate(),
 							processUpdate.getEndTime());
 				}
 			} else {
-				System.out.println(processUpdate.getStrDescription());
-				updatedTask = new Floating(processUpdate.getStrDescription());
+				System.out.println(processUpdate.getDescription());
+				updatedTask = new Floating(processUpdate.getDescription());
+				System.out.println(processUpdate.getDescription());
 				System.out.println(updatedTask.toString());
 			}
 			break;
 		default:
 			break;
 		}
-		if(updatedTask!=null){
-		fileStorage.writeTask(updatedTask);
-		updateCommand.setCurrentTask(taskToUpdate);
-		updateCommand.setUpdateTask(updatedTask);
-		undoCommandHistory.push(updateCommand);
-		}else{
+		if (updatedTask != null) {
+			fileStorage.writeTask(updatedTask);
+			updateCommand.setCurrentTask(taskToUpdate);
+			updateCommand.setUpdateTask(updatedTask);
+			undoCommandHistory.push(updateCommand);
+		} else {
 			System.out.println("Its null");
 		}
 		updateTaskLists();
@@ -863,9 +866,13 @@ public class Logic {
 				taskToDelete.add(a);
 			}
 		} else if (deleteCommand.hasDeleteString()) {
-			Task taskDelete = fileStorage.absoluteSearch(deleteCommand.getDeleteString()).get(0);
-			fileStorage.deleteTask(taskDelete);
-			taskToDelete.add(taskDelete);
+			if (deleteCommand.getDeleteString().equals("all")) {
+				clearAllTask(new Clear());
+			} else {
+				Task taskDelete = fileStorage.absoluteSearch(deleteCommand.getDeleteString()).get(0);
+				fileStorage.deleteTask(taskDelete);
+				taskToDelete.add(taskDelete);
+			}
 		}
 		deleteCommand.setTaskDeleted(taskToDelete);
 		updateTaskLists();
