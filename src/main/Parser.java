@@ -375,8 +375,10 @@ public class Parser {
 				break;
 			case "-e":
 				String strEndDateTime = getUpdateEndDateTimeString(strCommand).trim();
-				DateClass endDate = parseDate(strEndDateTime);
-				TimeClass endTime = parseTime(strEndDateTime);
+				String strEndDateTimeCopy = new String(strEndDateTime);
+				DateClass endDate = parseDate(strEndDateTimeCopy);
+				strEndDateTimeCopy = removeDate(strEndDateTimeCopy);
+				TimeClass endTime = parseTime(strEndDateTimeCopy);
 				
 				if(endDate == null || endTime == null){
 					return null;
@@ -390,8 +392,10 @@ public class Parser {
 				break;
 			case "-s":
 				String strStartDateTime = getUpdateStartDateTimeString(strCommand).trim();
-				DateClass startDate = parseDate(strStartDateTime);
-				TimeClass startTime = parseTime(strStartDateTime);
+				String strStartDateTimeCopy = new String(strStartDateTime);
+				DateClass startDate = parseDate(strStartDateTimeCopy);
+				strStartDateTimeCopy = removeDate(strStartDateTimeCopy);
+				TimeClass startTime = parseTime(strStartDateTimeCopy);
 				
 				if(startDate == null || startTime == null){
 					return null;
@@ -928,7 +932,7 @@ public class Parser {
 		// String command = "update new swimming -d swimming";
 		Command t;
 		String command;
-		command = "search meeting";
+		command = "update 10 -e 15/11 5pm";
 		t = p.parse(command);
 		
 		System.out.println(((Event) t.getTask()).getEndTime().to12HourFormat());
