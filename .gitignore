@@ -11,5 +11,6 @@ data
 overdue.json
 overdue
 build
+vodoPath
 build.fxbuild
 /build/

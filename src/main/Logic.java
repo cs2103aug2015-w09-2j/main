@@ -372,6 +372,7 @@ public class Logic {
 		} else if (displayCommand.getDisplayString().equals(DISPLAY_OVERDUE_TASKS)) {
 			readOverdue();
 			hasNewOverdueTask.set(Boolean.FALSE);
+			System.out.println(fileStorage.readOverdueTask().size() + " & state is" + hasNewOverdueTask.getValue());
 			displayStatusCode.set(2);
 			return true;
 		} else {
