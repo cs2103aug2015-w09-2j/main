@@ -16,6 +16,13 @@ import main.ui.MainApp;
 public class Logic {
 	private String fileName;
 	private static Logic oneLogic = null;
+	private static final String ALLCOLLUMS = "ALL";
+	private static final String EVENTS = "main.Event";
+	private static final String DEADLINES = "main.Deadline";
+	private static final String FLOATINGTASKS = "main.Floating";
+	private static final String DISPLAY_ONGOING_TASKS = "ongoing";
+	private static final String DISPLAY_DONE_TASKS = "done";
+	private static final String DISPLAY_OVERDUE_TASKS = "overdue";
 
 	/**
 	 * Description Constructor : Creates and instance of the Logic class with
@@ -110,6 +117,9 @@ public class Logic {
 		allFloatingTasks = fileStorage.readFloatingTask();
 		allEvents = filterOverdueTask(allEvents);
 		allDeadlines = filterOverdueTask(allDeadlines);
+		if (fileStorage.readOverdueTask().size() > 0) {
+			hasNewOverdueTask.set(Boolean.TRUE);
+		}
 		Collections.sort(allEvents);
 		Collections.sort(allDeadlines);
 		Collections.sort(allFloatingTasks);
@@ -121,7 +131,7 @@ public class Logic {
 		ArrayList<Task> taskList = new ArrayList<Task>();
 		for (Task currentTask : tasks) {
 			switch (currentTask.getClass().getName()) {
-			case "main.Event":
+			case EVENTS:
 				int compareTo = 0;
 				try {
 					compareTo = ((Event) currentTask).getEndDate()
@@ -147,7 +157,7 @@ public class Logic {
 					fileStorage.deleteTask(currentTask);
 				}
 				break;
-			case "main.Deadline":
+			case DEADLINES:
 				compareTo = 0;
 				try {
 					compareTo = ((Deadline) currentTask).getEndDate()
@@ -253,6 +263,7 @@ public class Logic {
 	private boolean addFloating(Command inputCommand) {
 		fileStorage.writeTask(inputCommand.getTask());
 		undoCommandHistory.push(inputCommand);
+		redoCommandHistory.clear();
 		updateTaskLists();
 		fillFloatings();
 		return true;
@@ -261,6 +272,7 @@ public class Logic {
 	private boolean addDeadline(Command inputCommand) {
 		fileStorage.writeTask(inputCommand.getTask());
 		undoCommandHistory.push(inputCommand);
+		redoCommandHistory.clear();
 		updateTaskLists();
 		fillDeadlines();
 		return true;
@@ -269,6 +281,7 @@ public class Logic {
 	private boolean addEvent(Command inputCommand) {
 		fileStorage.writeTask(inputCommand.getTask());
 		undoCommandHistory.push(inputCommand);
+		redoCommandHistory.clear();
 		updateTaskLists();
 		fillEvents();
 		return true;
@@ -290,7 +303,7 @@ public class Logic {
 			taskCleared.add(currentTask);
 		}
 		updateTaskLists();
-		updateRespectiveGUICol("ALL");
+		updateRespectiveGUICol(ALLCOLLUMS);
 		clearAllTask.setTaskCleared(taskCleared);
 		undoCommandHistory.push(clearAllTask);
 		return true;
@@ -309,8 +322,9 @@ public class Logic {
 			}
 		}
 		updateTaskLists();
-		updateRespectiveGUICol("ALL");
+		updateRespectiveGUICol(ALLCOLLUMS);
 		undoCommandHistory.push(new Done(tasksDone, tasksSetDone));
+		redoCommandHistory.clear();
 		System.out.println(Arrays.toString(tasksDone.toArray()));
 		return true;
 	}
@@ -336,18 +350,19 @@ public class Logic {
 
 	private boolean display(Command inputCommand) {
 		Display displayCommand = (Display) inputCommand;
-		if (displayCommand.getDisplayString().equals("ongoing")) {
+		if (displayCommand.getDisplayString().equals(DISPLAY_ONGOING_TASKS)) {
 			updateTaskLists();
 			fillEvents();
 			fillFloatings();
 			fillDeadlines();
 			displayStatusCode.set(0);
 			return true;
-		} else if (displayCommand.getDisplayString().equals("done")) {
+		} else if (displayCommand.getDisplayString().equals(DISPLAY_DONE_TASKS)) {
 			readDone();
 			displayStatusCode.set(1);
 			return true;
-		} else if (displayCommand.getDisplayString().equals("overdue")) {
+		} else if (displayCommand.getDisplayString().equals(DISPLAY_OVERDUE_TASKS)) {
+			hasNewOverdueTask.set(Boolean.FALSE);
 			readOverdue();
 			displayStatusCode.set(2);
 			return true;
@@ -443,17 +458,17 @@ public class Logic {
 		allFloatingTasks.clear();
 		for (Task currentTask : doneTasks) {
 			switch (currentTask.getClass().getName()) {
-			case "main.Floating":
+			case FLOATINGTASKS:
 				allFloatingTasks.add(currentTask);
 				break;
-			case "main.Deadline":
+			case DEADLINES:
 				allDeadlines.add(currentTask);
 				break;
-			case "main.Event":
+			case EVENTS:
 				allEvents.add(currentTask);
 				break;
 			}
-			updateRespectiveGUICol("ALL");
+			updateRespectiveGUICol(ALLCOLLUMS);
 		}
 	}
 
@@ -464,14 +479,14 @@ public class Logic {
 		allFloatingTasks.clear();
 		for (Task currentTask : overdueTasks) {
 			switch (currentTask.getClass().getName()) {
-			case "main.Deadline":
+			case DEADLINES:
 				allDeadlines.add(currentTask);
 				break;
-			case "main.Event":
+			case EVENTS:
 				allEvents.add(currentTask);
 				break;
 			}
-			updateRespectiveGUICol("ALL");
+			updateRespectiveGUICol(ALLCOLLUMS);
 		}
 	}
 
@@ -495,17 +510,17 @@ public class Logic {
 		case DONE:
 			redoDone(redoCommand);
 			undoCommandHistory.push(redoCommand);
-			updateRespectiveGUICol("ALL");
+			updateRespectiveGUICol(ALLCOLLUMS);
 			break;
 		case CLEAR:
 			redoClear(redoCommand);
 			undoCommandHistory.push(redoCommand);
-			updateRespectiveGUICol("ALL");
+			updateRespectiveGUICol(ALLCOLLUMS);
 			break;
 		default:
 			break;
 		}
-		return false;
+		return true;
 	}
 
 	private void redoDeleteCommand(Command redoCommand) {
@@ -514,7 +529,7 @@ public class Logic {
 			fileStorage.deleteTask(currentTask);
 		}
 		updateTaskLists();
-		updateRespectiveGUICol("ALL");
+		updateRespectiveGUICol(ALLCOLLUMS);
 	}
 
 	private void redoAddCommand(Command redoCommand) {
@@ -562,12 +577,12 @@ public class Logic {
 		case DONE:
 			undoDone(undoCommand);
 			redoCommandHistory.push(undoCommand);
-			updateRespectiveGUICol("ALL");
+			updateRespectiveGUICol(ALLCOLLUMS);
 			break;
 		case CLEAR:
 			undoClear(undoCommand);
 			redoCommandHistory.push(undoCommand);
-			updateRespectiveGUICol("ALL");
+			updateRespectiveGUICol(ALLCOLLUMS);
 			break;
 		default:
 			break;
@@ -581,7 +596,7 @@ public class Logic {
 		fileStorage.deleteTask(undoUpdate.getUpdateTask());
 		redoCommandHistory.push(undoUpdate);
 		updateTaskLists();
-		updateRespectiveGUICol("ALL");
+		updateRespectiveGUICol(ALLCOLLUMS);
 	}
 
 	private void redoUpdateCommand(Command undoCommand) {
@@ -590,7 +605,7 @@ public class Logic {
 		fileStorage.writeTask(redoUpdate.getUpdateTask());
 		redoCommandHistory.push(redoUpdate);
 		updateTaskLists();
-		updateRespectiveGUICol("ALL");
+		updateRespectiveGUICol(ALLCOLLUMS);
 	}
 
 	private void undoDeleteCommand(Command undoCommand) {
@@ -600,7 +615,7 @@ public class Logic {
 		}
 		// fileStorage.writeTask(((Delete) undoCommand).getTaskDeleted());
 		updateTaskLists();
-		updateRespectiveGUICol("ALL");
+		updateRespectiveGUICol(ALLCOLLUMS);
 	}
 
 	private void undoAddCommand(Command undoCommand) {
@@ -626,7 +641,7 @@ public class Logic {
 			fileStorage.writeTask(currentTask);
 			updateTaskLists();
 		}
-		updateRespectiveGUICol("ALL");
+		updateRespectiveGUICol(ALLCOLLUMS);
 	}
 
 	private boolean update(Command inputCommand) {
@@ -640,14 +655,13 @@ public class Logic {
 		} else {
 			return false;
 		}
-
 		// System.out.println(taskToUpdate.toString());
 		Task updatedTask = null;
 		// updatedTask = taskToUpdate;
 		System.out.println(taskToUpdate.getClass().getName());
 		// System.out.println(taskToUpdate.toString());
 		switch (taskToUpdate.getClass().getName()) {
-		case "main.Event":
+		case EVENTS:
 			updatedTask = new Event(((Event) taskToUpdate).getDescription(), ((Event) taskToUpdate).getStartDate(),
 					((Event) taskToUpdate).getStartTime(), ((Event) taskToUpdate).getEndDate(),
 					((Event) taskToUpdate).getEndTime());
@@ -662,7 +676,7 @@ public class Logic {
 			if (processUpdate.hasStartTime())
 				((Event) updatedTask).setStartTime(processUpdate.getStartTime());
 			break;
-		case "main.Deadline":
+		case DEADLINES:
 			if (processUpdate.hasStartDate()) {
 				if (processUpdate.hasDescription()) {
 					if (processUpdate.hasEndDate()) {
@@ -695,7 +709,7 @@ public class Logic {
 			}
 
 			break;
-		case "main.Floating":
+		case FLOATINGTASKS:
 			System.out.println(processUpdate.getDescription());
 			System.out.println(taskToUpdate.toString());
 			if (processUpdate.hasStartDate()) {
@@ -732,8 +746,9 @@ public class Logic {
 			updateCommand.setCurrentTask(taskToUpdate);
 			updateCommand.setUpdateTask(updatedTask);
 			undoCommandHistory.push(updateCommand);
+			redoCommandHistory.clear();
 			updateTaskLists();
-			updateRespectiveGUICol("ALL");
+			updateRespectiveGUICol(ALLCOLLUMS);
 			return true;
 		} else {
 			System.out.println("Its null");
@@ -774,7 +789,8 @@ public class Logic {
 			deleteCommand.setTaskDeleted(taskToDelete);
 			updateTaskLists();
 			undoCommandHistory.push(deleteCommand);
-			updateRespectiveGUICol("ALL");
+			redoCommandHistory.clear();
+			updateRespectiveGUICol(ALLCOLLUMS);
 			return true;
 		} else {
 			return false;
@@ -798,13 +814,13 @@ public class Logic {
 
 	private void updateRespectiveGUICol(String taskType) {
 		switch (taskType) {
-		case "main.Event":
+		case EVENTS:
 			fillEvents();
 			break;
-		case "main.Deadline":
+		case DEADLINES:
 			fillDeadlines();
 			break;
-		case "main.Floating":
+		case FLOATINGTASKS:
 			fillFloatings();
 			break;
 		default:
