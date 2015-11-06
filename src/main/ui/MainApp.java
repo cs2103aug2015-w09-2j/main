@@ -61,8 +61,8 @@ public class MainApp extends Application {
 		logic.setDisplayState(statusCode);
 	}
 
-	public void setHasNewOverdueTask(BooleanProperty hasNewOverdueTask) {
-		logic.setHasNewOverdueTask(hasNewOverdueTask);
+	public BooleanProperty getHasNewOverdueTask() {
+		return logic.getHasNewOverdueTask();
 	}
 
 	public String getSearchKeyword() {

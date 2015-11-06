@@ -2,6 +2,8 @@ package main.ui.view;
 
 import java.text.ParseException;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -20,6 +22,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import main.ui.MainApp;
 import main.ui.util.CommandListener;
 import main.ui.util.StatusListener;
@@ -81,7 +84,7 @@ public class MainLayoutController {
 		displayState.setValue(StatusListener.Status.ONGOING.getCode());
 		displayStatusLabel.setText(StatusListener.getStatusText(displayState.getValue()));
 
-		hasNewOverdueTask.setValue(false);
+		hasNewOverdueTask.setValue(Boolean.FALSE);
 		overdueLabel.setVisible(false);
 	}
 
@@ -96,7 +99,7 @@ public class MainLayoutController {
 		initialize();
 		setListeners();
 		mainApp.setDisplayState(displayState);
-		mainApp.setHasNewOverdueTask(hasNewOverdueTask);
+		this.hasNewOverdueTask = mainApp.getHasNewOverdueTask();
 	}
 
 	public void focusCommandBox() {
@@ -204,6 +207,8 @@ public class MainLayoutController {
 			responseBox.setId("response-box-fail");
 			responseLabel.setText("\"" + command + "\"" + " was unsuccessful");
 		}
+		ScaleTransition st = new ScaleTransition(Duration.millis(3000), responseBox);
+		st.play();
 	}
 
 	@FXML
