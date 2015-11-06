@@ -186,6 +186,11 @@ public class MainLayoutController {
 				} else {
 					displayStatusLabel.setText(statusText);
 				}
+
+				FadeTransition fadeIn = new FadeTransition(Duration.millis(1000), displayStatusLabel);
+				fadeIn.setFromValue(0);
+				fadeIn.setToValue(1);
+				fadeIn.play();
 			}
 
 		});
