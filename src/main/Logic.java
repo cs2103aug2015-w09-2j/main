@@ -5,6 +5,7 @@ import java.util.*;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.*;
 
 import main.ui.MainApp;
@@ -45,6 +46,7 @@ public class Logic {
 	 * Description Default Constructor
 	 */
 	private Logic() {
+		hasNewOverdueTask = new SimpleBooleanProperty();
 		updateTaskLists();
 		undoCommandHistory = new Stack<Command>();
 		redoCommandHistory = new Stack<Command>();
@@ -118,7 +120,7 @@ public class Logic {
 		allEvents = filterOverdueTask(allEvents);
 		allDeadlines = filterOverdueTask(allDeadlines);
 		if (fileStorage.readOverdueTask().size() > 0) {
-			hasNewOverdueTask.set(Boolean.TRUE);
+			hasNewOverdueTask.setValue(Boolean.TRUE);
 		}
 		Collections.sort(allEvents);
 		Collections.sort(allDeadlines);
@@ -906,8 +908,8 @@ public class Logic {
 		this.displayStatusCode = displayStatusCode;
 	}
 
-	public void setHasNewOverdueTask(BooleanProperty hasNewOverdueTask) {
-		this.hasNewOverdueTask = hasNewOverdueTask;
+	public BooleanProperty getHasNewOverdueTask() {
+		return hasNewOverdueTask;
 	}
 
 	public String getSearchKeyword() {
