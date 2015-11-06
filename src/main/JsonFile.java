@@ -84,10 +84,10 @@ public class JsonFile {
 				filePath = fs.getFilePath();
 				break;
 			case "DONE_FILE":
-				filePath = "done.json";
+				filePath = fs.getDonePath();
 				break;
 			case "OVERDUE_FILE":
-				filePath = "overdue.json";
+				filePath = fs.getOverduePath();
 				break;
 			default:
 				System.out.println("getJsonFileContent(String fileType) has a empty filePath");

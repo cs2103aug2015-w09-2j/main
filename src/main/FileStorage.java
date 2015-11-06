@@ -17,6 +17,8 @@ public class FileStorage {
 	private static String pathName;
 	private static Json json;
 	private static JsonFile jsonFile;
+	private static String globalDonePath;
+	private static String globalOverduePath;
 	
 	/**
 	 * This constructor will get and stores the directory of the 
@@ -27,7 +29,7 @@ public class FileStorage {
 		//pathName = "\\path.txt";
 		jsonFile = new JsonFile();
 		pathDir = "";
-		pathName = "path.txt";
+		pathName = "vodoPath";
 		filePath = currFilePath();
 		json = new Json(filePath);
 		
@@ -54,7 +56,8 @@ public class FileStorage {
 	 * @param task the task to be written into the done file
 	 */
 	public void writeDoneTask(Task task){
-		File file = new File("done.json");
+		//File file = new File("done.json");
+		File file = new File(globalDonePath);
 		if(!file.exists()){
 			createFile(file);
 			//Check file if it is in the json empty format
@@ -69,7 +72,8 @@ public class FileStorage {
 	 * @param task the task to be written into the overdue file
 	 */
 	public void writeOverdueTask(Task task){
-		File file = new File("overdue.json");
+		//File file = new File("overdue.json");
+		File file = new File(globalOverduePath);
 		if(!file.exists()){
 			createFile(file);
 			//Check file if it is in the json empty format
@@ -328,12 +332,28 @@ public class FileStorage {
 	 * @param newPath the new storage location which the user wants to store his data
 	 */
 	public void setFilePath(String newPath){
-		writeFile(newPath, pathDir + pathName, false, false);
-
+		
+		//Split to get the home directory
+		int index = newPath.lastIndexOf("\\");
+		String dir = newPath.substring(0, index);
+		
+		String content = "";
+		if(newPath.contains(".json")){
+			content = newPath + ";" + dir + "\\done.json;" + dir + "\\overdue.json;";
+		}else{
+			content = newPath + ".json;" + dir + "\\done.json;" + dir + "\\overdue.json;";
+		}
+		
+		newPath = appendJsonFileType(newPath);
+		writeFile(content, pathDir + pathName, false, false);
 		File newFile = new File(newPath);
 		createFile(newFile);
+		
+		
 		copyFile(newPath);
 		filePath = newPath;
+		
+		
 	}
 
 	/**
@@ -342,6 +362,22 @@ public class FileStorage {
 	 */
 	public String getFilePath(){
 		return filePath;
+	}
+	
+	/**
+	 * The methods retrieve and return the current directory of the storage file
+	 * @return the directory of the storage file
+	 */
+	public String getDonePath(){
+		return globalDonePath;
+	}
+	
+	/**
+	 * The methods retrieve and return the current directory of the storage file
+	 * @return the directory of the storage file
+	 */
+	public String getOverduePath(){
+		return globalOverduePath;
 	}
 
 		
@@ -352,20 +388,42 @@ public class FileStorage {
 	private static String currFilePath(){
 
 		//String defaultDataPath = System.getProperty("user.home") + "\\VODO\\data.txt";
-		String defaultDataPath = "data.json";//"data.txt";
+		String defaultDataPath = "data.json";//"data.txt";  //THE WRITE PATH IS HERE!!!!!!!!!!!!!
+		String donePath = "done.json";
+		String overduePath = "overdue.json"; 
 		File pathFile = new File(pathDir + pathName);
 		File dataFile = new File(defaultDataPath);
+		File doneFile = new File(donePath);
+		File overdueFile = new File(overduePath);
 		String filePath;
 
 		if(!pathFile.exists()){
 			createFile(pathFile);
 			createFile(dataFile);
+			createFile(doneFile);
+			createFile(overdueFile);
 			jsonFile.createJsonFile(dataFile);
+			jsonFile.createJsonFile(doneFile);
+			jsonFile.createJsonFile(overdueFile);
 			//hideFolder(pathDir);
-			writeFile(defaultDataPath, pathDir + pathName, false, false);
+			String content = defaultDataPath + ";" + donePath + ";" + overduePath + ";";
+			
+			writeFile(content, pathDir + pathName, false, false);
 		}
 		filePath = readPath(pathDir + pathName);
-
+		//filePath array to get storage, done and overdue file String.split.(",");
+		//doneFilePath = array[1];
+		//overduePath = array[2];
+		//New Code
+		
+		
+		String[] pathArr = filePath.split(";");
+		
+		filePath = pathArr[0];
+		globalDonePath = pathArr[1].substring(1);
+		globalOverduePath = pathArr[2].substring(1);
+		
+		
 		return filePath;
 	}
 
@@ -403,8 +461,19 @@ public class FileStorage {
 		try {
 			FileWriter fileWriter = new FileWriter(file, isAppend);
 			BufferedWriter bufferedWriter =new BufferedWriter(fileWriter);
+			
+			StringBuilder sb = new StringBuilder(text);
+			int index = sb.indexOf(";");
+			while (index >=0){
+				
+				if(index != -1){
+			    	sb.insert(index+1, "\n");
+			    }
+				index = sb.indexOf(";", index+1);	
+				
+			}
 
-			bufferedWriter.write(text);
+			bufferedWriter.write(sb.toString());
 
 			if(isNewLine == true){
 				bufferedWriter.newLine();
@@ -443,11 +512,21 @@ public class FileStorage {
 	 * @param newPath the directory of the new storage file
 	 */
 	private static void copyFile(String newPath){
-
-		File oldFile = new File(filePath);
-		File newFile = new File(newPath);
+		
+		int index = newPath.lastIndexOf("\\");
+		String dir = newPath.substring(0, index);
+		newPath = appendJsonFileType(newPath);
+		File oldDataFile = new File(filePath);
+		File newDataFile = new File(newPath);
+		File oldDoneFile = new File(globalDonePath);
+		File newDoneFile = new File(dir + "\\done.json");
+		File oldOverdueFile = new File(globalOverduePath);
+		File newOverdueFile = new File(dir + "\\overdue.json");
+		
 		try {
-			Files.copy(oldFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(oldDataFile.toPath(), newDataFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(oldDoneFile.toPath(), newDoneFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(oldOverdueFile.toPath(), newOverdueFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			//System.out.println("copied");
 		} catch (IOException e) {
 			System.out.println("Copy file fail");
@@ -456,6 +535,13 @@ public class FileStorage {
 		}
 	}
 	
+	private static String appendJsonFileType(String newPath){
+		if(newPath.contains(".json")){
+			return newPath;
+		}
+		return  newPath + ".json";
+		
+	}
 	
 	
 	/**
