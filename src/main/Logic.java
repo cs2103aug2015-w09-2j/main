@@ -124,6 +124,8 @@ public class Logic {
 		if (fileStorage.readOverdueTask().size() > 0) {
 			hasNewOverdueTask.setValue(Boolean.TRUE);
 			System.out.println(fileStorage.readOverdueTask().size() + " & state is" + hasNewOverdueTask.getValue());
+		}else{
+			hasNewOverdueTask.setValue(Boolean.FALSE);
 		}
 		Collections.sort(allEvents);
 		Collections.sort(allDeadlines);
