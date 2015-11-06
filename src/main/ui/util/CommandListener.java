@@ -2,11 +2,11 @@ package main.ui.util;
 
 public class CommandListener {
 
-	public static final String HELP_MAIN = "Available commands: add/delete/update/clear/display/done/undo/redo/search/exit";
+	public static final String HELP_MAIN = "Available commands: add, delete, update, show, done, undo, redo, search, exit";
 	private static final String HELP_ADD = "add <task description> [from/by/at] <date&time> [to] <date&time>";
-	private static final String HELP_DELETE = "delete <number>, delete <number> [,/-] <number>";
+	private static final String HELP_DELETE = "delete <number>, delete <number> [,/-] <number>, delete all";
 	private static final String HELP_UPDATE = "update <number>, update <number> [,/-] <number>";
-	private static final String HELP_DISPLAY = "display [ongoing/overdue/done/events/deadlines/floatings]";
+	private static final String HELP_DISPLAY = "show [ongoing/overdue/done]";
 	private static final String HELP_DONE = "done <number>, done <number> [,/-] <number>";
 	private static final String HELP_UNDO = "undo, undo [number of times]";
 	private static final String HELP_REDO = "redo, redo [number of times]";

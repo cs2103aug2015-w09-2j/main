@@ -18,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 import main.ui.MainApp;
 import main.ui.util.CommandListener;
@@ -53,6 +54,10 @@ public class MainLayoutController {
 	private Label displayStatusLabel;
 	@FXML
 	private Label overdueLabel;
+	@FXML
+	private Label responseLabel;
+	@FXML
+	private AnchorPane responseBox;
 
 
 	public MainLayoutController() {
@@ -191,11 +196,24 @@ public class MainLayoutController {
 		floatingsListView.setItems(floatings);
 	}
 
+	private void respondTo(String command, boolean isSuccessful) {
+		if (isSuccessful) {
+			responseBox.setId("response-box-success");
+			responseLabel.setText("\"" + command + "\"" + " was successful");
+		} else {
+			responseBox.setId("response-box-fail");
+			responseLabel.setText("\"" + command + "\"" + " was unsuccessful");
+		}
+	}
+
 	@FXML
 	private void getCommand() throws NoSuchFieldException, ParseException { // exception will be handled by Logic later, remove this later
+		boolean isSuccessful;
 		String command = commandBox.getText();
 
-		mainApp.processCommand(command);
+		isSuccessful = mainApp.processCommand(command);
+		respondTo(command, isSuccessful);
+
 		commandBox.setText("");
 	}
 
