@@ -87,12 +87,12 @@
 }
 
 #response-box-success {
-	-fx-background-color: #A5D6A7;
+	-fx-background-color: rgba(165,214,167,1); /* a5d6a7 */
 	-fx-background-radius: 6px;
 }
 
 #response-box-fail {
-	-fx-background-color: #EF9A9A;
+	-fx-background-color: rgba(239,154,154,1); /* #ef9a9a */
 	-fx-background-radius: 6px;
 }
 

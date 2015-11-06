@@ -3,7 +3,9 @@ package main.ui.view;
 import java.text.ParseException;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
+import javafx.animation.SequentialTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -207,8 +209,17 @@ public class MainLayoutController {
 			responseBox.setId("response-box-fail");
 			responseLabel.setText("\"" + command + "\"" + " was unsuccessful");
 		}
-		ScaleTransition st = new ScaleTransition(Duration.millis(3000), responseBox);
-		st.play();
+		ScaleTransition st1 = new ScaleTransition(Duration.millis(200), responseBox);
+		st1.setFromY(0);
+		st1.setToY(1);
+
+		ScaleTransition st2 = new ScaleTransition(Duration.millis(200), responseBox);
+		st2.setFromY(1);
+		st2.setToY(0);
+
+		SequentialTransition st3 = new SequentialTransition();
+		st3.getChildren().addAll(st1, new PauseTransition(Duration.millis(2000)), st2);
+		st3.play();
 	}
 
 	@FXML
