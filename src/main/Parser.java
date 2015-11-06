@@ -140,7 +140,8 @@ public class Parser {
 			}
 		}
 
-		return strCommand.replace(dateBuffer.pop(), "").trim();
+		
+		return dateBuffer.size() != 0 ? strCommand.replace(dateBuffer.pop(), "").trim() : strCommand;
 	}
 
 	private TimeClass getTime(String strCommand) {
@@ -932,7 +933,7 @@ public class Parser {
 		// String command = "update new swimming -d swimming";
 		Command t;
 		String command;
-		command = "update 10 -e 15/11 5pm";
+		command = "update 1 -s tomorrow 1105";
 		t = p.parse(command);
 		
 		System.out.println(((Event) t.getTask()).getEndTime().to12HourFormat());
