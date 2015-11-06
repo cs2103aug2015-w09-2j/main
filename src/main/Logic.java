@@ -25,6 +25,7 @@ public class Logic {
 	private static final String DISPLAY_ONGOING_TASKS = "ongoing";
 	private static final String DISPLAY_DONE_TASKS = "done";
 	private static final String DISPLAY_OVERDUE_TASKS = "overdue";
+	private static int currentView; 
 
 	/**
 	 * Description Constructor : Creates and instance of the Logic class with
@@ -126,6 +127,7 @@ public class Logic {
 			System.out.println(fileStorage.readOverdueTask().size() + " & state is" + hasNewOverdueTask.getValue());
 		}else{
 			hasNewOverdueTask.setValue(Boolean.FALSE);
+			System.out.println(fileStorage.readOverdueTask().size() + " & state is" + hasNewOverdueTask.getValue());
 		}
 		Collections.sort(allEvents);
 		Collections.sort(allDeadlines);
@@ -365,17 +367,17 @@ public class Logic {
 			fillEvents();
 			fillFloatings();
 			fillDeadlines();
-			displayStatusCode.set(0);
+			displayStatusCode.set(StatusListener.Status.ONGOING.getCode());
 			return true;
 		} else if (displayCommand.getDisplayString().equals(DISPLAY_DONE_TASKS)) {
 			readDone();
-			displayStatusCode.set(1);
+			displayStatusCode.set(StatusListener.Status.DONE.getCode());
 			return true;
 		} else if (displayCommand.getDisplayString().equals(DISPLAY_OVERDUE_TASKS)) {
 			readOverdue();
 			hasNewOverdueTask.set(Boolean.FALSE);
 			System.out.println(fileStorage.readOverdueTask().size() + " & state is" + hasNewOverdueTask.getValue());
-			displayStatusCode.set(2);
+			displayStatusCode.set(StatusListener.Status.OVERDUE.getCode());
 			return true;
 		} else {
 			return false;
