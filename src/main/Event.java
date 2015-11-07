@@ -7,7 +7,7 @@ public class Event extends Task {
 	private DateClass endDate;
 	private TimeClass startTime;
 	private TimeClass endTime;
-	private boolean isDone ; 
+	 
 
 	/**
 	 * Description Constructor : Creates a event task, which is a subclass of the Command abstract class.
@@ -24,7 +24,7 @@ public class Event extends Task {
 		this.endDate = endDate;
 		this.startTime = startTime;
 		this.endTime = endTime;
-		isDone = false;
+		
 	}
 
 	/**
@@ -92,11 +92,5 @@ public class Event extends Task {
 		}
 	}
 
-	public boolean isDone() {
-		return isDone;
-	}
-
-	public void setDone(boolean isDone) {
-		this.isDone = isDone;
-	}
+	
 }

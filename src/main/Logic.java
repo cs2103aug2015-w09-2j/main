@@ -25,7 +25,7 @@ public class Logic {
 	private static final String DISPLAY_ONGOING_TASKS = "ongoing";
 	private static final String DISPLAY_DONE_TASKS = "done";
 	private static final String DISPLAY_OVERDUE_TASKS = "overdue";
-	private static int currentView; 
+	private static int currentView = StatusListener.Status.ONGOING.getCode();
 
 	/**
 	 * Description Constructor : Creates and instance of the Logic class with
@@ -125,7 +125,7 @@ public class Logic {
 		if (fileStorage.readOverdueTask().size() > 0) {
 			hasNewOverdueTask.setValue(Boolean.TRUE);
 			System.out.println(fileStorage.readOverdueTask().size() + " & state is" + hasNewOverdueTask.getValue());
-		}else{
+		} else {
 			hasNewOverdueTask.setValue(Boolean.FALSE);
 			System.out.println(fileStorage.readOverdueTask().size() + " & state is" + hasNewOverdueTask.getValue());
 		}
@@ -159,11 +159,11 @@ public class Logic {
 						taskList.add(currentTask);
 					} else {
 						fileStorage.writeOverdueTask(currentTask);
-						fileStorage.deleteTask(currentTask);
+						deleteTaskFromCurrentView(currentTask);
 					}
 				} else {
 					fileStorage.writeOverdueTask(currentTask);
-					fileStorage.deleteTask(currentTask);
+					deleteTaskFromCurrentView(currentTask);
 				}
 				break;
 			case DEADLINES:
@@ -185,11 +185,11 @@ public class Logic {
 						taskList.add(currentTask);
 					} else {
 						fileStorage.writeOverdueTask(currentTask);
-						fileStorage.deleteTask(currentTask);
+						deleteTaskFromCurrentView(currentTask);
 					}
 				} else {
 					fileStorage.writeOverdueTask(currentTask);
-					fileStorage.deleteTask(currentTask);
+					deleteTaskFromCurrentView(currentTask);
 				}
 				break;
 			default:
@@ -302,16 +302,17 @@ public class Logic {
 	private boolean clearAllTask(Command inputCommand) {
 		Clear clearAllTask = (Clear) inputCommand;
 		ArrayList<Task> taskCleared = new ArrayList<Task>();
+		
 		for (Task currentTask : allEvents) {
-			fileStorage.deleteTask(currentTask);
+			deleteTaskFromCurrentView(currentTask);
 			taskCleared.add(currentTask);
 		}
 		for (Task currentTask : allDeadlines) {
-			fileStorage.deleteTask(currentTask);
+			deleteTaskFromCurrentView(currentTask);
 			taskCleared.add(currentTask);
 		}
 		for (Task currentTask : allFloatingTasks) {
-			fileStorage.deleteTask(currentTask);
+			deleteTaskFromCurrentView(currentTask);
 			taskCleared.add(currentTask);
 		}
 		updateTaskLists();
@@ -321,12 +322,23 @@ public class Logic {
 		return true;
 	}
 
+	private void deleteTaskFromCurrentView(Task currentTask) {
+		if(currentView == StatusListener.Status.DONE.getCode()){
+			fileStorage.deleteDoneTask(currentTask);
+		}else if(currentView == StatusListener.Status.OVERDUE.getCode()){
+			fileStorage.deletOverdueTask(currentTask);
+		}else{
+			fileStorage.deleteTask(currentTask);
+		}
+	}
+
 	private boolean done(Command inputCommand) {
-		updateTaskLists();
+		//updateTaskLists();
 		Set<Integer> tasksDone = ((Done) inputCommand).getTaskIDs();
 		ArrayList<Task> tasksSetDone = new ArrayList<Task>();
 		for (Integer i : tasksDone) {
-			if (i <= (allEvents.size() + allDeadlines.size() + allFloatingTasks.size())) {
+			if (i>0 && i <= (allEvents.size() + allDeadlines.size() + allFloatingTasks.size())) {
+				//deleteSingleTask(i);
 				tasksSetDone.add(markDone(i));
 				// return true;
 			} else {
@@ -344,17 +356,17 @@ public class Logic {
 	private Task markDone(Integer i) {
 		if (i <= allEvents.size()) {
 			fileStorage.writeDoneTask(allEvents.get(i - 1));
-			fileStorage.deleteTask(allEvents.get(i - 1));
+			deleteTaskFromCurrentView(allEvents.get(i - 1));
 			System.out.println("from event");
 			return allEvents.get(i - 1);
 		} else if (i <= allEvents.size() + allDeadlines.size()) {
 			fileStorage.writeDoneTask(allDeadlines.get(i - allEvents.size() - 1));
-			fileStorage.deleteTask(allDeadlines.get(i - allEvents.size() - 1));
+			deleteTaskFromCurrentView(allDeadlines.get(i - allEvents.size() - 1));
 			System.out.println("from deadline");
 			return allDeadlines.get(i - allEvents.size() - 1);
 		} else {
 			fileStorage.writeDoneTask(allFloatingTasks.get(i - allEvents.size() - allDeadlines.size() - 1));
-			fileStorage.deleteTask(allFloatingTasks.get(i - allEvents.size() - allDeadlines.size() - 1));
+			deleteTaskFromCurrentView(allFloatingTasks.get(i - allEvents.size() - allDeadlines.size() - 1));
 			System.out.println("from floatings");
 			return allFloatingTasks.get(i - allEvents.size() - allDeadlines.size() - 1);
 		}
@@ -367,16 +379,20 @@ public class Logic {
 			fillEvents();
 			fillFloatings();
 			fillDeadlines();
+			updateRespectiveGUICol(ALLCOLLUMS);
+			currentView = StatusListener.Status.ONGOING.getCode();
 			displayStatusCode.set(StatusListener.Status.ONGOING.getCode());
 			return true;
 		} else if (displayCommand.getDisplayString().equals(DISPLAY_DONE_TASKS)) {
 			readDone();
+			currentView = StatusListener.Status.DONE.getCode();
 			displayStatusCode.set(StatusListener.Status.DONE.getCode());
 			return true;
 		} else if (displayCommand.getDisplayString().equals(DISPLAY_OVERDUE_TASKS)) {
 			readOverdue();
 			hasNewOverdueTask.set(Boolean.FALSE);
 			System.out.println(fileStorage.readOverdueTask().size() + " & state is" + hasNewOverdueTask.getValue());
+			currentView = StatusListener.Status.OVERDUE.getCode();
 			displayStatusCode.set(StatusListener.Status.OVERDUE.getCode());
 			return true;
 		} else {
@@ -428,7 +444,7 @@ public class Logic {
 		allEvents.clear();
 		allDeadlines.clear();
 		// allFloatingTasks.clear();
-		searchKeyword = strSearchString+ " before " + beforeDate.toString();
+		searchKeyword = strSearchString + " before " + beforeDate.toString();
 		allEvents = fileStorage.searchEventTaskBeforeDate(strSearchString, beforeDate);
 		fillEvents();
 		allDeadlines = fileStorage.searchDeadlineTaskBeforeDate(strSearchString, beforeDate);
@@ -539,7 +555,7 @@ public class Logic {
 	private void redoDeleteCommand(Command redoCommand) {
 		undoCommandHistory.push(redoCommand);
 		for (Task currentTask : ((Delete) redoCommand).getTaskDeleted()) {
-			fileStorage.deleteTask(currentTask);
+			deleteTaskFromCurrentView(currentTask);
 		}
 		updateTaskLists();
 		updateRespectiveGUICol(ALLCOLLUMS);
@@ -556,7 +572,7 @@ public class Logic {
 		Clear redoClear = ((Clear) redoCommand);
 		ArrayList<Task> taskCleared = redoClear.getTaskCleared();
 		for (Task currentTask : taskCleared) {
-			fileStorage.deleteTask(currentTask);
+			deleteTaskFromCurrentView(currentTask);
 		}
 		updateTaskLists();
 	}
@@ -565,7 +581,7 @@ public class Logic {
 		ArrayList<Task> redoDoneTask = ((Done) redoCommand).getTasksSetDone();
 		for (Task currentTask : redoDoneTask) {
 			fileStorage.writeDoneTask(currentTask);
-			fileStorage.deleteTask(currentTask);
+			deleteTaskFromCurrentView(currentTask);
 			updateTaskLists();
 		}
 	}
@@ -606,7 +622,7 @@ public class Logic {
 	private void undoUpdateCommand(Command undoCommand) {
 		Update undoUpdate = (Update) undoCommand;
 		fileStorage.writeTask(undoUpdate.getCurrentTask());
-		fileStorage.deleteTask(undoUpdate.getUpdateTask());
+		fileStorage.deleteTask(undoUpdate.getUpdateTask());//check again how 
 		redoCommandHistory.push(undoUpdate);
 		updateTaskLists();
 		updateRespectiveGUICol(ALLCOLLUMS);
@@ -614,7 +630,7 @@ public class Logic {
 
 	private void redoUpdateCommand(Command undoCommand) {
 		Update redoUpdate = (Update) undoCommand;
-		fileStorage.deleteTask(redoUpdate.getCurrentTask());
+		fileStorage.deleteTask(redoUpdate.getCurrentTask());///check again how to do 
 		fileStorage.writeTask(redoUpdate.getUpdateTask());
 		redoCommandHistory.push(redoUpdate);
 		updateTaskLists();
@@ -663,7 +679,8 @@ public class Logic {
 		System.out.println(updateCommand.getTaskToUpdate().getDescription() + " ");
 		// System.out.println(processUpdate);
 		Task taskToUpdate;
-		if (processUpdate.getTaskID() <= (allEvents.size() + allDeadlines.size() + allFloatingTasks.size())) {
+		if (processUpdate.getTaskID() > 0
+				&& processUpdate.getTaskID() <= (allEvents.size() + allDeadlines.size() + allFloatingTasks.size())) {
 			taskToUpdate = deleteSingleTask(processUpdate.getTaskID());
 		} else {
 			return false;
@@ -774,7 +791,7 @@ public class Logic {
 		ArrayList<Task> taskToDelete = new ArrayList<Task>();
 		if (deleteCommand.hasTaskIDs()) {
 			for (Integer i : deleteCommand.getTaskIDs()) {
-				if (i <= (allEvents.size() + allDeadlines.size() + allFloatingTasks.size())) {
+				if (i > 0 && i <= (allEvents.size() + allDeadlines.size() + allFloatingTasks.size())) {
 					Task a = deleteSingleTask(i);
 					System.out.println(i + " " + a.toString() + " ");
 					taskToDelete.add(a);
@@ -788,7 +805,7 @@ public class Logic {
 			} else {
 				Task taskDelete = fileStorage.absoluteSearch(deleteCommand.getDeleteString()).get(0);
 				if (taskDelete != null) {
-					fileStorage.deleteTask(taskDelete);
+					deleteTaskFromCurrentView(taskDelete);
 					taskToDelete.add(taskDelete);
 					return true;
 				} else {
@@ -810,15 +827,15 @@ public class Logic {
 
 	private Task deleteSingleTask(int taskIndex) {
 		if (taskIndex <= allEvents.size()) {
-			fileStorage.deleteTask(allEvents.get(taskIndex - 1));
+			deleteTaskFromCurrentView(allEvents.get(taskIndex - 1));
 			return allEvents.get(taskIndex - 1);
 		} else if (taskIndex <= (allEvents.size() + allDeadlines.size())) {
 			int indexToDelete = taskIndex - allEvents.size() - 1;
-			fileStorage.deleteTask(allDeadlines.get(indexToDelete));
+			deleteTaskFromCurrentView(allDeadlines.get(indexToDelete));
 			return allDeadlines.get(indexToDelete);
 		} else {
 			int indexToDelete = taskIndex - allEvents.size() - allDeadlines.size() - 1;
-			fileStorage.deleteTask(allFloatingTasks.get(indexToDelete));
+			deleteTaskFromCurrentView(allFloatingTasks.get(indexToDelete));
 			return allFloatingTasks.get(indexToDelete);
 		}
 	}
