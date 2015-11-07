@@ -56,18 +56,7 @@ public class Logic {
 	}
 
 	private static Parser parser = new Parser();
-	// private static UserInterface UI = new UserInterface(); // [teddy] this
-	// will
-	// be deleted once
 	private FileStorage fileStorage = new FileStorage();
-	// private static Command.CommandType command;
-	// private static Command.CommandType undoCommand =
-	// Command.CommandType.UNKNOWN; // most
-	// recent
-	// undo
-	// command
-	// private static Task undoTaskObject;
-	// private static ArrayList<Task> taskHistory;
 	private static Stack<Command> undoCommandHistory;
 	private static Stack<Command> redoCommandHistory;
 	private static ArrayList<Task> allEvents;
@@ -523,6 +512,7 @@ public class Logic {
 			}
 			updateRespectiveGUICol(ALLCOLLUMS);
 		}
+		updateRespectiveGUICol(ALLCOLLUMS);
 	}
 
 	private void readOverdue() {
@@ -541,6 +531,7 @@ public class Logic {
 			}
 			updateRespectiveGUICol(ALLCOLLUMS);
 		}
+		updateRespectiveGUICol(ALLCOLLUMS);
 	}
 
 	private boolean redo() {
