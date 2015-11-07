@@ -22,6 +22,9 @@ public class JsonSearch {
 		ArrayList<Task> eventList = jsonTask.eventTaskArray(event);
 		ArrayList<Task> searchList = new ArrayList<Task>();
 		
+		if(isStringNull(keyword)){
+			return eventList;
+		}
 		String[] keywordArr = keyword.split(" ");
 		
 		for(int i=0; i<eventList.size(); i++){
@@ -58,6 +61,10 @@ public class JsonSearch {
 		String description,endDate, endTime;
 		ArrayList<Task> deadlineList = jsonTask.deadlineTaskArray(deadline);
 		ArrayList<Task> searchList = new ArrayList<Task>();
+		
+		if(isStringNull(keyword)){
+			return deadlineList;
+		}
 		
 		String[] keywordArr = keyword.split(" ");
 		
@@ -370,4 +377,12 @@ public class JsonSearch {
 		return allTasks;
 	}
 	
+	private boolean isStringNull(String word){
+		if(word==null || word.equals("")){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 }
