@@ -26,6 +26,7 @@ public class Logic {
 	private static final String DISPLAY_DONE_TASKS = "done";
 	private static final String DISPLAY_OVERDUE_TASKS = "overdue";
 	private static int currentView = StatusListener.Status.ONGOING.getCode();
+	private static int newOverdueTask = 0;
 
 	/**
 	 * Description Constructor : Creates and instance of the Logic class with
@@ -33,9 +34,7 @@ public class Logic {
 	 *
 	 * @param filename
 	 */
-	/*
-	 * public Logic(String filename) { fileName = filename; }
-	 */
+	
 
 	public static Logic getInstance() {
 		if (oneLogic == null) {
@@ -110,8 +109,10 @@ public class Logic {
 		allFloatingTasks = fileStorage.readFloatingTask();
 		allEvents = filterOverdueTask(allEvents);
 		allDeadlines = filterOverdueTask(allDeadlines);
-		System.out.println(fileStorage.readOverdueTask().size());
-		if (fileStorage.readOverdueTask().size() > 0) {
+		System.out.println(fileStorage.readOverdueTask().size() + " "  + hasNewOverdueTask.getValue());
+		
+		if (fileStorage.readOverdueTask().size() > newOverdueTask) {
+			//newOverdueTask = fileStorage.readOverdueTask().size();
 			hasNewOverdueTask.setValue(Boolean.TRUE);
 			System.out.println(fileStorage.readOverdueTask().size() + " & state is" + hasNewOverdueTask.getValue());
 		} else {
@@ -385,6 +386,7 @@ public class Logic {
 		} else if (displayCommand.getDisplayString().equals(DISPLAY_OVERDUE_TASKS)) {
 			readOverdue();
 			hasNewOverdueTask.set(Boolean.FALSE);
+			newOverdueTask = fileStorage.readOverdueTask().size();
 			System.out.println(fileStorage.readOverdueTask().size() + " & state is" + hasNewOverdueTask.getValue());
 			currentView = StatusListener.Status.OVERDUE.getCode();
 			displayStatusCode.set(StatusListener.Status.OVERDUE.getCode());
