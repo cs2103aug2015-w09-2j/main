@@ -4,19 +4,15 @@ import java.text.ParseException;
 
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
-import javafx.animation.PathTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 
 import javafx.fxml.FXML;
@@ -25,17 +21,12 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.shape.Line;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import main.ui.MainApp;
 import main.ui.util.CommandListener;
 import main.ui.util.StatusListener;
-import main.ui.util.StatusListener.Status;
 import main.Task;
-import main.Event;
-import main.Deadline;
-import main.Floating;
 
 public class MainLayoutController {
 
@@ -110,7 +101,7 @@ public class MainLayoutController {
 			overdueLabel.setVisible(true);
 
 			FadeTransition fadeInAndOut = new FadeTransition(Duration.millis(800), overdueLabel);
-			fadeInAndOut.setFromValue(0);
+			fadeInAndOut.setFromValue(0.4);
 			fadeInAndOut.setToValue(1);
 			fadeInAndOut.setCycleCount(Animation.INDEFINITE);
 			fadeInAndOut.setAutoReverse(true);
@@ -203,8 +194,8 @@ public class MainLayoutController {
 				if (newValue.equals(Boolean.TRUE)) {
 					overdueLabel.setVisible(true);
 
-					FadeTransition fadeInAndOut = new FadeTransition(Duration.millis(800), overdueLabel);
-					fadeInAndOut.setFromValue(0);
+					FadeTransition fadeInAndOut = new FadeTransition(Duration.millis(1000), overdueLabel);
+					fadeInAndOut.setFromValue(0.4);
 					fadeInAndOut.setToValue(1);
 					fadeInAndOut.setCycleCount(Animation.INDEFINITE);
 					fadeInAndOut.setAutoReverse(true);
