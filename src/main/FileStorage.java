@@ -31,7 +31,7 @@ public class FileStorage {
 		pathDir = "";
 		pathName = "vodoPath";
 		filePath = currFilePath();
-		json = new Json(filePath);
+		json = new Json(filePath, globalDonePath, globalOverduePath);
 		
 	
 	}
@@ -42,11 +42,7 @@ public class FileStorage {
 	 */
 	public void writeTask(Task task){
 		File file = new File(filePath);
-		if(!file.exists()){
-			createFile(file);
-			//Check file if it is in the json empty format
-			jsonFile.createJsonFile(file);
-		}
+		checkFileExist();
 		jsonFile.isJsonFileEmpty(file);
 		json.writeTask(task);
 	}
@@ -56,13 +52,8 @@ public class FileStorage {
 	 * @param task the task to be written into the done file
 	 */
 	public void writeDoneTask(Task task){
-		//File file = new File("done.json");
 		File file = new File(globalDonePath);
-		if(!file.exists()){
-			createFile(file);
-			//Check file if it is in the json empty format
-			jsonFile.createJsonFile(file);
-		}
+		checkFileExist();
 		jsonFile.isJsonFileEmpty(file);
 		json.writeDoneTask(task);
 	}
@@ -72,13 +63,8 @@ public class FileStorage {
 	 * @param task the task to be written into the overdue file
 	 */
 	public void writeOverdueTask(Task task){
-		//File file = new File("overdue.json");
 		File file = new File(globalOverduePath);
-		if(!file.exists()){
-			createFile(file);
-			//Check file if it is in the json empty format
-			jsonFile.createJsonFile(file);
-		}
+		checkFileExist();
 		jsonFile.isJsonFileEmpty(file);
 		json.writeOverdueTask(task);
 	}
@@ -88,6 +74,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of done tasks
 	 */
 	public ArrayList<Task> readDoneTask(){
+		checkFileExist();
 		return json.readDoneTask();
 	}
 	
@@ -96,6 +83,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of overdue tasks
 	 */
 	public ArrayList<Task> readOverdueTask(){
+		checkFileExist();
 		return json.readOverdueTask();
 	}
 	
@@ -104,6 +92,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of event tasks
 	 */
 	public ArrayList<Task> readEventTask(){
+		checkFileExist();
 		return json.readEventTask();
 	}
 	
@@ -112,6 +101,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of deadline tasks
 	 */
 	public ArrayList<Task> readDeadlineTask(){
+		checkFileExist();
 		return json.readDeadlineTask();
 	}
 	
@@ -120,6 +110,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of floating tasks
 	 */
 	public ArrayList<Task> readFloatingTask(){
+		checkFileExist();
 		return json.readFloatingTask();
 	}
 	
@@ -128,6 +119,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of event, deadline and floating tasks
 	 */
 	public ArrayList<Task> readAllTask(){
+		checkFileExist();
 		return json.readAllTask();
 	}
 	
@@ -137,6 +129,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of event tasks which contains the keyword
 	 */
 	public ArrayList<Task>searchEventTask(String keyword){
+		checkFileExist();
 		return json.searchEventTask(keyword);
 	}
 		
@@ -146,6 +139,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of deadline tasks which contains the keyword
 	 */
 	public ArrayList<Task>searchDeadlineTask(String keyword){
+		checkFileExist();
 		return json.searchDeadlineTask(keyword);
 	}
 	
@@ -155,6 +149,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of floating tasks which contains the keyword
 	 */
 	public ArrayList<Task>searchFloatingTask(String keyword){
+		checkFileExist();
 		return json.searchFloatingTask(keyword);
 	}
 	
@@ -164,6 +159,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of event, deadline and floating tasks which contains the keyword
 	 */
 	public ArrayList<Task>searchAllTask(String keyword){
+		checkFileExist();
 		return json.searchAllTask(keyword);
 	}
 	
@@ -173,6 +169,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of event, deadline and floating tasks which matches the task exactly
 	 */
 	public ArrayList<Task>absoluteSearch(String task){
+		checkFileExist();
 		return json.absoluteSearch(task);
 	}
 	
@@ -186,6 +183,7 @@ public class FileStorage {
 	 * both the task and taskInfo exactly
 	 */
 	public ArrayList<Task>absoluteSearch(String task, String taskInfo){
+		checkFileExist();
 		return json.absoluteSearch(task, taskInfo);
 	}
 	
@@ -195,6 +193,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of event tasks ends before the given date
 	 */
 	public ArrayList<Task>searchEventTaskBeforeDate(String keyword, DateClass date){
+		checkFileExist();
 		return json.searchEventTaskBeforeDate(keyword, date);
 	}
 	
@@ -204,6 +203,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of deadline tasks ends before the given date
 	 */
 	public ArrayList<Task>searchDeadlineTaskBeforeDate(String keyword, DateClass date){
+		checkFileExist();
 		return json.searchDeadlineTaskBeforeDate(keyword, date);
 	}
 	
@@ -213,6 +213,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of event, deadline and tasks ends before the given date
 	 */
 	public ArrayList<Task>searchAllTaskBeforeDate(String keyword, DateClass date){
+		checkFileExist();
 		return json.searchAllTaskBeforeDate(keyword, date);
 	}
 	
@@ -223,6 +224,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of event tasks which falls on the given date
 	 */
 	public ArrayList<Task>searchEventTaskOnDate(String keyword, DateClass date){
+		checkFileExist();
 		return json.searchEventTaskOnDate(keyword, date);
 	}
 	
@@ -232,6 +234,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of deadline tasks which falls the given date
 	 */
 	public ArrayList<Task>searchDeadlineTaskOnDate(String keyword, DateClass date){
+		checkFileExist();
 		return json.searchDeadlineTaskOnDate(keyword, date);
 	}
 	
@@ -241,6 +244,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of event and deadline tasks which falls on the given date
 	 */
 	public ArrayList<Task>searchAllTaskOnDate(String keyword, DateClass date){
+		checkFileExist();
 		return json.searchAllTaskOnDate(keyword, date);
 	}
 	
@@ -250,6 +254,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of event tasks which are after the given date
 	 */
 	public ArrayList<Task>searchEventTaskAfterDate(String keyword, DateClass date){
+		checkFileExist();
 		return json.searchEventTaskAfterDate(keyword, date);
 	}
 	
@@ -259,6 +264,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of deadline tasks which are after the given date
 	 */
 	public ArrayList<Task>searchDeadlineTaskAfterDate(String keyword, DateClass date){
+		checkFileExist();
 		return json.searchDeadlineTaskAfterDate(keyword, date);
 	}
 	
@@ -268,6 +274,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of event and deadline tasks which are after the given date
 	 */
 	public ArrayList<Task>searchAllTaskAfterDate(String keyword, DateClass date){
+		checkFileExist();
 		return json.searchAllTaskAfterDate(keyword, date);
 	}
 	
@@ -278,6 +285,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of event tasks which are from startDate to endDate
 	 */
 	public ArrayList<Task>searchEventTaskBetweenDates(String keyword, DateClass startDate, DateClass endDate){
+		checkFileExist();
 		return json.searchEventTaskBetweenDates(keyword, startDate, endDate);
 	}
 	
@@ -288,6 +296,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of deadline tasks which are from startDate to endDate
 	 */
 	public ArrayList<Task>searchDeadlineTaskBetweenDates(String keyword, DateClass startDate, DateClass endDate){
+		checkFileExist();
 		return json.searchDeadlineTaskBetweenDates(keyword, startDate, endDate);
 	}
 	
@@ -298,6 +307,7 @@ public class FileStorage {
 	 * @return ArrayList<Task> of event and deadline tasks which are from startDate to endDate
 	 */
 	public ArrayList<Task>searchAllTaskBetweenDates(String keyword, DateClass startDate, DateClass endDate){
+		checkFileExist();
 		return json.searchAllTaskBetweenDates(keyword, startDate, endDate);
 	}
 	
@@ -309,6 +319,7 @@ public class FileStorage {
 	 * @param task task to be deleted
 	 */
 	public void deleteTask(Task task){
+		checkFileExist();
 		json.deleteFromStorageFile(task);
 	}
 	
@@ -317,6 +328,7 @@ public class FileStorage {
 	 * @param task task to be deleted
 	 */
 	public void deleteDoneTask(Task task){
+		checkFileExist();
 		json.deleteFromDoneFile(task);
 	}
 	
@@ -325,33 +337,31 @@ public class FileStorage {
 	 * @param task task to be deleted
 	 */
 	public void deletOverdueTask(Task task){
+		checkFileExist();
 		json.deleteFromOverdueFile(task);
 	}
 	/**
 	 * This methods updates and set the new storage file path
 	 * @param newPath the new storage location which the user wants to store his data
 	 */
-	public void setFilePath(String newPath){
+	public void setFilePath(String dir){
 		
 		//Split to get the home directory
-		int index = newPath.lastIndexOf("\\");
-		String dir = newPath.substring(0, index);
+		//int index = newPath.lastIndexOf("\\");
+		//String dir = newPath.substring(0, index);
 		
 		String content = "";
-		if(newPath.contains(".json")){
-			content = newPath + ";" + dir + "\\done.json;" + dir + "\\overdue.json;";
-		}else{
-			content = newPath + ".json;" + dir + "\\done.json;" + dir + "\\overdue.json;";
-		}
 		
-		newPath = appendJsonFileType(newPath);
+		content = dir + "\\data.json;" + dir + "\\done.json;" + dir + "\\overdue.json;";
+		
+		//newPath = appendJsonFileType(newPath);
 		writeFile(content, pathDir + pathName, false, false);
-		File newFile = new File(newPath);
+		File newFile = new File(dir + "\\data.json");
 		createFile(newFile);
 		
 		
-		copyFile(newPath);
-		filePath = newPath;
+		copyFile(dir);
+		filePath = dir + "\\data.json";
 		
 		
 	}
@@ -511,13 +521,14 @@ public class FileStorage {
 	 * This methods copy the content of the old file to a new file
 	 * @param newPath the directory of the new storage file
 	 */
-	private static void copyFile(String newPath){
+	private static void copyFile(String dir){
 		
-		int index = newPath.lastIndexOf("\\");
-		String dir = newPath.substring(0, index);
-		newPath = appendJsonFileType(newPath);
+		//int index = newPath.lastIndexOf("\\");
+		//String dir = newPath.substring(0, index);
+		//newPath = appendJsonFileType(newPath);
+		
 		File oldDataFile = new File(filePath);
-		File newDataFile = new File(newPath);
+		File newDataFile = new File(dir + "\\data.json");
 		File oldDoneFile = new File(globalDonePath);
 		File newDoneFile = new File(dir + "\\done.json");
 		File oldOverdueFile = new File(globalOverduePath);
@@ -543,6 +554,27 @@ public class FileStorage {
 		
 	}
 	
+	private static void checkFileExist(){
+		File storageFile = new File(filePath);
+		File doneFile = new File(globalDonePath);
+		File overdueFile = new File(globalOverduePath);
+		
+		if(!storageFile.exists()){
+			createFile(storageFile);
+			//Check file if it is in the json empty format
+			jsonFile.createJsonFile(storageFile);
+		}
+		if(!doneFile.exists()){
+			createFile(doneFile);
+			//Check file if it is in the json empty format
+			jsonFile.createJsonFile(doneFile);
+		}
+		if(!overdueFile.exists()){
+			createFile(overdueFile);
+			//Check file if it is in the json empty format
+			jsonFile.createJsonFile(overdueFile);
+		}
+	}
 	
 	/**
 	 * Search and return all events tasks which contains both keyword1 and keyword2
