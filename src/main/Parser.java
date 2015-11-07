@@ -188,6 +188,7 @@ public class Parser {
 
 	private Update parseUpdateCommand(String strCommand) {
 
+		
 		strCommand = parserUtils.removeNWords(1, strCommand);
 		
 		UpdateTask updateTask = new UpdateTask();
@@ -748,8 +749,10 @@ public class Parser {
 	public Command parse(String strCommand) {
 
 		Command parsedCommand;
-
-		if (isAnAddCommand(strCommand)) {
+		
+		if(strCommand.equals("")){
+			parsedCommand = null;
+		} else if (isAnAddCommand(strCommand)) {
 			parsedCommand = parseAddCommand(strCommand);
 		} else if (isAnUpdateCommand(strCommand)) {
 			parsedCommand = parseUpdateCommand(strCommand);
@@ -775,7 +778,7 @@ public class Parser {
 			parsedCommand = null;
 		}
 
-		return parsedCommand;
+		return parsedCommand == null ? new Command(CommandType.UNKNOWN) : parsedCommand;
 	}
 	
 	public static void main(String[] args) throws NoSuchFieldException, ParseException {
