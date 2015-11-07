@@ -2,7 +2,9 @@ package main.ui.view;
 
 import java.text.ParseException;
 
+import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
+import javafx.animation.PathTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
@@ -23,6 +25,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Line;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import main.ui.MainApp;
@@ -97,7 +100,22 @@ public class MainLayoutController {
 		initialize();
 		mainApp.setDisplayState(displayState);
 		this.hasNewOverdueTask = mainApp.getHasNewOverdueTask();
+		checkInitialHasNewOverdueTask();
 		setListeners();
+	}
+
+	private void checkInitialHasNewOverdueTask() {
+		// TODO Auto-generated method stub
+		if (hasNewOverdueTask.getValue().equals(Boolean.TRUE)) {
+			overdueLabel.setVisible(true);
+
+			FadeTransition fadeInAndOut = new FadeTransition(Duration.millis(800), overdueLabel);
+			fadeInAndOut.setFromValue(0);
+			fadeInAndOut.setToValue(1);
+			fadeInAndOut.setCycleCount(Animation.INDEFINITE);
+			fadeInAndOut.setAutoReverse(true);
+			fadeInAndOut.play();
+		}
 	}
 
 	public void focusCommandBox() {
@@ -168,6 +186,11 @@ public class MainLayoutController {
 				} else {
 					displayStatusLabel.setText(statusText);
 				}
+
+				FadeTransition fadeIn = new FadeTransition(Duration.millis(1000), displayStatusLabel);
+				fadeIn.setFromValue(0);
+				fadeIn.setToValue(1);
+				fadeIn.play();
 			}
 
 		});
@@ -179,6 +202,14 @@ public class MainLayoutController {
 				System.out.println(newValue);
 				if (newValue.equals(Boolean.TRUE)) {
 					overdueLabel.setVisible(true);
+
+					FadeTransition fadeInAndOut = new FadeTransition(Duration.millis(800), overdueLabel);
+					fadeInAndOut.setFromValue(0);
+					fadeInAndOut.setToValue(1);
+					fadeInAndOut.setCycleCount(Animation.INDEFINITE);
+					fadeInAndOut.setAutoReverse(true);
+					fadeInAndOut.play();
+
 				} else {
 					overdueLabel.setVisible(false);
 				}
@@ -206,17 +237,17 @@ public class MainLayoutController {
 			responseBox.setId("response-box-fail");
 			responseLabel.setText("\"" + command + "\"" + " was unsuccessful");
 		}
-		ScaleTransition st1 = new ScaleTransition(Duration.millis(200), responseBox);
-		st1.setFromY(0);
-		st1.setToY(1);
+		ScaleTransition scaleIn = new ScaleTransition(Duration.millis(200), responseBox);
+		scaleIn.setFromY(0);
+		scaleIn.setToY(1);
 
-		ScaleTransition st2 = new ScaleTransition(Duration.millis(200), responseBox);
-		st2.setFromY(1);
-		st2.setToY(0);
+		ScaleTransition scaleOut = new ScaleTransition(Duration.millis(200), responseBox);
+		scaleOut.setFromY(1);
+		scaleOut.setToY(0);
 
-		SequentialTransition st3 = new SequentialTransition();
-		st3.getChildren().addAll(st1, new PauseTransition(Duration.millis(2000)), st2);
-		st3.play();
+		SequentialTransition sequence = new SequentialTransition();
+		sequence.getChildren().addAll(scaleIn, new PauseTransition(Duration.millis(2000)), scaleOut);
+		sequence.play();
 	}
 
 	@FXML
