@@ -234,17 +234,17 @@ public class JsonSearch {
 			
 			switch(option){
 				case "BEFORE":
-					if(((Event)task).getEndDate().compareTo(date) < 0){
+					if(((Event)task).getStartDate().compareTo(date) < 0 || ((Event)task).getEndDate().compareTo(date) < 0){
 						searchList.add(task);
 					}
 					break;
 				case "ON":
-					if(((Event)task).getEndDate().compareTo(date) == 0){
+					if(((Event)task).getStartDate().compareTo(date) <= 0 && ((Event)task).getEndDate().compareTo(date) >= 0){
 						searchList.add(task);
 					}
 					break;
 				case "AFTER":
-					if(((Event)task).getEndDate().compareTo(date) > 0){
+					if(((Event)task).getStartDate().compareTo(date) > 0 || ((Event)task).getEndDate().compareTo(date) > 0){
 						searchList.add(task);
 					}
 					break;
