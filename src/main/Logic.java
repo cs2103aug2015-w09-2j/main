@@ -229,19 +229,24 @@ public class Logic {
 			success = done(inputCommand);
 			// displayStatusCode.set(1);
 			// success = true;
+			displayStatusCode.set(StatusListener.Status.ONGOING.getCode());
 			break;
 		case DELETE:
 			success = deleteTask(inputCommand);
+			displayStatusCode.set(StatusListener.Status.ONGOING.getCode());
 			break;
 		case CLEAR:
 			success = clearAllTask(inputCommand);
+			displayStatusCode.set(StatusListener.Status.ONGOING.getCode());
 			break;
 		case SEARCH:
 			success = search(inputCommand);
-			if (displayStatusCode.get() == StatusListener.Status.SEARCH.getCode()) {
-				displayStatusCode.set(StatusListener.Status.NEWSEARCH.getCode());
-			} else {
-				displayStatusCode.set(StatusListener.Status.SEARCH.getCode());
+			if (success) {
+				if (displayStatusCode.get() == StatusListener.Status.SEARCH.getCode()) {
+					displayStatusCode.set(StatusListener.Status.NEWSEARCH.getCode());
+				} else {
+					displayStatusCode.set(StatusListener.Status.SEARCH.getCode());
+				}
 			}
 			break;
 		case UNDO:
@@ -302,7 +307,7 @@ public class Logic {
 	private boolean clearAllTask(Command inputCommand) {
 		Clear clearAllTask = (Clear) inputCommand;
 		ArrayList<Task> taskCleared = new ArrayList<Task>();
-		
+
 		for (Task currentTask : allEvents) {
 			deleteTaskFromCurrentView(currentTask);
 			taskCleared.add(currentTask);
@@ -323,22 +328,22 @@ public class Logic {
 	}
 
 	private void deleteTaskFromCurrentView(Task currentTask) {
-		if(currentView == StatusListener.Status.DONE.getCode()){
+		if (currentView == StatusListener.Status.DONE.getCode()) {
 			fileStorage.deleteDoneTask(currentTask);
-		}else if(currentView == StatusListener.Status.OVERDUE.getCode()){
+		} else if (currentView == StatusListener.Status.OVERDUE.getCode()) {
 			fileStorage.deletOverdueTask(currentTask);
-		}else{
+		} else {
 			fileStorage.deleteTask(currentTask);
 		}
 	}
 
 	private boolean done(Command inputCommand) {
-		//updateTaskLists();
+		// updateTaskLists();
 		Set<Integer> tasksDone = ((Done) inputCommand).getTaskIDs();
 		ArrayList<Task> tasksSetDone = new ArrayList<Task>();
 		for (Integer i : tasksDone) {
-			if (i>0 && i <= (allEvents.size() + allDeadlines.size() + allFloatingTasks.size())) {
-				//deleteSingleTask(i);
+			if (i > 0 && i <= (allEvents.size() + allDeadlines.size() + allFloatingTasks.size())) {
+				// deleteSingleTask(i);
 				tasksSetDone.add(markDone(i));
 				// return true;
 			} else {
@@ -420,7 +425,11 @@ public class Logic {
 		allEvents.clear();
 		allDeadlines.clear();
 		// allFloatingTasks.clear();
-		searchKeyword = strSearchString + " between " + firstDate.toString() + " " + secondDate.toString();
+		if (strSearchString != null) {
+			searchKeyword = strSearchString + " between " + firstDate.toString() + " " + secondDate.toString();
+		} else {
+			searchKeyword = "between " + firstDate.toString() + " " + secondDate.toString();
+		}
 		allEvents = fileStorage.searchEventTaskBetweenDates(strSearchString, firstDate, secondDate);
 		fillEvents();
 		allDeadlines = fileStorage.searchDeadlineTaskBetweenDates(strSearchString, firstDate, secondDate);
@@ -432,7 +441,11 @@ public class Logic {
 		allEvents.clear();
 		allDeadlines.clear();
 		// allFloatingTasks.clear();
-		searchKeyword = strSearchString + " after " + afterDate.toString();
+		if (strSearchString != null) {
+			searchKeyword = strSearchString + " after " + afterDate.toString();
+		} else {
+			searchKeyword = "after " + afterDate.toString();
+		}
 		allEvents = fileStorage.searchEventTaskAfterDate(strSearchString, afterDate);
 		fillEvents();
 		allDeadlines = fileStorage.searchDeadlineTaskAfterDate(strSearchString, afterDate);
@@ -444,7 +457,11 @@ public class Logic {
 		allEvents.clear();
 		allDeadlines.clear();
 		// allFloatingTasks.clear();
-		searchKeyword = strSearchString + " before " + beforeDate.toString();
+		if (strSearchString != null) {
+			searchKeyword = strSearchString + " before " + beforeDate.toString();
+		} else {
+			searchKeyword = "before " + beforeDate.toString();
+		}
 		allEvents = fileStorage.searchEventTaskBeforeDate(strSearchString, beforeDate);
 		fillEvents();
 		allDeadlines = fileStorage.searchDeadlineTaskBeforeDate(strSearchString, beforeDate);
@@ -456,7 +473,11 @@ public class Logic {
 		allEvents.clear();
 		allDeadlines.clear();
 		allFloatingTasks.clear();
-		searchKeyword = strSearchString + " on " + date.toString();
+		if (strSearchString != null) {
+			searchKeyword = strSearchString + " on " + date.toString();
+		} else {
+			searchKeyword = "on " + date.toString();
+		}
 		allEvents = fileStorage.searchEventTaskOnDate(strSearchString, date);
 		fillEvents();
 		allDeadlines = fileStorage.searchDeadlineTaskOnDate(strSearchString, date);
@@ -470,6 +491,9 @@ public class Logic {
 		allEvents.clear();
 		allDeadlines.clear();
 		allFloatingTasks.clear();
+		if (strSearchString == null || strSearchString.equals("")) {
+			return false;
+		}
 		searchKeyword = strSearchString;
 		allEvents = fileStorage.searchEventTask(strSearchString);
 		fillEvents();
@@ -622,7 +646,7 @@ public class Logic {
 	private void undoUpdateCommand(Command undoCommand) {
 		Update undoUpdate = (Update) undoCommand;
 		fileStorage.writeTask(undoUpdate.getCurrentTask());
-		fileStorage.deleteTask(undoUpdate.getUpdateTask());//check again how 
+		fileStorage.deleteTask(undoUpdate.getUpdateTask());// check again how
 		redoCommandHistory.push(undoUpdate);
 		updateTaskLists();
 		updateRespectiveGUICol(ALLCOLLUMS);
@@ -630,7 +654,8 @@ public class Logic {
 
 	private void redoUpdateCommand(Command undoCommand) {
 		Update redoUpdate = (Update) undoCommand;
-		fileStorage.deleteTask(redoUpdate.getCurrentTask());///check again how to do 
+		fileStorage.deleteTask(redoUpdate.getCurrentTask());/// check again how
+															/// to do
 		fileStorage.writeTask(redoUpdate.getUpdateTask());
 		redoCommandHistory.push(redoUpdate);
 		updateTaskLists();
