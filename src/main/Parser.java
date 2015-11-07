@@ -188,6 +188,7 @@ public class Parser {
 
 	private Update parseUpdateCommand(String strCommand) {
 
+		
 		strCommand = parserUtils.removeNWords(1, strCommand);
 		
 		UpdateTask updateTask = new UpdateTask();
@@ -747,6 +748,10 @@ public class Parser {
 
 	public Command parse(String strCommand) {
 
+		if(strCommand.equals("")){
+			return null;
+		}
+		
 		Command parsedCommand;
 
 		if (isAnAddCommand(strCommand)) {
