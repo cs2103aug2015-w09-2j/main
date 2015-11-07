@@ -6,18 +6,18 @@ import org.junit.Test;
 
 public class ParserTest {
 
+	/*
+	 * 	ADD_DEADLINE("deadline"), ADD_FLOATING("floating"),ADD_EVENT("event"),
+		 DELETE("delete"), CLEAR("clear"), 
+		DISPLAY("display"), SEARCH("search"), DONE("done"),
+		SAVE("save"),
+		UNKNOWN("");
+	 */
+	
 	private Parser parser;
 	
 	public ParserTest(){
 		parser = new Parser();
-	}
-	
-	@Test
-	public void testParsingFloating() {
-		
-		Command command = parser.parse("add description");
-		Floating floating = (Floating)command.getTask();
-		assertEquals("description", floating.getDescription());
 	}
 
 	@Test
@@ -58,10 +58,10 @@ public class ParserTest {
 		assertEquals(update, null);
 		
 		/* If user just enters only description */
-		strCommand = "update 1 -d mydescription";
+		strCommand = "update 1 -d mydescription 123";
 		update = (Update) parser.parse(strCommand);
 		updateTask = update.getTaskToUpdate();
-		assertEquals(updateTask.getDescription(),"mydescription");
+		assertEquals(updateTask.getDescription(),"mydescription 123");
 		assertEquals(updateTask.getEndDate(),null);
 		assertEquals(updateTask.getStartDate(),null);
 		assertEquals(updateTask.getStartTime(),null);
@@ -106,6 +106,17 @@ public class ParserTest {
 		assertEquals(updateTask.getEndTime().toString(), "1205");
 		assertEquals(updateTask.getStartDate().toString(),"11/12/2018");
 		assertEquals(updateTask.getStartTime().toString(),"1105");
+		
+		/* If user just enters startdate nlp and 24hr time */
+		strCommand = "update 1 -s tomorrow 1105";
+		update = (Update) parser.parse(strCommand);
+		updateTask = update.getTaskToUpdate();
+		assertEquals(updateTask.getDescription(), null);
+		assertEquals(updateTask.getEndDate(), null);
+		assertEquals(updateTask.getEndTime(), null);
+		assertEquals(updateTask.getStartDate().toString(),new PrettyTimeWrapper("tomorrow").getDate().toString());
+		assertEquals(updateTask.getStartTime().toString(),"1105");
+		
 	}
 
 	@Test
@@ -129,5 +140,60 @@ public class ParserTest {
 		assertEquals(undo.getCommandType(), Command.CommandType.UNDO);
 	}
 
+	@Test
+	public void testParsingRedo(){
+		String strCommand;
+		Redo redo;
+		
+		/* If user just enters "redo" */
+		strCommand = "redo";
+		redo = (Redo) parser.parse(strCommand);
+		assertEquals(redo.getCommandType(), Command.CommandType.REDO);
+		
+		/* If user just enters a spaceinfront */
+		strCommand = " redo";
+		redo = (Redo) parser.parse(strCommand);
+		assertEquals(redo, null);
+		
+		/* If user just enters characters to the back, its still ok!*/
+		strCommand = "redo asd";
+		redo = (Redo) parser.parse(strCommand);
+		assertEquals(redo.getCommandType(), Command.CommandType.REDO);
+	}
+
+	@Test
+	public void testParsingExit(){
+		String strCommand;
+		Exit exit;
+		
+		/* If user just enters "redo" */
+		strCommand = "exit";
+		exit = (Exit) parser.parse(strCommand);
+		assertEquals(exit.getCommandType(), Command.CommandType.EXIT);
+		
+		/* If user just enters a spaceinfront */
+		strCommand = " exit";
+		exit = (Exit) parser.parse(strCommand);
+		assertEquals(exit, null);
+		
+		/* If user just enters characters to the back, its still ok!*/
+		strCommand = "exit asd";
+		exit = (Exit) parser.parse(strCommand);
+		assertEquals(exit.getCommandType(), Command.CommandType.EXIT);
+	}
+
+	
+	@Test
+	public void testParsingFloating(){
+		String strCommand;
+		Floating floating;
+		Command command;
+		
+		/* If user just enters "add" */
+		strCommand = "add";
+		command = parser.parse(strCommand);
+		assertEquals(null, command);
+		
+	}
 
 }

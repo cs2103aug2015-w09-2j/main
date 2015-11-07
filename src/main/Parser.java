@@ -15,162 +15,12 @@ import main.Command.CommandType;
 
 public class Parser {
 
-	private ParserUtils putils;
+	private ParserUtils parserUtils;
 	
 	public Parser(){
-		putils = new ParserUtils();
+		parserUtils = new ParserUtils();
 	}
 	
-	
-	/*** Util METHODS ***/
-
-	private String getWord(int intIndex, String strText) {
-		String[] words = strText.split(" ");
-
-		if (intIndex < 0 || intIndex >= words.length)
-			return null;
-
-		return words[intIndex];
-	}
-
-	private String removeNWords(int numOfWordsToRemove, String strText) {
-		int intRemoved = 0;
-		String strWord;
-
-		while (intRemoved != numOfWordsToRemove) {
-			strWord = getWord(0, strText);
-			strText = strText.replaceFirst(strWord, "").trim();
-
-			intRemoved++;
-		}
-
-		return strText;
-	}
-
-	
-	private String getDescription(String strCommand) {
-		StringBuilder sb = new StringBuilder();
-		int intWordIndex = 0;
-
-		String strNextWord = getWord(intWordIndex, strCommand);
-
-		while (DateHandler.tryParse(strNextWord) == null) {
-			sb.append(strNextWord + " ");
-			intWordIndex++;
-			strNextWord = getWord(intWordIndex, strCommand);
-			if (strNextWord == null)
-				break;
-		}
-
-		String strDescription = sb.toString().trim();
-
-		return strDescription;
-	}
-
-	private int getNumberOfWords(String strText) {
-		return strText.split(" ").length;
-	}
-
-	private String removeDelimiters(String strText) {
-		strText = strText.replaceAll("-d", "").trim();
-		strText = strText.replaceAll("-e", "").trim();
-		strText = strText.replaceAll("-s", "").trim();
-
-		return strText;
-	}
-
-	private DateClass getDate(String strCommand) {
-		String parsedDate;
-
-		String[] strSplitWords = strCommand.split(" ");
-
-		for (String word : strSplitWords) {
-			parsedDate = DateHandler.tryParse(word);
-			if (parsedDate != null) {
-				try {
-					return new DateClass(parsedDate);
-				} catch (NoSuchFieldException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-
-		return null;
-	}
-	
-	private String getUpdateStartDateTimeString(String strCommand){
-		String[] splitWords = strCommand.split(" ");
-		StringBuilder sb = new StringBuilder();
-		
-		for(String word : splitWords){
-			if(word.equals("-d") || word.equals("-e"))
-				break;
-			sb.append(word + " ");
-		}
-		
-		return sb.toString().trim();
-	}
-	
-	private String getUpdateEndDateTimeString(String strCommand){
-		String[] splitWords = strCommand.split(" ");
-		StringBuilder sb = new StringBuilder();
-		
-		for(String word : splitWords){
-			if(word.equals("-d") || word.equals("-s"))
-				break;
-			sb.append(word + " ");
-		}
-		
-		return sb.toString().trim();
-	}
-	private String removeDate(String strCommand) {
-		String parsedDate;
-		Stack<String> dateBuffer = new Stack<String>();
-
-		String[] strSplitWords = strCommand.split(" ");
-
-		for (String word : strSplitWords) {
-			parsedDate = DateHandler.tryParse(word);
-			if (parsedDate != null) {
-				dateBuffer.push(word);
-			}
-		}
-
-		
-		return dateBuffer.size() != 0 ? strCommand.replace(dateBuffer.pop(), "").trim() : strCommand;
-	}
-
-	private TimeClass getTime(String strCommand) {
-		String[] strSplitWords = strCommand.split(" ");
-		TimeClass time = null;
-
-		for (String word : strSplitWords) {
-			if ((time = TimeHandler.parse(word)) != null) {
-				return time;
-			}
-		}
-
-		return time;
-	}
-
-	private String removeTime(String strCommand) {
-		String[] strSplitWords = strCommand.split(" ");
-		TimeClass time = null;
-		Stack<String> timeBuffer = new Stack<String>();
-
-		for (String word : strSplitWords) {
-			if ((time = TimeHandler.parse(word)) != null) {
-				timeBuffer.push(word);
-			}
-		}
-
-		return strCommand.replace(timeBuffer.pop(), "").trim();
-	}
-
 	/* Command verifying methods */
 
 	/**
@@ -183,7 +33,7 @@ public class Parser {
 	 */
 	private boolean isAnAddCommand(String strCommand) {
 		// If the first word is update
-		String strFirstWord = getWord(0, strCommand);
+		String strFirstWord = parserUtils.getWord(0, strCommand);
 		if (strFirstWord.equals("add")) {
 			return true;
 		}
@@ -192,7 +42,7 @@ public class Parser {
 	
 	private boolean isAClearCommand(String strCommand) {
 		// If the first word is update
-		String strFirstWord = getWord(0, strCommand);
+		String strFirstWord = parserUtils.getWord(0, strCommand);
 		if (strFirstWord.equals("clear")) {
 			return true;
 		}
@@ -201,7 +51,7 @@ public class Parser {
 	}
 
 	private boolean isASaveCommand(String strCommand) {
-		String strFirstWord = getWord(0, strCommand);
+		String strFirstWord = parserUtils.getWord(0, strCommand);
 		if (strFirstWord.equals("save")) {
 			return true;
 		}
@@ -226,7 +76,7 @@ public class Parser {
 		}
 		
 		// If strCommand has "from" and "to", its an event!
-		if (putils.containsWord("from", strCommand) &&  putils.containsWord("to", strCommand)) {
+		if (parserUtils.containsWord("from", strCommand) &&  parserUtils.containsWord("to", strCommand)) {
 			return true;
 		}
 		return false;
@@ -255,7 +105,7 @@ public class Parser {
 
 	private boolean isAnUpdateCommand(String strCommand) {
 		// If the first word is update
-		String strFirstWord = getWord(0, strCommand);
+		String strFirstWord = parserUtils.getWord(0, strCommand);
 		if (strFirstWord.equals("update")) {
 			return true;
 		}
@@ -264,7 +114,7 @@ public class Parser {
 
 	private boolean isAnExitCommand(String strCommand) {
 		// If the first word is update
-		String strFirstWord = getWord(0, strCommand);
+		String strFirstWord = parserUtils.getWord(0, strCommand);
 		if (strFirstWord.equals("exit")) {
 			return true;
 		}
@@ -274,7 +124,7 @@ public class Parser {
 	
 	private boolean isASearchCommand(String strCommand) {
 		// If the first word is update
-		String strFirstWord = getWord(0, strCommand);
+		String strFirstWord = parserUtils.getWord(0, strCommand);
 		if (strFirstWord.equals("search")) {
 			return true;
 		}
@@ -283,7 +133,7 @@ public class Parser {
 
 	private boolean isAnUndoCommand(String strCommand) {
 		// If the first word is update
-		String strFirstWord = getWord(0, strCommand);
+		String strFirstWord = parserUtils.getWord(0, strCommand);
 		if (strFirstWord.equals("undo")) {
 			return true;
 		}
@@ -292,7 +142,7 @@ public class Parser {
 
 	private boolean isARedoCommand(String strCommand) {
 		// If the first word is update
-		String strFirstWord = getWord(0, strCommand);
+		String strFirstWord = parserUtils.getWord(0, strCommand);
 		if (strFirstWord.equals("redo")) {
 			return true;
 		}
@@ -301,7 +151,7 @@ public class Parser {
 	
 	private boolean isADisplayCommand(String strCommand) {
 		// If the first word is update
-		String strFirstWord = getWord(0, strCommand);
+		String strFirstWord = parserUtils.getWord(0, strCommand);
 		if (strFirstWord.equals("display") || strFirstWord.equals("show")) {
 			return true;
 		}
@@ -317,7 +167,7 @@ public class Parser {
 
 	private boolean isADeleteCommand(String strCommand) {
 		// If the first word is update
-		String strFirstWord = getWord(0, strCommand);
+		String strFirstWord = parserUtils.getWord(0, strCommand);
 		if (strFirstWord.equals("delete") || strFirstWord.equals("remove")) {
 			return true;
 		}
@@ -326,7 +176,7 @@ public class Parser {
 
 	private boolean isADoneCommand(String strCommand) {
 		// If the first word is update
-		String strFirstWord = getWord(0, strCommand);
+		String strFirstWord = parserUtils.getWord(0, strCommand);
 		if (strFirstWord.equals("done")) {
 			return true;
 		}
@@ -338,7 +188,7 @@ public class Parser {
 
 	private Update parseUpdateCommand(String strCommand) {
 
-		strCommand = removeNWords(1, strCommand);
+		strCommand = parserUtils.removeNWords(1, strCommand);
 		
 		UpdateTask updateTask = new UpdateTask();
 
@@ -347,7 +197,7 @@ public class Parser {
 		 */
 		int taskID;
 		try{
-			taskID = Integer.valueOf(getWord(0, strCommand));
+			taskID = Integer.valueOf(parserUtils.getWord(0, strCommand));
 		}catch(NumberFormatException n){
 			return null;
 		}
@@ -355,30 +205,30 @@ public class Parser {
 		updateTask.setTaskID(taskID);
 		
 		//remove taskID
-		strCommand = removeNWords(1, strCommand);
+		strCommand = parserUtils.removeNWords(1, strCommand);
 		
 		while (!strCommand.equals("")) {
 			// Get delimiter
-			String delimiter = getWord(0, strCommand);
+			String delimiter = parserUtils.getWord(0, strCommand);
 		
-			if(putils.isDelimeter(delimiter) == false){
+			if(parserUtils.isDelimeter(delimiter) == false){
 				break;
 			}
 			
-			strCommand = removeNWords(1, strCommand);
+			strCommand = parserUtils.removeNWords(1, strCommand);
 
 			switch (delimiter) {
 			case "-d":
-				String strDescription = removeDelimiters(getDescription(strCommand));
+				String strDescription = parserUtils.removeDelimiters(parserUtils.getDescription(strCommand));
 				updateTask.setDescription(strDescription.equals("") ? null : strDescription);
 
-				strCommand = removeNWords(strDescription.split(" ").length, strCommand);
+				strCommand = parserUtils.removeNWords(strDescription.split(" ").length, strCommand);
 				break;
 			case "-e":
-				String strEndDateTime = getUpdateEndDateTimeString(strCommand).trim();
+				String strEndDateTime = parserUtils.getUpdateEndDateTimeString(strCommand).trim();
 				String strEndDateTimeCopy = new String(strEndDateTime);
 				DateClass endDate = parseDate(strEndDateTimeCopy);
-				strEndDateTimeCopy = removeDate(strEndDateTimeCopy);
+				strEndDateTimeCopy = parserUtils.removeDate(strEndDateTimeCopy);
 				TimeClass endTime = parseTime(strEndDateTimeCopy);
 				
 				if(endDate == null || endTime == null){
@@ -392,10 +242,10 @@ public class Parser {
 
 				break;
 			case "-s":
-				String strStartDateTime = getUpdateStartDateTimeString(strCommand).trim();
+				String strStartDateTime = parserUtils.getUpdateStartDateTimeString(strCommand).trim();
 				String strStartDateTimeCopy = new String(strStartDateTime);
 				DateClass startDate = parseDate(strStartDateTimeCopy);
-				strStartDateTimeCopy = removeDate(strStartDateTimeCopy);
+				strStartDateTimeCopy = parserUtils.removeDate(strStartDateTimeCopy);
 				TimeClass startTime = parseTime(strStartDateTimeCopy);
 				
 				if(startDate == null || startTime == null){
@@ -437,7 +287,7 @@ public class Parser {
 		Command command;
 
 		// 1. Remove "add" from command
-		strCommand = removeNWords(1, strCommand);
+		strCommand = parserUtils.removeNWords(1, strCommand);
 
 		// Add command can be for Deadline, Floating or Event,
 
@@ -454,8 +304,8 @@ public class Parser {
 
 				strEndDateAndEndTime = preprocessNLP(strEndDateAndEndTime);
 
-				endDate = getDate(strEndDateAndEndTime);
-				endTime = getTime(strEndDateAndEndTime);
+				endDate = parserUtils.getDate(strEndDateAndEndTime);
+				endTime = parserUtils.getTime(strEndDateAndEndTime);
 
 				if (endDate == null && endTime == null) {
 					// use natural language to try get DateClass
@@ -463,13 +313,13 @@ public class Parser {
 					endDate = prettyTime.getDate();
 					endTime = prettyTime.getTime();
 				} else if (endDate != null && endTime == null) {
-					String strWithoutDate = removeDate(strEndDateAndEndTime);
+					String strWithoutDate = parserUtils.removeDate(strEndDateAndEndTime);
 					// use natural language to try get DateClass
 					PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutDate);
 					endTime = prettyTime.getTime();
 
 				} else if (endDate == null && endTime != null) {
-					String strWithoutTime = removeTime(strEndDateAndEndTime);
+					String strWithoutTime = parserUtils.removeTime(strEndDateAndEndTime);
 					// use natural language to try get DateClass
 					PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutTime);
 					endDate = prettyTime.getDate();
@@ -485,8 +335,8 @@ public class Parser {
 
 			strStartDateAndStartTime = preprocessNLP(strStartDateAndStartTime);
 
-			startDate = getDate(strStartDateAndStartTime);
-			startTime = getTime(strStartDateAndStartTime);
+			startDate = parserUtils.getDate(strStartDateAndStartTime);
+			startTime = parserUtils.getTime(strStartDateAndStartTime);
 
 			if (startDate == null && startTime == null) {
 				// use natural language to try get DateClass
@@ -494,13 +344,13 @@ public class Parser {
 				startDate = prettyTime.getDate();
 				startTime = prettyTime.getTime();
 			} else if (startDate != null && startTime == null) {
-				String strWithoutDate = removeDate(strStartDateAndStartTime);
+				String strWithoutDate = parserUtils.removeDate(strStartDateAndStartTime);
 				// use natural language to try get DateClass
 				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutDate);
 				startTime = prettyTime.getTime();
 
 			} else if (startDate == null && startTime != null) {
-				String strWithoutTime = removeTime(strCommand);
+				String strWithoutTime = parserUtils.removeTime(strCommand);
 				// use natural language to try get DateClass
 				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutTime);
 				startDate = prettyTime.getDate();
@@ -574,8 +424,8 @@ public class Parser {
 			// PreProcess
 			strEndDateAndEndTime = preprocessNLP(strEndDateAndEndTime);
 
-			endDate = getDate(strEndDateAndEndTime);
-			endTime = getTime(strEndDateAndEndTime);
+			endDate = parserUtils.getDate(strEndDateAndEndTime);
+			endTime = parserUtils.getTime(strEndDateAndEndTime);
 
 			if (endDate == null && endTime == null) {
 				// use natural language to try get DateClass
@@ -583,13 +433,13 @@ public class Parser {
 				endDate = prettyTime.getDate();
 				endTime = prettyTime.getTime();
 			} else if (endDate != null && endTime == null) {
-				String strWithoutDate = removeDate(strEndDateAndEndTime);
+				String strWithoutDate = parserUtils.removeDate(strEndDateAndEndTime);
 				// use natural language to try get DateClass
 				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutDate);
 				endTime = prettyTime.getTime();
 
 			} else if (endDate == null && endTime != null) {
-				String strWithoutTime = removeTime(strEndDateAndEndTime);
+				String strWithoutTime = parserUtils.removeTime(strEndDateAndEndTime);
 				// use natural language to try get DateClass
 				PrettyTimeWrapper prettyTime = new PrettyTimeWrapper(strWithoutTime);
 				endDate = prettyTime.getDate();
@@ -628,7 +478,11 @@ public class Parser {
 			 * Required Event Syntax for successful parsing: Description
 			 */
 			strDescription = strCommand;
-
+			
+			if(strDescription.equals("")){
+				return null;
+			}
+			
 			command = new Command(CommandType.ADD_FLOATING);
 
 			command.setTask(new Floating(strDescription));
@@ -639,9 +493,9 @@ public class Parser {
 
 	private Command parseSearchCommand(String strCommand){
 		// remove "search" word
-		String strSearchString = removeNWords(1, strCommand);
+		String strSearchString = parserUtils.removeNWords(1, strCommand);
 		
-		String enclosedString = putils.getEnclosedDescription(strSearchString);
+		String enclosedString = parserUtils.getEnclosedDescription(strSearchString);
 		
 		
 		
@@ -655,8 +509,8 @@ public class Parser {
 			
 			//else find for dates
 			if(strSearchString.matches("after .+") || strSearchString.matches("before .+") || strSearchString.matches("on .+")){
-				String firstWord =  getWord(0, strSearchString);
-				strSearchString = removeNWords(1, strSearchString);
+				String firstWord =  parserUtils.getWord(0, strSearchString);
+				strSearchString = parserUtils.removeNWords(1, strSearchString);
 				DateClass firstDate = parseDate(strSearchString);
 				
 				if(firstDate == null){
@@ -816,21 +670,21 @@ public class Parser {
 	}
 
 	private Command parseDisplayCommand(String strCommand) {
-		String displayString = removeNWords(1, strCommand);
+		String displayString = parserUtils.removeNWords(1, strCommand);
 		return new Display(displayString);
 	}
 
 	private Command parseDeleteCommand(String strCommand) {
-		strCommand = removeNWords(1, strCommand);
+		strCommand = parserUtils.removeNWords(1, strCommand);
 		
-		String enclosedDescription = putils.getEnclosedDescription(strCommand);
+		String enclosedDescription = parserUtils.getEnclosedDescription(strCommand);
 		
 		//Delete has "xxx" description
 		if(enclosedDescription != null){
 			return new Delete(enclosedDescription);
 		}
 		
-		Set<Integer> taskIDs =  putils.getRangeSet(strCommand);
+		Set<Integer> taskIDs =  parserUtils.getRangeSet(strCommand);
 		
 		//Has task ids
 		if(taskIDs != null){
@@ -842,7 +696,7 @@ public class Parser {
 	}
 
 	private Command parseDoneCommand(String strCommand) {
-		strCommand = removeNWords(1, strCommand);
+		strCommand = parserUtils.removeNWords(1, strCommand);
 
 		String[] strSplit = strCommand.split(",");
 		Set<Integer> parsedIDs = new TreeSet<Integer>();
@@ -878,6 +732,19 @@ public class Parser {
 		}
 	}
 
+	private Command parseSaveCommand(String strCommand) {
+		strCommand = parserUtils.removeNWords(1, strCommand);
+		return new Save(strCommand);
+	}
+	
+	private Command parseExitCommand(String strCommand) {
+		return new Exit();
+	}
+	
+	private Command parseClearCommand(String strCommand) {
+		return new Clear();
+	}
+
 	public Command parse(String strCommand) {
 
 		Command parsedCommand;
@@ -910,22 +777,6 @@ public class Parser {
 
 		return parsedCommand;
 	}
-
-	private Command parseSaveCommand(String strCommand) {
-		strCommand = removeNWords(1, strCommand);
-		return new Save(strCommand);
-	}
-	
-	private Command parseExitCommand(String strCommand) {
-		return new Exit();
-	}
-	
-	
-	private Command parseClearCommand(String strCommand) {
-		return new Clear();
-	}
-
-	
 	
 	public static void main(String[] args) throws NoSuchFieldException, ParseException {
 		Parser p = new Parser();
@@ -933,7 +784,7 @@ public class Parser {
 		// String command = "update new swimming -d swimming";
 		Command t;
 		String command;
-		command = "update 1 -s tomorrow 1105";
+		command = "";
 		t = p.parse(command);
 		
 		System.out.println(((Event) t.getTask()).getEndTime().to12HourFormat());

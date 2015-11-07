@@ -164,12 +164,6 @@ public class UpdateTask extends Task{
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	public String toString(){
-		String out ="";
-		
-		return out;
-		
-	}
 
 	
 }
