@@ -48,7 +48,7 @@ public class Logic {
 	 * Description Default Constructor
 	 */
 	private Logic() {
-		hasNewOverdueTask = new SimpleBooleanProperty();
+		hasNewOverdueTask = new SimpleBooleanProperty(Boolean.FALSE);
 		updateTaskLists();
 		undoCommandHistory = new Stack<Command>();
 		redoCommandHistory = new Stack<Command>();
