@@ -745,8 +745,9 @@ public class Logic {
 
 	/**
 	 * command to handle redo and distribute the redo command depending on the
-	 * command type to redo
-	 * redo will only happen if the previous command is undo. 
+	 * command type to redo redo will only happen if the previous command is
+	 * undo.
+	 * 
 	 * @return boolean if redo possible or not
 	 */
 	private boolean redo() {
@@ -783,9 +784,9 @@ public class Logic {
 	}
 
 	/**
-	 * handles the redo of the delete command . 
-	 * If the command to redo is the delete command 
-	 * takes in the command as parameter 
+	 * handles the redo of the delete command . If the command to redo is the
+	 * delete command takes in the command as parameter
+	 * 
 	 * @param redoCommand
 	 */
 	private void redoDeleteCommand(Command redoCommand) {
@@ -798,7 +799,8 @@ public class Logic {
 	}
 
 	/**
-	 * redo an add command 
+	 * redo an add command
+	 * 
 	 * @param redoCommand
 	 */
 	private void redoAddCommand(Command redoCommand) {
@@ -810,6 +812,7 @@ public class Logic {
 
 	/**
 	 * redo the clear command
+	 * 
 	 * @param redoCommand
 	 */
 	private void redoClear(Command redoCommand) {
@@ -822,7 +825,8 @@ public class Logic {
 	}
 
 	/**
-	 * redoes the done command
+	 * redo the done command
+	 * 
 	 * @param redoCommand
 	 */
 	private void redoDone(Command redoCommand) {
@@ -834,7 +838,11 @@ public class Logic {
 		}
 	}
 
-	// @@author A0133869R
+	/**
+	 * Manages the flow of the undo command
+	 * 
+	 * @return
+	 */
 	private boolean undo() {
 		if (undoCommandHistory.size() == 0)
 			return false;
@@ -868,7 +876,11 @@ public class Logic {
 		return true;
 	}
 
-	// @@author A0133869R
+	/**
+	 * undo an update command
+	 * 
+	 * @param undoCommand
+	 */
 	private void undoUpdateCommand(Command undoCommand) {
 		Update undoUpdate = (Update) undoCommand;
 		fileStorage.writeTask(undoUpdate.getCurrentTask());
@@ -878,9 +890,13 @@ public class Logic {
 		updateRespectiveGUICol(ALLCOLLUMS);
 	}
 
-	// @@author A0133869R
-	private void redoUpdateCommand(Command undoCommand) {
-		Update redoUpdate = (Update) undoCommand;
+	/**
+	 * redo an update command
+	 * 
+	 * @param undoCommand
+	 */
+	private void redoUpdateCommand(Command redoCommand) {
+		Update redoUpdate = (Update) redoCommand;
 		fileStorage.deleteTask(redoUpdate.getCurrentTask());/// check again how
 															/// to do
 		fileStorage.writeTask(redoUpdate.getUpdateTask());
@@ -889,18 +905,25 @@ public class Logic {
 		updateRespectiveGUICol(ALLCOLLUMS);
 	}
 
-	// @@author A0133869R
+	/**
+	 * undo a delete command
+	 * 
+	 * @param undoCommand
+	 */
 	private void undoDeleteCommand(Command undoCommand) {
 		redoCommandHistory.push(undoCommand);
 		for (Task currentTask : ((Delete) undoCommand).getTaskDeleted()) {
 			fileStorage.writeTask(currentTask);
 		}
-		// fileStorage.writeTask(((Delete) undoCommand).getTaskDeleted());
 		updateTaskLists();
 		updateRespectiveGUICol(ALLCOLLUMS);
 	}
 
-	// @@author A0133869R
+	/**
+	 * undo an add command
+	 * 
+	 * @param undoCommand
+	 */
 	private void undoAddCommand(Command undoCommand) {
 		redoCommandHistory.push(undoCommand);
 		fileStorage.deleteTask(undoCommand.getTask());
@@ -908,7 +931,11 @@ public class Logic {
 		updateRespectiveGUICol(undoCommand.getTask().getClass().getName());
 	}
 
-	// @@author A0133869R
+	/**
+	 * undo a clear command
+	 * 
+	 * @param undoCommand
+	 */
 	private void undoClear(Command undoCommand) {
 		Clear undoClear = ((Clear) undoCommand);
 		ArrayList<Task> taskCleared = undoClear.getTaskCleared();
@@ -918,7 +945,11 @@ public class Logic {
 		updateTaskLists();
 	}
 
-	// @@author A0133869R
+	/**
+	 * undo a done command
+	 * 
+	 * @param undoCommand
+	 */
 	private void undoDone(Command undoCommand) {
 		Done doneCommand = ((Done) undoCommand);
 		for (Task currentTask : doneCommand.getTasksSetDone()) {
@@ -929,7 +960,12 @@ public class Logic {
 		updateRespectiveGUICol(ALLCOLLUMS);
 	}
 
-	// @@author A0133869R
+	/**
+	 * handles the update command
+	 * 
+	 * @param inputCommand
+	 * @return boolean success failure of the update
+	 */
 	private boolean update(Command inputCommand) {
 		Update updateCommand = (Update) inputCommand;
 		UpdateTask processUpdate = (UpdateTask) updateCommand.getTaskToUpdate();
@@ -942,11 +978,11 @@ public class Logic {
 		} else {
 			return false;
 		}
-		// System.out.println(taskToUpdate.toString());
+
 		Task updatedTask = null;
-		// updatedTask = taskToUpdate;
+
 		System.out.println(taskToUpdate.getClass().getName());
-		// System.out.println(taskToUpdate.toString());
+
 		switch (taskToUpdate.getClass().getName()) {
 		case EVENTS:
 			updatedTask = updateEventTask(processUpdate, taskToUpdate);
@@ -976,7 +1012,12 @@ public class Logic {
 		}
 	}
 
-	// @@author A0133869R
+	/**
+	 * manages the update of a floating task
+	 * @param processUpdate
+	 * @param taskToUpdate
+	 * @return returns the task just updated
+	 */
 	private Task updateFloatingTask(UpdateTask processUpdate, Task taskToUpdate) {
 		Task updatedTask;
 		System.out.println(processUpdate.getDescription());
@@ -1008,7 +1049,12 @@ public class Logic {
 		return updatedTask;
 	}
 
-	// @@author A0133869R
+	/**
+	 * manages the update of a Deadline task
+	 * @param processUpdate
+	 * @param taskToUpdate
+	 * @return returns the task just updated
+	 */
 	private Task updateDeadlineTask(UpdateTask processUpdate, Task taskToUpdate) {
 		Task updatedTask;
 		if (processUpdate.hasStartDate()) {
@@ -1044,7 +1090,12 @@ public class Logic {
 		return updatedTask;
 	}
 
-	// @@author A0133869R
+	/**
+	 * manages the update of a event task
+	 * @param processUpdate
+	 * @param taskToUpdate
+	 * @return returns the task just updated
+	 */
 	private Task updateEventTask(UpdateTask processUpdate, Task taskToUpdate) {
 		Task updatedTask;
 		updatedTask = new Event(((Event) taskToUpdate).getDescription(), ((Event) taskToUpdate).getStartDate(),
@@ -1063,7 +1114,11 @@ public class Logic {
 		return updatedTask;
 	}
 
-	// @@author A0133869R
+	/**
+	 * Handles the delete command 
+	 * @param inputCommand
+	 * @return boolean success failure 
+	 */
 	private boolean deleteTask(Command inputCommand) {
 		Delete deleteCommand = ((Delete) inputCommand);
 		ArrayList<Task> taskToDelete = new ArrayList<Task>();
@@ -1104,7 +1159,12 @@ public class Logic {
 		}
 	}
 
-	// @@author A0133869R
+	/**
+	 * Deletes task based on the index given 
+	 * it handles the delete of task by single index
+	 * @param taskIndex
+	 * @return returns the task that has been deleted 
+	 */
 	private Task deleteSingleTask(int taskIndex) {
 		if (taskIndex <= allEvents.size()) {
 			deleteTaskFromCurrentView(allEvents.get(taskIndex - 1));
@@ -1120,7 +1180,11 @@ public class Logic {
 		}
 	}
 
-	// @@author A0133869R
+	/**
+	 * Helps in updating the view and also the task list
+	 * Fills up the task list when a command is excuted or the view is changed
+	 * @param taskType
+	 */
 	private void updateRespectiveGUICol(String taskType) {
 		switch (taskType) {
 		case EVENTS:
