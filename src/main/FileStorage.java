@@ -374,16 +374,16 @@ public class FileStorage {
 	}
 
 	/**
-	 * The methods retrieve and return the current directory of the storage file
-	 * @return the directory of the storage file
+	 * The methods retrieve and return the current directory of the done file
+	 * @return the directory of the done file
 	 */
 	public String getDonePath(){
 		return globalDonePath;
 	}
 
 	/**
-	 * The methods retrieve and return the current directory of the storage file
-	 * @return the directory of the storage file
+	 * The methods retrieve and return the current directory of the overdue file
+	 * @return the directory of the overdue file
 	 */
 	public String getOverduePath(){
 		return globalOverduePath;
