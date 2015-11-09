@@ -110,7 +110,7 @@ public class MainLayoutController {
 			overdueLabel.setVisible(true);
 
 			FadeTransition fadeInAndOut = new FadeTransition(Duration.millis(800), overdueLabel);
-			fadeInAndOut.setFromValue(0.4);
+			fadeInAndOut.setFromValue(0.2);
 			fadeInAndOut.setToValue(1);
 			fadeInAndOut.setCycleCount(Animation.INDEFINITE);
 			fadeInAndOut.setAutoReverse(true);
@@ -206,7 +206,7 @@ public class MainLayoutController {
 					overdueLabel.setVisible(true);
 
 					FadeTransition fadeInAndOut = new FadeTransition(Duration.millis(1000), overdueLabel);
-					fadeInAndOut.setFromValue(0.4);
+					fadeInAndOut.setFromValue(0.2);
 					fadeInAndOut.setToValue(1);
 					fadeInAndOut.setCycleCount(Animation.INDEFINITE);
 					fadeInAndOut.setAutoReverse(true);
