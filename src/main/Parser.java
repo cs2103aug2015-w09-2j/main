@@ -839,8 +839,6 @@ public class Parser {
 	}
 
 	public Command parse(String strCommand) {
-		System.out.println("From parser: " + strCommand);
-
 		Command parsedCommand;
 
 		if (strCommand.equals("")) {

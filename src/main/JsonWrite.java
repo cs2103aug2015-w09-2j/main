@@ -101,7 +101,6 @@ public class JsonWrite {
 
 
 		FileStorage fs = new FileStorage();
-		System.out.println("HEY" + fs == null);
 		String filePath = "";
 		switch(fileType){
 			case "STORAGE_FILE":
