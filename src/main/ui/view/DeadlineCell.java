@@ -5,9 +5,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import main.Commands.Deadline;
-import main.Commands.Task;
-import main.common.DateClass;
+import main.Deadline;
+import main.Task;
+import main.DateClass;
 
 public class DeadlineCell extends ListCell<Task> {
 	private static int startIndex;

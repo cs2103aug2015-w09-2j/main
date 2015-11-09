@@ -6,8 +6,8 @@ import java.text.ParseException;
 
 import org.junit.Test;
 
-import main.FileStorage.FileStorage;
-import main.parser.Parser;
+import main.FileStorage;
+import main.Parser;
 import main.ui.MainApp;
 
 public class LogicTest {

@@ -12,7 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import main.Commands.Task;
+import main.Task;
 import main.ui.view.MainLayoutController;
 import main.Logic;
 
