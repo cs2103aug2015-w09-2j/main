@@ -81,7 +81,7 @@ public class JsonDelete {
 		}
 		   String jsonText = out.toString().replace("\\", "");
 
-		FileStorage fs = new FileStorage();
+		FileStorage fs = FileStorage.getInstance();
 		String filePath = "";
 		switch(fileType){
 			case "STORAGE_FILE":

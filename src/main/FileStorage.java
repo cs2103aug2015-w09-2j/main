@@ -21,16 +21,25 @@ public class FileStorage {
 	private static JsonFile jsonFile;
 	private static String globalDonePath;
 	private static String globalOverduePath;
+	
+	private static FileStorage singleFileStorage = null;
 
 	/**
 	 * This constructor will get and stores the directory of the
 	 * file storage into "filePath when the application is initialize
 	 */
-	public FileStorage(){
+	private FileStorage(){
 		jsonFile = new JsonFile();
 		pathName = "vodoPath";
 		filePath = currFilePath();
 		json = new Json(filePath, globalDonePath, globalOverduePath);
+	}
+	
+	public static FileStorage getInstance(){
+		if(singleFileStorage==null){
+			singleFileStorage = new FileStorage();
+		}
+		return singleFileStorage;
 	}
 
 	/**

@@ -1,3 +1,4 @@
+//@@author A0133869R
 package main;
 
 import java.text.ParseException;
@@ -31,6 +32,7 @@ import main.ui.util.StatusHelper;
  * @author Ravi
  *
  */
+
 public class Logic {
 	private static Logic oneLogic = null;
 	private static final String ALLCOLLUMS = "ALL";
@@ -44,12 +46,12 @@ public class Logic {
 	private static int newOverdueTask = 0;
 
 	/**
-	 * Description Constructor : Creates and instance of the Logic class with
-	 * the fileName stated
+	 * Description Singleton pattern used to get a single instance called by UI. 
+	 *
 	 *
 	 * @param filename
 	 */
-	// @@author A0133869R
+	
 	public static Logic getInstance() {
 		if (oneLogic == null) {
 			oneLogic = new Logic();
@@ -60,9 +62,9 @@ public class Logic {
 	/**
 	 * Description Default Constructor
 	 */
-	// @@author A0133869R
-	private Logic() { // [TEDDY] this is all that I initialize keeping in mind
-						// the initial view of the user using the app
+
+	private Logic() { // Initilizae all the valriable and singleton classes. Also initialize the View in UI
+						//
 		hasNewOverdueTask = new SimpleBooleanProperty(Boolean.FALSE);// added
 		displayStatusCode = new SimpleIntegerProperty(StatusHelper.Status.ONGOING.getCode());// added
 		updateTaskLists();
@@ -76,7 +78,7 @@ public class Logic {
 	}
 
 	private static Parser parser = Parser.getInstance();
-	private FileStorage fileStorage = new FileStorage();
+	private FileStorage fileStorage = FileStorage.getInstance();
 	private static Stack<Command> undoCommandHistory;
 	private static Stack<Command> redoCommandHistory;
 	private static ArrayList<Task> allEvents;
@@ -101,13 +103,14 @@ public class Logic {
 	 * Description Takes in the command as a string from the user input and
 	 * processes the command and executes the command if its in the correct
 	 * format
-	 *
+	 * if incorrect command format return false 
+	 * if correct lets the execute command return true or false
 	 * @param input
 	 * @return
 	 * @throws NoSuchFieldException
 	 * @throws ParseException
 	 */
-	// @@author A0133869R
+	
 	public boolean processCommand(String input) {
 		boolean output = true;
 		Command command = parser.parse(input);
@@ -120,7 +123,7 @@ public class Logic {
 		}
 	}
 
-	// @@author A0133869R
+	
 	private void updateTaskLists() {
 		allEvents = fileStorage.readEventTask();
 		allDeadlines = fileStorage.readDeadlineTask();

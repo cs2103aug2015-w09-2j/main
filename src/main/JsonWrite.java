@@ -100,7 +100,10 @@ public class JsonWrite {
 		String jsonText = out.toString().replace("\\", "");
 
 
-		FileStorage fs = new FileStorage();
+
+		FileStorage fs = FileStorage.getInstance();
+		System.out.println("HEY" + fs == null);
+
 		String filePath = "";
 		switch(fileType){
 			case "STORAGE_FILE":

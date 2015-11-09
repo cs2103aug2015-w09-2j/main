@@ -72,7 +72,7 @@ public class JsonFile {
 	 * @return ArrayList of JSONArray containing EVENT, DEADLINE, FLOATING
 	 */
 	public ArrayList<JSONArray> getJsonFileContent(String fileType){
-		FileStorage fs = new FileStorage();
+		FileStorage fs = FileStorage.getInstance();
 		String filePath = "";
 		switch(fileType){
 			case "STORAGE_FILE":

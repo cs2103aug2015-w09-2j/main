@@ -12,7 +12,7 @@ import org.junit.Test;
 
 public class FileStorageJunitTest {
 
-	FileStorage fs = new FileStorage();
+	FileStorage fs = FileStorage.getInstance();
 	String [] eventArr = {"Meeting with boss", "Skype meeting", "Dental appoinment", "Lunch with client", "Projet presentation"};
 	String [] deadlineArr = {"Finish project", "Recruit new member", "Collect files", "Maths homework", "Return books"};
 	String [] floatingArr = {"Buy new car", "Clean the house", "Visit korea", "Watch movie", "Drinking with buddy"};
