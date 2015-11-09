@@ -184,7 +184,11 @@ public class MainLayoutController {
 				int newState = newValue.intValue();
 				String statusText = StatusHelper.getStatusText(newState);
 				if (newState == StatusHelper.Status.SEARCH.getCode() || newState == StatusHelper.Status.NEWSEARCH.getCode()) {
-					displayStatusLabel.setText(String.format(statusText, mainApp.getSearchKeyword()));
+					String keyword = mainApp.getSearchKeyword();
+					if (keyword.length() > 12) {
+						keyword = keyword.substring(0,12) + "...";
+					}
+					displayStatusLabel.setText(String.format(statusText, keyword));
 				} else {
 					displayStatusLabel.setText(statusText);
 				}
