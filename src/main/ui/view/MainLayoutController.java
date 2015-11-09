@@ -1,6 +1,5 @@
+//@@author A0126518E
 package main.ui.view;
-
-import java.text.ParseException;
 
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
@@ -14,7 +13,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -23,30 +21,36 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import main.Commands.Task;
+import main.common.Logger;
 import main.ui.MainApp;
-import main.ui.util.CommandListener;
-import main.ui.util.StatusListener;
-import main.Task;
+import main.ui.util.CommandHelper;
+import main.ui.util.StatusHelper;
 
 public class MainLayoutController {
 
+	private static String LOG_STRING = "User typed in: \"%1$s\"";
+
 	private MainApp mainApp;
+	private Logger logger;
 
 	private ObservableList<Task> events;
 	private ObservableList<Task> deadlines;
 	private ObservableList<Task> floatings;
+
 	private IntegerProperty displayState;
 	private BooleanProperty hasNewOverdueTask;
 
-	// Fields for binding to UI components
 	@FXML
 	private ListView<Task> eventsListView;
 	@FXML
 	private ListView<Task> deadlinesListView;
 	@FXML
 	private ListView<Task> floatingsListView;
+
 	@FXML
 	private TextField commandBox;
+
 	@FXML
 	private Label helpLabel;
 	@FXML
@@ -55,11 +59,13 @@ public class MainLayoutController {
 	private Label overdueLabel;
 	@FXML
 	private Label responseLabel;
+
 	@FXML
 	private AnchorPane responseBox;
 
 
 	public MainLayoutController() {
+		logger = Logger.getInstance();
 		displayState = new SimpleIntegerProperty();
 	}
 
@@ -72,16 +78,16 @@ public class MainLayoutController {
 		customizeDeadlineCellFactory();
 		customizeFloatingCellFactory();
 
-		// initial help dialog is MAIN
-		helpLabel.setText(CommandListener.HELP_MAIN);
+		// initial help dialog should be MAIN
+		helpLabel.setText(CommandHelper.HELP_MAIN);
 
-		// initial status is ONGOING
-		displayState.setValue(StatusListener.Status.ONGOING.getCode());
-		displayStatusLabel.setText(StatusListener.getStatusText(displayState.getValue()));
+		// initial status should be ONGOING
+		displayState.setValue(StatusHelper.Status.ONGOING.getCode());
+		displayStatusLabel.setText(StatusHelper.getStatusText(displayState.getValue()));
 	}
 
 	/**
-	 * Set the reference to MainApp and setup the view
+	 * Set the reference to MainApp and do the initial setup
 	 * @param mainApp
 	 */
 	public void setMainApp(MainApp mainApp) {
@@ -90,13 +96,16 @@ public class MainLayoutController {
 		setupListViews();
 		initialize();
 		mainApp.setDisplayState(displayState);
-		this.hasNewOverdueTask = mainApp.getHasNewOverdueTask();
+		setHasNewOverdueTask();
 		checkInitialHasNewOverdueTask();
 		setListeners();
 	}
 
+	public void focusCommandBox() {
+		commandBox.requestFocus();
+	}
+
 	private void checkInitialHasNewOverdueTask() {
-		// TODO Auto-generated method stub
 		if (hasNewOverdueTask.getValue().equals(Boolean.TRUE)) {
 			overdueLabel.setVisible(true);
 
@@ -109,19 +118,11 @@ public class MainLayoutController {
 		}
 	}
 
-	public void focusCommandBox() {
-		commandBox.requestFocus();
-	}
-
-	public void showhelpLabel(String helpLabel) {
-		System.out.println(helpLabel);
-	}
-
 	private void customizeEventCellFactory() {
 		eventsListView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 			@Override
 			public ListCell<Task> call(ListView<Task> eventsListView) {
-				return new TaskCell.EventCell();
+				return new EventCell();
 			}
 		});
 	}
@@ -130,8 +131,8 @@ public class MainLayoutController {
 		deadlinesListView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 			@Override
 			public ListCell<Task> call(ListView<Task> deadlinesListView) {
-				TaskCell.DeadlineCell.startIndex = events.size();
-				return new TaskCell.DeadlineCell();
+				DeadlineCell.setStartIndex(events.size());
+				return new DeadlineCell();
 			}
 		});
 	}
@@ -140,10 +141,20 @@ public class MainLayoutController {
 		floatingsListView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 			@Override
 			public ListCell<Task> call(ListView<Task> floatingsListView) {
-				TaskCell.FloatingCell.startIndex = events.size() + deadlines.size();
-				return new TaskCell.FloatingCell();
+				FloatingCell.setStartIndex(events.size() + deadlines.size());
+				return new FloatingCell();
 			}
 		});
+	}
+
+	private void setupListViews() {
+		eventsListView.setItems(events);
+		deadlinesListView.setItems(deadlines);
+		floatingsListView.setItems(floatings);
+	}
+
+	private void setHasNewOverdueTask() {
+		this.hasNewOverdueTask = mainApp.getHasNewOverdueTask();
 	}
 
 	private void setListeners() {
@@ -171,8 +182,8 @@ public class MainLayoutController {
 			@Override
 			public void changed(ObservableValue<? extends Number> displayState, Number oldValue, Number newValue) {
 				int newState = newValue.intValue();
-				String statusText = StatusListener.getStatusText(newState);
-				if (newState == StatusListener.Status.SEARCH.getCode() || newState == StatusListener.Status.NEWSEARCH.getCode()) {
+				String statusText = StatusHelper.getStatusText(newState);
+				if (newState == StatusHelper.Status.SEARCH.getCode() || newState == StatusHelper.Status.NEWSEARCH.getCode()) {
 					displayStatusLabel.setText(String.format(statusText, mainApp.getSearchKeyword()));
 				} else {
 					displayStatusLabel.setText(statusText);
@@ -214,10 +225,23 @@ public class MainLayoutController {
 		floatings = mainApp.getFloatings();
 	}
 
-	private void setupListViews() {
-		eventsListView.setItems(events);
-		deadlinesListView.setItems(deadlines);
-		floatingsListView.setItems(floatings);
+	@FXML
+	private void getCommand() {
+		boolean isSuccessful;
+		String command = commandBox.getText();
+		logger.write(String.format(LOG_STRING, command));
+
+		isSuccessful = mainApp.processCommand(command);
+		respondTo(command, isSuccessful);
+
+		commandBox.setText("");
+	}
+
+	@FXML
+	private void listenToKeyTyped() {
+		String textTyped = commandBox.getText();
+		String response = CommandHelper.respondTo(textTyped);
+		helpLabel.setText(response);
 	}
 
 	private void respondTo(String command, boolean isSuccessful) {
@@ -228,6 +252,7 @@ public class MainLayoutController {
 			responseBox.setId("response-box-fail");
 			responseLabel.setText("\"" + command + "\"" + " was unsuccessful");
 		}
+
 		ScaleTransition scaleIn = new ScaleTransition(Duration.millis(200), responseBox);
 		scaleIn.setFromY(0);
 		scaleIn.setToY(1);
@@ -239,24 +264,6 @@ public class MainLayoutController {
 		SequentialTransition sequence = new SequentialTransition();
 		sequence.getChildren().addAll(scaleIn, new PauseTransition(Duration.millis(2000)), scaleOut);
 		sequence.play();
-	}
-
-	@FXML
-	private void getCommand() throws NoSuchFieldException, ParseException { // exception will be handled by Logic later, remove this later
-		boolean isSuccessful;
-		String command = commandBox.getText();
-
-		isSuccessful = mainApp.processCommand(command);
-		respondTo(command, isSuccessful);
-
-		commandBox.setText("");
-	}
-
-	@FXML
-	private void listenToKeyTyped() {
-		String textTyped = commandBox.getText();
-		String response = CommandListener.respondTo(textTyped);
-		helpLabel.setText(response);
 	}
 
 }

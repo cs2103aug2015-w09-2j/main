@@ -1,64 +1,41 @@
+//@@author A0126518E
 package main.ui;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.util.ArrayList; // remove later
 
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import javafx.fxml.FXMLLoader;
-
 import javafx.scene.Scene;
-
 import javafx.scene.layout.GridPane;
-
 import javafx.stage.Stage;
-import main.ui.util.StatusListener;
+import main.Commands.Task;
 import main.ui.view.MainLayoutController;
-import main.*; // remove later
 import main.Logic;
-import main.Task;
 
 public class MainApp extends Application {
+
+	private Logic logic;
 
 	private Stage primaryStage;
 	private GridPane mainLayout;
 
-	private ObservableList<Task> events;
-	private ObservableList<Task> deadlines;
-	private ObservableList<Task> floatings;
-
-	private Logic logic;
-
-	public MainApp() throws NoSuchFieldException, ParseException { // remove throws later
-		events = FXCollections.observableArrayList();
-		deadlines = FXCollections.observableArrayList();
-		floatings = FXCollections.observableArrayList();
+	public MainApp() {
 	}
 
 	public ObservableList<Task> getEvents() {
-		return events;
+		return logic.getEvents();
 	}
 
 	public ObservableList<Task> getDeadlines() {
-		return deadlines;
+		return logic.getDeadlines();
 	}
 
 	public ObservableList<Task> getFloatings() {
-		return floatings;
-	}
-
-	public boolean processCommand(String command) throws NoSuchFieldException, ParseException { // exception will be handled by Logic later, remove this later
-		return logic.processCommand(command);
-	}
-
-	public void setDisplayState(IntegerProperty statusCode) {
-		logic.setDisplayState(statusCode);
+		return logic.getFloatings();
 	}
 
 	public BooleanProperty getHasNewOverdueTask() {
@@ -68,21 +45,32 @@ public class MainApp extends Application {
 	public String getSearchKeyword() {
 		return logic.getSearchKeyword();
 	}
+
+	public void setDisplayState(IntegerProperty statusCode) {
+		logic.setDisplayState(statusCode);
+	}
+
+	public boolean processCommand(String command) {
+		return logic.processCommand(command);
+	}
+
+	public void exit() {
+		Platform.exit();
+	}
+
 	/**
 	 * Initializes the scene and display the stage
 	 */
-	public void showMainLayout() {
-		try {
-			// Load the scene graph from MainLayout.fxml
+	private void showMainLayout() {
+		 try {
 			FXMLLoader loader = new FXMLLoader();
+			System.out.println(MainApp.class.getResource("").getPath());
 			loader.setLocation(MainApp.class.getResource("view/MainLayout.fxml"));
 			mainLayout = (GridPane) loader.load();
 
-			// Set up the controller
 			MainLayoutController mainLayoutController = loader.getController();
-			mainLayoutController.setMainApp(this); // pass tasks to controller
+			mainLayoutController.setMainApp(this);
 
-			// Show the scene containing the main layout
 			Scene scene = new Scene(mainLayout);
 			primaryStage.setScene(scene);
 			primaryStage.setResizable(false);
@@ -96,10 +84,12 @@ public class MainApp extends Application {
 
 	}
 
+	//@@author generated
 	@Override
 	public void init() {
 	}
 
+	//@@author A0126518E
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
@@ -107,13 +97,8 @@ public class MainApp extends Application {
 
 		logic = Logic.getInstance();
 		logic.setMainApp(this);
-		logic.setTasks(events, deadlines, floatings);
 
 		showMainLayout();
-	}
-
-	public void exit() {
-		Platform.exit();
 	}
 
 	public static void main(String[] args) {
