@@ -64,7 +64,6 @@ public class MainApp extends Application {
 	private void showMainLayout() {
 		 try {
 			FXMLLoader loader = new FXMLLoader();
-			System.out.println(MainApp.class.getResource("").getPath());
 			loader.setLocation(MainApp.class.getResource("view/MainLayout.fxml"));
 			mainLayout = (GridPane) loader.load();
 

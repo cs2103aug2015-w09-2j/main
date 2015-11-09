@@ -50,7 +50,6 @@ public class FileStorage {
 		File file = new File(filePath);
 		checkFileExist();
 		jsonFile.isJsonFileEmpty(file);
-		System.out.println("From filestorage: " + task.toString() + " and " + file.toString());
 		json.writeTask(task);
 	}
 

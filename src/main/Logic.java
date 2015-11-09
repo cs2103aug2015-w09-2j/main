@@ -112,7 +112,6 @@ public class Logic {
 	 */
 	
 	public boolean processCommand(String input) {
-		System.out.println("From logic: " + input);
 		boolean output = true;
 		Command command = parser.parse(input);
 		if (command.getCommandType().equals(Command.CommandType.UNKNOWN)) {
