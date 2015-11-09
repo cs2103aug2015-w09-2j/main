@@ -31,6 +31,8 @@ public class Json {
 	/**
 	 * This constructor initialize all the method
 	 * @param filePath the current file directory of the storage file
+	 * @param donePath the file directory of the done file
+	 * @param overduePath the file directory of the overdue file
 	 */
 	public Json(String filePath, String donePath, String overduePath){
 		Json.filePath = filePath;
@@ -215,6 +217,7 @@ public class Json {
 
 	/**
 	 * Search for all event task before a specified end date
+	 * @param keyword keyword of a task
 	 * @param date a end date
 	 * @return an ArrayList<Task> of event task before a specified end date
 	 */
@@ -226,6 +229,7 @@ public class Json {
 
 	/**
 	 * Search for all deadline task before a specified end date
+	 * @param keyword keyword of a task
 	 * @param date a end date
 	 * @return an ArrayList<Task> of deadline task before a specified end date
 	 */
@@ -237,6 +241,7 @@ public class Json {
 
 	/**
 	 * Search for all event and deadline task before a specified end date
+	 * @param keyword keyword of a task
 	 * @param date a end date
 	 * @return an ArrayList<Task> of event and deadline task before a specified end date
 	 */
@@ -248,6 +253,7 @@ public class Json {
 
 	/**
 	 * Search for all event task on a specified end date
+	 * @param keyword keyword of a task
 	 * @param date a end date
 	 * @return an ArrayList<Task> of event task on a specified end date
 	 */
@@ -259,6 +265,7 @@ public class Json {
 
 	/**
 	 * Search for all deadline task on a specified end date
+	 * @param keyword keyword of a task
 	 * @param date a end date
 	 * @return an ArrayList<Task> of deadline task on a specified end date
 	 */
@@ -270,6 +277,7 @@ public class Json {
 
 	/**
 	 * Search for all event and deadline task on a specified end date
+	 * @param keyword keyword of a task
 	 * @param date a end date
 	 * @return an ArrayList<Task> of event and deadline task on a specified end date
 	 */
@@ -280,6 +288,7 @@ public class Json {
 
 	/**
 	 * Search for all event task after a specified end date
+	 * @param keyword keyword of a task
 	 * @param date a end date
 	 * @return an ArrayList<Task> of event task after a specified end date
 	 */
@@ -291,6 +300,7 @@ public class Json {
 
 	/**
 	 * Search for all deadline task after a specified end date
+	 * @param keyword keyword of a task
 	 * @param date a end date
 	 * @return an ArrayList<Task> of deadline task after a specified end date
 	 */
@@ -302,6 +312,7 @@ public class Json {
 
 	/**
 	 * Search for all event and deadline task after a specified end date
+	 * @param keyword keyword of a task
 	 * @param date a end date
 	 * @return an ArrayList<Task> of event and deadline task after a specified end date
 	 */
@@ -312,6 +323,7 @@ public class Json {
 
 	/**
 	 * Search and return all event tasks which are from startDate to endDate
+	 * @param keyword keyword of a task
 	 * @param startDate the start date
 	 * @param endDate the end date
 	 * @return ArrayList<Task> of event tasks which are from startDate to endDate
@@ -324,6 +336,7 @@ public class Json {
 
 	/**
 	 * Search and return all deadline tasks which are from startDate to endDate
+	 * @param keyword keyword of a task
 	 * @param startDate the start date
 	 * @param endDate the end date
 	 * @return ArrayList<Task> of deadline tasks which are from startDate to endDate
@@ -336,6 +349,7 @@ public class Json {
 
 	/**
 	 * Search and return all event and deadline tasks which are from startDate to endDate
+	 * @param keyword keyword of a task
 	 * @param startDate the start date
 	 * @param endDate the end date
 	 * @return ArrayList<Task> of event and deadline tasks which are from startDate to endDate
@@ -422,6 +436,7 @@ public class Json {
 
 	/**
 	 * Check if content of an existing file is empty
+	 * @param path file directory of the file
 	 */
 	private void isFileEmpty(String path){
 		File file = new File(path);
