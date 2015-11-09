@@ -1,8 +1,6 @@
 //@@author A0133267H
 package main;
 
-import java.util.ArrayList;
-
 import main.DateClass;
 
 public class Search extends Command {

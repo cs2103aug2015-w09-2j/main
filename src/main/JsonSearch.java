@@ -225,8 +225,10 @@ public class JsonSearch {
 
 	/**
 	 * Search for all event task before a specific end date
+	 * @param keyword keyword of a task
 	 * @param date end date
 	 * @param event JSONArray of event task
+	 * @param option specify either BEFORE, ON or AFTER a date
 	 * @return an ArrayList<Task> of event tasks which ends before the specific end date
 	 */
 	public ArrayList<Task> searchEventTaskByDate(String keyword, DateClass date, JSONArray event, String option){
@@ -265,8 +267,10 @@ public class JsonSearch {
 
 	/**
 	 * Search for all deadline task before a specific end date
+	 * @param keyword keyword of a task
 	 * @param date end date
 	 * @param deadline JSONArray of deadline task
+	 * @param option specify either BEFORE, ON or AFTER a date
 	 * @return an ArrayList<Task> of deadline tasks which ends before the specific end date
 	 */
 	public ArrayList<Task> searchDeadlineTaskByDate(String keyword, DateClass date, JSONArray deadline, String option){
@@ -303,7 +307,9 @@ public class JsonSearch {
 
 	/**
 	 * Search for all event and deadline task before a specific end date
+	 * @param keyword keyword of a task
 	 * @param date end date
+	 * @param option specify either BEFORE, ON or AFTER a date
 	 * @return an ArrayList<Task> of event and deadline tasks which ends before the specific end date
 	 */
 	public ArrayList<Task> searchAllTaskByDate(String keyword, DateClass date, String option){
@@ -323,6 +329,14 @@ public class JsonSearch {
 		return allTasks;
 	}
 
+	/**
+	 * Search for all event task between the startDate and endDate
+	 * @param keyword keyword of a task
+	 * @param startDate the start date
+	 * @param endDate the end date
+	 * @param event JSONArray of event task
+	 * @return an ArrayList<Task> of event tasks which falls between the startDate and endDate
+	 */
 	public ArrayList<Task> searchEventTaskBetweenDates(String keyword, DateClass startDate, DateClass endDate, JSONArray event){
 
 		ArrayList<Task> eventList = searchEventTask(keyword, event);
@@ -340,7 +354,15 @@ public class JsonSearch {
 
 		return searchList;
 	}
-
+	
+	/**
+	 * Search for all deadline task between the startDate and endDate
+	 * @param keyword keyword of a task
+	 * @param startDate the start date
+	 * @param endDate the end date
+	 * @param deadline JSONArray of deadline task
+	 * @return an ArrayList<Task> of deadline tasks which falls between the startDate and endDate
+	 */
 	public ArrayList<Task> searchDeadlineTaskBetweenDates(String keyword, DateClass startDate, DateClass endDate, JSONArray deadline){
 
 		ArrayList<Task> deadlineList = searchDeadlineTask(keyword, deadline);
@@ -359,6 +381,13 @@ public class JsonSearch {
 		return searchList;
 	}
 
+	/**
+	 * Search for all event and deadline task between the startDate and endDate
+	 * @param keyword keyword of the task
+	 * @param startDate the start date
+	 * @param endDate the end date
+	 * @return an ArrayList<Task> of event and deadline tasks which falls between the startDate and endDate
+	 */
 	public ArrayList<Task> searchAllTaskBetweenDates(String keyword, DateClass startDate, DateClass endDate){
 		JsonFile jsonFile = new JsonFile();
 		ArrayList<JSONArray> content = jsonFile.getJsonFileContent(STORAGE_FILE);
@@ -376,6 +405,11 @@ public class JsonSearch {
 		return allTasks;
 	}
 
+	/**
+	 * Check if the word is null
+	 * @param word string to be checked
+	 * @return true if string is null / false if string is not null
+	 */
 	private boolean isStringNull(String word){
 		if(word==null || word.equals("")){
 			return true;

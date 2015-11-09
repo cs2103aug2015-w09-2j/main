@@ -2,7 +2,7 @@ package main;
 
 import static org.junit.Assert.*;
 
-import java.text.ParseException;
+
 
 import org.junit.Test;
 
@@ -47,7 +47,7 @@ public class LogicTest {
 
 		assertFalse(myLogic.processCommand("add proposal plant by 8/11 2359"));
 		assertTrue(myLogic.processCommand("add planning report by tomorrow"));
-		assertTrue(myLogic.processCommand("add finish software demo by today 12pm"));
+		assertTrue(myLogic.processCommand("add finish software demo by tomorrow 12pm"));
 		//assertTrue(myLogic.processCommand("add finish printing app by tomorrow 2pm"));
 		assertTrue(myLogic.processCommand("add finish annual report 2014/15 in 2 weeks"));
 		assertTrue(myLogic.processCommand("add fill in application form in 2 days"));

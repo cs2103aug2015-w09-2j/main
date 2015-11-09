@@ -20,7 +20,7 @@ import org.json.simple.parser.ParseException;
 public class JsonDelete {
 
 	/**
-	 * Delete a task from storage, done or overdue file
+	 * Delete a task from storage, done or overdue file depending of the fileType
 	 * @param task a task to be deleted
 	 * @param fileType a STORAGE_FILE, DONE_FILE, OVERDUE_FILE
 	 */

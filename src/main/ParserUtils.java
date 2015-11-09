@@ -222,10 +222,12 @@ public class ParserUtils {
 
 	public String removeTime(String strCommand) {
 		String[] strSplitWords = strCommand.split(" ");
-		TimeClass time = null;
+		
 		Stack<String> timeBuffer = new Stack<String>();
 
 		for (String word : strSplitWords) {
+			@SuppressWarnings("unused")
+			TimeClass time;
 			if ((time = TimeHandler.parse(word)) != null) {
 				timeBuffer.push(word);
 			}

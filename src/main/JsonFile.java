@@ -16,16 +16,11 @@ import org.json.simple.parser.JSONParser;
 public class JsonFile {
 
 
-	public JsonFile(){
-
-	}
-
 	/**
 	 * Create a JSON file with the default JSON format
 	 * @param file the file to be created
 	 */
 	public void createJsonFile(File file){
-
 
 
 		String open = "{";
@@ -73,7 +68,7 @@ public class JsonFile {
 
 	/**
 	 * This method return the JSONArray of EVENT, DEADLINE, FLOATING
-	 * @param fileType determine if the is a STORAGE_FILE, DONE_FILE or OVERDUE_FILE
+	 * @param fileType determine if the file type is a STORAGE_FILE, DONE_FILE or OVERDUE_FILE
 	 * @return ArrayList of JSONArray containing EVENT, DEADLINE, FLOATING
 	 */
 	public ArrayList<JSONArray> getJsonFileContent(String fileType){
@@ -122,6 +117,11 @@ public class JsonFile {
 		return contentList;
 	}
 
+	/**
+	 * Create indentation in the file
+	 * @param filePath directory of the file
+	 * @param jsonText text to be indented
+	 */
 	public void JsonPrettyPrint(String filePath, String jsonText){
 		try {
 			FileWriter file = new FileWriter(filePath, false);

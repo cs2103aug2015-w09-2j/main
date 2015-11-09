@@ -110,14 +110,14 @@ public class JsonTask {
 	 * @param floating JSONArray of event task to be converted
 	 * @return ArrayList<Task> of floating tasks
 	 */
-	public ArrayList<Task> floatingTaskArray(JSONArray event){
+	public ArrayList<Task> floatingTaskArray(JSONArray floating){
 		ArrayList<Task> floatingTaskList = new ArrayList<Task>();
 		JSONParser jsonParser = new JSONParser();
 
-		for(int i=0; i<event.size(); i++){
+		for(int i=0; i<floating.size(); i++){
 
 			try{
-				JSONObject obj = (JSONObject) jsonParser.parse(event.get(i).toString().replace("\\", ""));
+				JSONObject obj = (JSONObject) jsonParser.parse(floating.get(i).toString().replace("\\", ""));
 
 				String task = obj.get("task").toString();
 

@@ -16,7 +16,6 @@ import main.DateClass;
 public class FileStorage {
 
 	private static String filePath;
-/*	private static FileStorage oneFileStorage = null;*/
 	private static String pathName;
 	private static Json json;
 	private static JsonFile jsonFile;
@@ -32,15 +31,8 @@ public class FileStorage {
 		pathName = "vodoPath";
 		filePath = currFilePath();
 		json = new Json(filePath, globalDonePath, globalOverduePath);
-
 	}
 
-/*	public static FileStorage getInstance(){
-		if(oneFileStorage==null){
-			oneFileStorage = new FileStorage();
-		}
-		return oneFileStorage;
-	}*/
 	/**
 	 * Write a new task into the storage file
 	 * @param task the task to be written into the storage file
@@ -182,8 +174,8 @@ public class FileStorage {
 	 * Search and return all event, deadline and floating tasks which matches
 	 * both the task and taskInfo exactly. taskInfo can be the start date, start time,
 	 * end date or end time of the task itself
-	 * @param description the complete description of a task
-	 * @param description the complete description of a task
+	 * @param task the complete description of a task
+	 * @param taskInfo addition task information such as date
 	 * @return ArrayList<Task> of event, deadline and floating tasks which matches
 	 * both the task and taskInfo exactly
 	 */
@@ -193,7 +185,8 @@ public class FileStorage {
 	}
 
 	/**
-	 * Search and return all event tasks which ends before or on the given date
+	 * Search and return all event tasks which ends before the given date
+	 * @param keyword keyword of a task
 	 * @param date the date in DateClass
 	 * @return ArrayList<Task> of event tasks ends before the given date
 	 */
@@ -203,7 +196,8 @@ public class FileStorage {
 	}
 
 	/**
-	 * Search and return all deadline tasks which ends before or on the given date
+	 * Search and return all deadline tasks which ends before the given date
+	 * @param keyword keyword of a task
 	 * @param date the date in DateClass
 	 * @return ArrayList<Task> of deadline tasks ends before the given date
 	 */
@@ -213,7 +207,8 @@ public class FileStorage {
 	}
 
 	/**
-	 * Search and return all event and deadline tasks which ends before or on the given date
+	 * Search and return all event and deadline tasks which ends before the given date
+	 * @param keyword keyword of a task
 	 * @param date the date in DateClass
 	 * @return ArrayList<Task> of event, deadline and tasks ends before the given date
 	 */
@@ -224,6 +219,7 @@ public class FileStorage {
 
 	/**
 	 * Search and return all event tasks which falls on the given date
+	 * @param keyword keyword of a task
 	 * @param date the date in DateClass
 	 * @return ArrayList<Task> of event tasks which falls on the given date
 	 */
@@ -234,6 +230,7 @@ public class FileStorage {
 
 	/**
 	 * Search and return all deadline tasks which falls on the given date
+	 * @param keyword keyword of a task
 	 * @param date the date in DateClass
 	 * @return ArrayList<Task> of deadline tasks which falls the given date
 	 */
@@ -244,6 +241,7 @@ public class FileStorage {
 
 	/**
 	 * Search and return all event and deadline tasks which falls on the given date
+	 * @param keyword keyword of a task
 	 * @param date the date in DateClass
 	 * @return ArrayList<Task> of event and deadline tasks which falls on the given date
 	 */
@@ -254,6 +252,7 @@ public class FileStorage {
 
 	/**
 	 * Search and return all event tasks which are after the given date
+	 * @param keyword keyword of a task
 	 * @param date the date in DateClass
 	 * @return ArrayList<Task> of event tasks which are after the given date
 	 */
@@ -264,6 +263,7 @@ public class FileStorage {
 
 	/**
 	 * Search and return all deadline tasks which are after the given date
+	 * @param keyword keyword of a task
 	 * @param date the date in DateClass
 	 * @return ArrayList<Task> of deadline tasks which are after the given date
 	 */
@@ -274,6 +274,7 @@ public class FileStorage {
 
 	/**
 	 * Search and return all event and deadline tasks which are after the given date
+	 * @param keyword keyword of a task
 	 * @param date the date in DateClass
 	 * @return ArrayList<Task> of event and deadline tasks which are after the given date
 	 */
@@ -283,10 +284,11 @@ public class FileStorage {
 	}
 
 	/**
-	 * Search and return all event tasks which are from startDate to endDate
+	 * Search and return all event tasks which are between startDate and endDate
+	 * @param keyword keyword of a task
 	 * @param startDate the start date
 	 * @param endDate the end date
-	 * @return ArrayList<Task> of event tasks which are from startDate to endDate
+	 * @return ArrayList<Task> of event tasks which are between startDate and endDate
 	 */
 	public ArrayList<Task>searchEventTaskBetweenDates(String keyword, DateClass startDate, DateClass endDate){
 		checkFileExist();
@@ -294,10 +296,11 @@ public class FileStorage {
 	}
 
 	/**
-	 * Search and return all deadline tasks which are from startDate to endDate
+	 * Search and return all deadline tasks which are between startDate and endDate
+	 * @param keyword keyword of a task
 	 * @param startDate the start date
 	 * @param endDate the end date
-	 * @return ArrayList<Task> of deadline tasks which are from startDate to endDate
+	 * @return ArrayList<Task> of deadline tasks which are between startDate and endDate
 	 */
 	public ArrayList<Task>searchDeadlineTaskBetweenDates(String keyword, DateClass startDate, DateClass endDate){
 		checkFileExist();
@@ -305,10 +308,11 @@ public class FileStorage {
 	}
 
 	/**
-	 * Search and return all event and deadline tasks which are from startDate to endDate
+	 * Search and return all event and deadline tasks which are between startDate and endDate
+	 * @param keyword keyword of a task
 	 * @param startDate the start date
 	 * @param endDate the end date
-	 * @return ArrayList<Task> of event and deadline tasks which are from startDate to endDate
+	 * @return ArrayList<Task> of event and deadline tasks which are between startDate and endDate
 	 */
 	public ArrayList<Task>searchAllTaskBetweenDates(String keyword, DateClass startDate, DateClass endDate){
 		checkFileExist();
@@ -344,19 +348,19 @@ public class FileStorage {
 	}
 	/**
 	 * This methods updates and set the new storage file path
-	 * @param newPath the new storage location which the user wants to store his data
+	 * @param dir the new storage location which the user wants to store his data
 	 */
 	public void setFilePath(String dir){
 
-		String content = dir + "\\data.json;" + dir + "\\done.json;" + dir + "\\overdue.json;";
+		String content = dir + "data.json;" + dir + "done.json;" + dir + "overdue.json;";
 
 		writeFile(content, pathName, false, false);
-		File newFile = new File(dir + "\\data.json");
+		File newFile = new File(dir + "data.json");
 		createFile(newFile);
 
 
 		copyFile(dir);
-		filePath = dir + "\\data.json";
+		filePath = dir + "data.json";
 
 	}
 
@@ -369,16 +373,16 @@ public class FileStorage {
 	}
 
 	/**
-	 * The methods retrieve and return the current directory of the storage file
-	 * @return the directory of the storage file
+	 * The methods retrieve and return the current directory of the done file
+	 * @return the directory of the done file
 	 */
 	public String getDonePath(){
 		return globalDonePath;
 	}
 
 	/**
-	 * The methods retrieve and return the current directory of the storage file
-	 * @return the directory of the storage file
+	 * The methods retrieve and return the current directory of the overdue file
+	 * @return the directory of the overdue file
 	 */
 	public String getOverduePath(){
 		return globalOverduePath;
@@ -505,7 +509,7 @@ public class FileStorage {
 
 	/**
 	 * This methods copy the content of the old file to a new file
-	 * @param newPath the directory of the new storage file
+	 * @param dir the directory of the new storage file
 	 */
 	private static void copyFile(String dir){
 
@@ -528,6 +532,9 @@ public class FileStorage {
 		}
 	}
 
+	/**
+	 * Check if storage, done or overdue file exists. Create the respective file if they do not exist
+	 */
 	private static void checkFileExist(){
 		File storageFile = new File(filePath);
 		File doneFile = new File(globalDonePath);
