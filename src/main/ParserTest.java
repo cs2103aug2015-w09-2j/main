@@ -196,7 +196,6 @@ public class ParserTest {
 	@Test
 	public void testParsingFloating(){
 		String strCommand;
-		Floating floating;
 		Command command;
 
 		/* If user just enters "add" */
