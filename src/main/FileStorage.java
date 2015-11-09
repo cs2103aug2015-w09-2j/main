@@ -353,15 +353,15 @@ public class FileStorage {
 	 */
 	public void setFilePath(String dir){
 
-		String content = dir + "\\data.json;" + dir + "\\done.json;" + dir + "\\overdue.json;";
+		String content = dir + "data.json;" + dir + "done.json;" + dir + "overdue.json;";
 
 		writeFile(content, pathName, false, false);
-		File newFile = new File(dir + "\\data.json");
+		File newFile = new File(dir + "data.json");
 		createFile(newFile);
 
 
 		copyFile(dir);
-		filePath = dir + "\\data.json";
+		filePath = dir + "data.json";
 
 	}
 
