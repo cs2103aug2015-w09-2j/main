@@ -42,16 +42,17 @@ public class Logic {
 	private static final String DISPLAY_ONGOING_TASKS = "ongoing";
 	private static final String DISPLAY_DONE_TASKS = "done";
 	private static final String DISPLAY_OVERDUE_TASKS = "overdue";
+	private static final int CLASSNAME_SUBSTRING = 5;
 	private static int currentView;
 	private static int newOverdueTask = 0;
 
 	/**
-	 * Description Singleton pattern used to get a single instance called by UI. 
+	 * Description Singleton pattern used to get a single instance called by UI.
 	 *
 	 *
 	 * @param filename
 	 */
-	
+
 	public static Logic getInstance() {
 		if (oneLogic == null) {
 			oneLogic = new Logic();
@@ -63,7 +64,8 @@ public class Logic {
 	 * Description Default Constructor
 	 */
 
-	private Logic() { // Initilizae all the valriable and singleton classes. Also initialize the View in UI
+	private Logic() { // Initialize all the variable and singleton classes. Also
+						// initialize the View in UI
 						//
 		hasNewOverdueTask = new SimpleBooleanProperty(Boolean.FALSE);// added
 		displayStatusCode = new SimpleIntegerProperty(StatusHelper.Status.ONGOING.getCode());// added
@@ -77,6 +79,7 @@ public class Logic {
 
 	}
 
+	private static Logger logger = Logger.getInstance();
 	private static Parser parser = Parser.getInstance();
 	private FileStorage fileStorage = FileStorage.getInstance();
 	private static Stack<Command> undoCommandHistory;
@@ -84,7 +87,6 @@ public class Logic {
 	private static ArrayList<Task> allEvents;
 	private static ArrayList<Task> allDeadlines;
 	private static ArrayList<Task> allFloatingTasks;
-	
 
 	// ------------------- To interact with GUI [added by teddy]
 	// ------------------
@@ -102,15 +104,15 @@ public class Logic {
 	/**
 	 * Description Takes in the command as a string from the user input and
 	 * processes the command and executes the command if its in the correct
-	 * format
-	 * if incorrect command format return false 
-	 * if correct lets the execute command return true or false
+	 * format if incorrect command format return false if correct lets the
+	 * execute command return true or false
+	 * 
 	 * @param input
 	 * @return
 	 * @throws NoSuchFieldException
 	 * @throws ParseException
 	 */
-	
+
 	public boolean processCommand(String input) {
 		boolean output = true;
 		Command command = parser.parse(input);
@@ -123,7 +125,11 @@ public class Logic {
 		}
 	}
 
-	
+	/**
+	 * This functions updates the list of the tasks that are been shown on the
+	 * current display display view it also calls functions to filter the
+	 * overdue and done task
+	 */
 	private void updateTaskLists() {
 		allEvents = fileStorage.readEventTask();
 		allDeadlines = fileStorage.readDeadlineTask();
@@ -132,25 +138,29 @@ public class Logic {
 		allEvents = filterOverdueTask(allEvents);
 		allDeadlines = filterDoneTask(allDeadlines);
 		allDeadlines = filterOverdueTask(allDeadlines);
-		System.out.println(fileStorage.readOverdueTask().size() + " " + hasNewOverdueTask.getValue());
+		logger.write(fileStorage.readOverdueTask().size() + " " + hasNewOverdueTask.getValue());
 
 		if (fileStorage.readOverdueTask().size() > newOverdueTask) {
 			hasNewOverdueTask.setValue(Boolean.TRUE);
-			System.out.println("notiictation update" + fileStorage.readOverdueTask().size() + " & state is"
+			logger.write("notiictation update" + fileStorage.readOverdueTask().size() + " & state is"
 					+ hasNewOverdueTask.getValue());
 		} else {
 			hasNewOverdueTask.setValue(Boolean.FALSE);
-			System.out.println("notifation update to false" + fileStorage.readOverdueTask().size() + " & state is"
+			logger.write("notifation update to false" + fileStorage.readOverdueTask().size() + " & state is"
 					+ hasNewOverdueTask.getValue());
 		}
 		Collections.sort(allEvents);
 		Collections.sort(allDeadlines);
 		Collections.sort(allFloatingTasks);
-		
 
 	}
 
-	// @@author A0133869R
+	/**
+	 * Segregates the done task and stores them in a separate file
+	 * 
+	 * @param tasks
+	 * @return arraylist of tasks without the done task
+	 */
 	private ArrayList<Task> filterDoneTask(ArrayList<Task> tasks) {
 		ArrayList<Task> output = new ArrayList<Task>();
 		for (Task currentTask : tasks) {
@@ -164,7 +174,13 @@ public class Logic {
 		return output;
 	}
 
-	// @@author A0133869R
+	/**
+	 * Segregates the overdue task which are overdue as of the current time and
+	 * stores them in a separate file
+	 * 
+	 * @param tasks
+	 * @return arraylist of tasks without the done task
+	 */
 	private ArrayList<Task> filterOverdueTask(ArrayList<Task> tasks) {
 		ArrayList<Task> taskList = new ArrayList<Task>();
 		for (Task currentTask : tasks) {
@@ -172,12 +188,12 @@ public class Logic {
 			case EVENTS:
 				int compareTo = 0;
 
-				filterOverdueTask(taskList, currentTask, compareTo);
+				filterOverdueEventTask(taskList, currentTask, compareTo);
 				break;
 			case DEADLINES:
 				compareTo = 0;
 
-				filterDeadlineTask(taskList, currentTask, compareTo);
+				filterOverdueDeadlineTask(taskList, currentTask, compareTo);
 				break;
 			default:
 				break;
@@ -186,8 +202,14 @@ public class Logic {
 		return taskList;
 	}
 
-	// @@author A0133869R
-	private void filterDeadlineTask(ArrayList<Task> taskList, Task currentTask, int compareTo) {
+	/**
+	 * helps to filter the deadline task
+	 * 
+	 * @param taskList
+	 * @param currentTask
+	 * @param compareTo
+	 */
+	private void filterOverdueDeadlineTask(ArrayList<Task> taskList, Task currentTask, int compareTo) {
 		try {
 			compareTo = ((Deadline) currentTask).getEndDate()
 					.compareTo(new DateClass(DateHandler.getIntDayNow(), DateHandler.getIntMonthNow()));
@@ -213,8 +235,14 @@ public class Logic {
 		}
 	}
 
-	// @@author A0133869R
-	private void filterOverdueTask(ArrayList<Task> taskList, Task currentTask, int compareTo) {
+	/**
+	 * helps to filter the event task
+	 * 
+	 * @param taskList
+	 * @param currentTask
+	 * @param compareTo
+	 */
+	private void filterOverdueEventTask(ArrayList<Task> taskList, Task currentTask, int compareTo) {
 		try {
 			compareTo = ((Event) currentTask).getEndDate()
 					.compareTo(new DateClass(DateHandler.getIntDayNow(), DateHandler.getIntMonthNow()));
@@ -246,11 +274,11 @@ public class Logic {
 	 * @param command
 	 * @param input
 	 * @param inputString
-	 * @return
-	 * @throws NoSuchFieldException
-	 * @throws ParseException
+	 * @return boolean -successful execution of command or unsucessful execution
+	 *         of command
+	 * 
 	 */
-	// @@author A0133869R
+
 	private boolean executeCommand(Command inputCommand) {
 		boolean success = false;
 		switch (inputCommand.getCommandType()) {
@@ -326,16 +354,25 @@ public class Logic {
 		return success;
 	}
 
-	// @@author A0133869R
+	/**
+	 * changes the location for the storage of data
+	 * 
+	 * @param inputCommand
+	 * @return true/fasle
+	 */
 	private boolean save(Command inputCommand) {
 		fileStorage.setFilePath(((Save) inputCommand).getPathLocation());
 		return true;
 	}
 
-	// @@author A0133869R
+	/**
+	 * Adds a floating task to the list
+	 * 
+	 * @param inputCommand
+	 * @return boolean success failure
+	 */
 	private boolean addFloating(Command inputCommand) {
 		fileStorage.writeTask(inputCommand.getTask());
-		System.out.println("i'm here");
 		undoCommandHistory.push(inputCommand);
 		redoCommandHistory.clear();
 		updateTaskLists();
@@ -343,7 +380,12 @@ public class Logic {
 		return true;
 	}
 
-	// @@author A0133869R
+	/**
+	 * Adds a deadline to the todo list
+	 * 
+	 * @param inputCommand
+	 * @return boolean success failure
+	 */
 	private boolean addDeadline(Command inputCommand) {
 		fileStorage.writeTask(inputCommand.getTask());
 		undoCommandHistory.push(inputCommand);
@@ -353,7 +395,13 @@ public class Logic {
 		return true;
 	}
 
-	// @@author A0133869R
+	/**
+	 * Adds a event task to the todo list
+	 * 
+	 * @param inputCommand
+	 * @return boolean success failure
+	 * 
+	 */
 	private boolean addEvent(Command inputCommand) {
 		fileStorage.writeTask(inputCommand.getTask());
 		undoCommandHistory.push(inputCommand);
@@ -363,7 +411,12 @@ public class Logic {
 		return true;
 	}
 
-	// @@author A0133869R
+	/**
+	 * command to delete all or clear the current tasks displayed on the screen
+	 * 
+	 * @param inputCommand
+	 * @return success failure
+	 */
 	private boolean clearAllTask(Command inputCommand) {
 		Clear clearAllTask = (Clear) inputCommand;
 		ArrayList<Task> taskCleared = new ArrayList<Task>();
@@ -388,7 +441,12 @@ public class Logic {
 		return true;
 	}
 
-	// @@author A0133869R
+	/**
+	 * deletes a particular task depending on the view you are in ongoing/done
+	 * /overedue
+	 * 
+	 * @param currentTask
+	 */
 	private void deleteTaskFromCurrentView(Task currentTask) {
 		if (currentView == StatusHelper.Status.DONE.getCode()) {
 			fileStorage.deleteDoneTask(currentTask);
@@ -399,7 +457,12 @@ public class Logic {
 		}
 	}
 
-	// @@author A0133869R
+	/**
+	 * Marks a task as done
+	 * 
+	 * @param inputCommand
+	 * @return boolean success failure
+	 */
 	private boolean done(Command inputCommand) {
 		// updateTaskLists();
 		Set<Integer> tasksDone = ((Done) inputCommand).getTaskIDs();
@@ -421,30 +484,41 @@ public class Logic {
 		return true;
 	}
 
-	// @@author A0133869R
+	/**
+	 * Marking task as done based on the index taken in as in integer
+	 * 
+	 * @param i
+	 * @return Task that is marked done
+	 */
 	private Task markDone(Integer i) {
 		if (i <= allEvents.size()) {
 			fileStorage.writeDoneTask(allEvents.get(i - 1));
 			deleteTaskFromCurrentView(allEvents.get(i - 1));
-			System.out.println("from event");
+			logger.write("done from event ");
 			allEvents.get(i - 1).setDone(true);
 			return allEvents.get(i - 1);
 		} else if (i <= allEvents.size() + allDeadlines.size()) {
 			fileStorage.writeDoneTask(allDeadlines.get(i - allEvents.size() - 1));
 			deleteTaskFromCurrentView(allDeadlines.get(i - allEvents.size() - 1));
-			System.out.println("from deadline");
+			logger.write("done from deadline");
 			allDeadlines.get(i - allEvents.size() - 1).setDone(true);
 			return allDeadlines.get(i - allEvents.size() - 1);
 		} else {
 			fileStorage.writeDoneTask(allFloatingTasks.get(i - allEvents.size() - allDeadlines.size() - 1));
 			deleteTaskFromCurrentView(allFloatingTasks.get(i - allEvents.size() - allDeadlines.size() - 1));
-			System.out.println("from floatings");
+			logger.write("done from floatings");
 			allFloatingTasks.get(i - allEvents.size() - allDeadlines.size() - 1).setDone(true);
 			return allFloatingTasks.get(i - allEvents.size() - allDeadlines.size() - 1);
 		}
 	}
 
-	// @@author A0133869R
+	/**
+	 * display is the show command which switches the display view between
+	 * ongoing , completed, and overdue tasks
+	 * 
+	 * @param inputCommand
+	 * @return boolean success failure
+	 */
 	private boolean display(Command inputCommand) {
 		Display displayCommand = (Display) inputCommand;
 		if (displayCommand.getDisplayString() == null) {
@@ -457,11 +531,13 @@ public class Logic {
 			fillDeadlines();
 			updateRespectiveGUICol(ALLCOLLUMS);
 			currentView = StatusHelper.Status.ONGOING.getCode();
+			logger.write(StatusHelper.Status.ONGOING.toString());
 			displayStatusCode.set(StatusHelper.Status.ONGOING.getCode());
 			return true;
 		} else if (displayCommand.getDisplayString().equals(DISPLAY_DONE_TASKS)) {
 			readDone();
 			currentView = StatusHelper.Status.DONE.getCode();
+			logger.write(StatusHelper.Status.DONE.toString());
 			displayStatusCode.set(StatusHelper.Status.DONE.getCode());
 			return true;
 		} else if (displayCommand.getDisplayString().equals(DISPLAY_OVERDUE_TASKS)) {
@@ -470,6 +546,7 @@ public class Logic {
 			newOverdueTask = fileStorage.readOverdueTask().size();
 			System.out.println(fileStorage.readOverdueTask().size() + " & state is" + hasNewOverdueTask.getValue());
 			currentView = StatusHelper.Status.OVERDUE.getCode();
+			logger.write(StatusHelper.Status.OVERDUE.toString());
 			displayStatusCode.set(StatusHelper.Status.OVERDUE.getCode());
 			return true;
 		} else {
@@ -477,7 +554,12 @@ public class Logic {
 		}
 	}
 
-	// @@author A0133869R
+	/**
+	 * helps in searching and carrying out various search process in the app
+	 * 
+	 * @param inputCommand
+	 * @return boolean success failure
+	 */
 	private boolean search(Command inputCommand) {
 		Search searchCommand = (Search) inputCommand;
 		if (searchCommand.isBetween()) {
@@ -494,7 +576,15 @@ public class Logic {
 		}
 	}
 
-	// @@author A0133869R
+	/**
+	 * searches for a certain string between a period of time search carried out
+	 * using token search
+	 * 
+	 * @param strSearchString
+	 * @param firstDate
+	 * @param secondDate
+	 * @return
+	 */
 	private boolean searchForDescriptionBetween(String strSearchString, DateClass firstDate, DateClass secondDate) {
 		allEvents.clear();
 		allDeadlines.clear();
@@ -511,7 +601,15 @@ public class Logic {
 		return true;
 	}
 
-	// @@author A0133869R
+	/**
+	 * searches for a certain string after a certain date search carried out
+	 * using token search
+	 * 
+	 * @param strSearchString
+	 * @param firstDate
+	 * @param secondDate
+	 * @return boolean true false
+	 */
 	private boolean searchForDescriptionAfter(String strSearchString, DateClass afterDate) {
 		allEvents.clear();
 		allDeadlines.clear();
@@ -528,7 +626,16 @@ public class Logic {
 		return true;
 	}
 
-	// @@author A0133869R
+	/**
+	 * 
+	 * searches for a certain string before a certain date search carried out
+	 * using token search
+	 * 
+	 * @param strSearchString
+	 * @param firstDate
+	 * @param secondDate
+	 * @return boolean success failure
+	 */
 	private boolean searchForDescriptionBefore(String strSearchString, DateClass beforeDate) {
 		allEvents.clear();
 		allDeadlines.clear();
@@ -545,7 +652,13 @@ public class Logic {
 		return true;
 	}
 
-	// @@author A0133869R
+	/**
+	 * searches for a string on a certain date
+	 * 
+	 * @param strSearchString
+	 * @param date
+	 * @return boolean success failure
+	 */
 	private boolean searchForDescriptionOnDate(String strSearchString, DateClass date) {
 		allEvents.clear();
 		allDeadlines.clear();
@@ -564,7 +677,12 @@ public class Logic {
 		return true;
 	}
 
-	// @@author A0133869R
+	/**
+	 * search for a string regardless of the date
+	 * 
+	 * @param strSearchString
+	 * @return
+	 */
 	private boolean searchForDescription(String strSearchString) {
 		allEvents.clear();
 		allDeadlines.clear();
@@ -582,7 +700,9 @@ public class Logic {
 		return true;
 	}
 
-	// @@author A0133869R
+	/**
+	 * reads the done task from the filestorage
+	 */
 	private void readDone() {
 		ArrayList<Task> doneTasks = fileStorage.readDoneTask();
 		allEvents.clear();
@@ -605,7 +725,9 @@ public class Logic {
 		updateRespectiveGUICol(ALLCOLLUMS);
 	}
 
-	// @@author A0133869R
+	/**
+	 * reads for the overdue task from the file storage
+	 */
 	private void readOverdue() {
 		ArrayList<Task> overdueTasks = fileStorage.readOverdueTask();
 		allEvents.clear();
@@ -625,7 +747,13 @@ public class Logic {
 		updateRespectiveGUICol(ALLCOLLUMS);
 	}
 
-	// @@author A0133869R
+	/**
+	 * command to handle redo and distribute the redo command depending on the
+	 * command type to redo redo will only happen if the previous command is
+	 * undo.
+	 * 
+	 * @return boolean if redo possible or not
+	 */
 	private boolean redo() {
 		if (redoCommandHistory.size() == 0)
 			return false;
@@ -659,7 +787,12 @@ public class Logic {
 		return true;
 	}
 
-	// @@author A0133869R
+	/**
+	 * handles the redo of the delete command . If the command to redo is the
+	 * delete command takes in the command as parameter
+	 * 
+	 * @param redoCommand
+	 */
 	private void redoDeleteCommand(Command redoCommand) {
 		undoCommandHistory.push(redoCommand);
 		for (Task currentTask : ((Delete) redoCommand).getTaskDeleted()) {
@@ -669,7 +802,11 @@ public class Logic {
 		updateRespectiveGUICol(ALLCOLLUMS);
 	}
 
-	// @@author A0133869R
+	/**
+	 * redo an add command
+	 * 
+	 * @param redoCommand
+	 */
 	private void redoAddCommand(Command redoCommand) {
 		undoCommandHistory.push(redoCommand);
 		fileStorage.writeTask(redoCommand.getTask());
@@ -677,7 +814,11 @@ public class Logic {
 		updateRespectiveGUICol(redoCommand.getTask().getClass().getName());
 	}
 
-	// @@author A0133869R
+	/**
+	 * redo the clear command
+	 * 
+	 * @param redoCommand
+	 */
 	private void redoClear(Command redoCommand) {
 		Clear redoClear = ((Clear) redoCommand);
 		ArrayList<Task> taskCleared = redoClear.getTaskCleared();
@@ -687,7 +828,11 @@ public class Logic {
 		updateTaskLists();
 	}
 
-	// @@author A0133869R
+	/**
+	 * redo the done command
+	 * 
+	 * @param redoCommand
+	 */
 	private void redoDone(Command redoCommand) {
 		ArrayList<Task> redoDoneTask = ((Done) redoCommand).getTasksSetDone();
 		for (Task currentTask : redoDoneTask) {
@@ -697,7 +842,11 @@ public class Logic {
 		}
 	}
 
-	// @@author A0133869R
+	/**
+	 * Manages the flow of the undo command
+	 * 
+	 * @return
+	 */
 	private boolean undo() {
 		if (undoCommandHistory.size() == 0)
 			return false;
@@ -731,7 +880,11 @@ public class Logic {
 		return true;
 	}
 
-	// @@author A0133869R
+	/**
+	 * undo an update command
+	 * 
+	 * @param undoCommand
+	 */
 	private void undoUpdateCommand(Command undoCommand) {
 		Update undoUpdate = (Update) undoCommand;
 		fileStorage.writeTask(undoUpdate.getCurrentTask());
@@ -741,9 +894,13 @@ public class Logic {
 		updateRespectiveGUICol(ALLCOLLUMS);
 	}
 
-	// @@author A0133869R
-	private void redoUpdateCommand(Command undoCommand) {
-		Update redoUpdate = (Update) undoCommand;
+	/**
+	 * redo an update command
+	 * 
+	 * @param undoCommand
+	 */
+	private void redoUpdateCommand(Command redoCommand) {
+		Update redoUpdate = (Update) redoCommand;
 		fileStorage.deleteTask(redoUpdate.getCurrentTask());/// check again how
 															/// to do
 		fileStorage.writeTask(redoUpdate.getUpdateTask());
@@ -752,18 +909,25 @@ public class Logic {
 		updateRespectiveGUICol(ALLCOLLUMS);
 	}
 
-	// @@author A0133869R
+	/**
+	 * undo a delete command
+	 * 
+	 * @param undoCommand
+	 */
 	private void undoDeleteCommand(Command undoCommand) {
 		redoCommandHistory.push(undoCommand);
 		for (Task currentTask : ((Delete) undoCommand).getTaskDeleted()) {
 			fileStorage.writeTask(currentTask);
 		}
-		// fileStorage.writeTask(((Delete) undoCommand).getTaskDeleted());
 		updateTaskLists();
 		updateRespectiveGUICol(ALLCOLLUMS);
 	}
 
-	// @@author A0133869R
+	/**
+	 * undo an add command
+	 * 
+	 * @param undoCommand
+	 */
 	private void undoAddCommand(Command undoCommand) {
 		redoCommandHistory.push(undoCommand);
 		fileStorage.deleteTask(undoCommand.getTask());
@@ -771,7 +935,11 @@ public class Logic {
 		updateRespectiveGUICol(undoCommand.getTask().getClass().getName());
 	}
 
-	// @@author A0133869R
+	/**
+	 * undo a clear command
+	 * 
+	 * @param undoCommand
+	 */
 	private void undoClear(Command undoCommand) {
 		Clear undoClear = ((Clear) undoCommand);
 		ArrayList<Task> taskCleared = undoClear.getTaskCleared();
@@ -781,7 +949,11 @@ public class Logic {
 		updateTaskLists();
 	}
 
-	// @@author A0133869R
+	/**
+	 * undo a done command
+	 * 
+	 * @param undoCommand
+	 */
 	private void undoDone(Command undoCommand) {
 		Done doneCommand = ((Done) undoCommand);
 		for (Task currentTask : doneCommand.getTasksSetDone()) {
@@ -792,11 +964,16 @@ public class Logic {
 		updateRespectiveGUICol(ALLCOLLUMS);
 	}
 
-	// @@author A0133869R
+	/**
+	 * handles the update command
+	 * 
+	 * @param inputCommand
+	 * @return boolean success failure of the update
+	 */
 	private boolean update(Command inputCommand) {
 		Update updateCommand = (Update) inputCommand;
 		UpdateTask processUpdate = (UpdateTask) updateCommand.getTaskToUpdate();
-		System.out.println(updateCommand.getTaskToUpdate().getDescription() + " ");
+		logger.write(updateCommand.getTaskToUpdate().getDescription() + " ");
 		// System.out.println(processUpdate);
 		Task taskToUpdate;
 		if (processUpdate.getTaskID() > 0
@@ -805,11 +982,11 @@ public class Logic {
 		} else {
 			return false;
 		}
-		// System.out.println(taskToUpdate.toString());
+
 		Task updatedTask = null;
-		// updatedTask = taskToUpdate;
-		System.out.println(taskToUpdate.getClass().getName());
-		// System.out.println(taskToUpdate.toString());
+
+		logger.write(taskToUpdate.getClass().getName());
+
 		switch (taskToUpdate.getClass().getName()) {
 		case EVENTS:
 			updatedTask = updateEventTask(processUpdate, taskToUpdate);
@@ -834,21 +1011,26 @@ public class Logic {
 			updateRespectiveGUICol(ALLCOLLUMS);
 			return true;
 		} else {
-			System.out.println("Its null");
+			logger.write("updated task is null");
 			return false;
 		}
 	}
 
-	// @@author A0133869R
+	/**
+	 * manages the update of a floating task
+	 * 
+	 * @param processUpdate
+	 * @param taskToUpdate
+	 * @return returns the task just updated
+	 */
 	private Task updateFloatingTask(UpdateTask processUpdate, Task taskToUpdate) {
 		Task updatedTask;
-		System.out.println(processUpdate.getDescription());
-		System.out.println(taskToUpdate.toString());
+		logger.write(taskToUpdate.toString());
 		if (processUpdate.hasStartDate()) {
 			if (processUpdate.hasDescription()) {
 				updatedTask = new Event(processUpdate.getDescription(), processUpdate.getStartDate(),
 						processUpdate.getStartTime(), processUpdate.getEndDate(), processUpdate.getEndTime());
-				System.out.println(processUpdate.getDescription());
+				logger.write(processUpdate.getDescription());
 			} else {
 				updatedTask = new Event(taskToUpdate.getDescription(), processUpdate.getStartDate(),
 						processUpdate.getStartTime(), processUpdate.getEndDate(), processUpdate.getEndTime());
@@ -857,21 +1039,25 @@ public class Logic {
 			if (processUpdate.hasDescription()) {
 				updatedTask = new Deadline(processUpdate.getDescription(), processUpdate.getEndDate(),
 						processUpdate.getEndTime());
-				System.out.println(processUpdate.getDescription());
+				logger.write(processUpdate.getDescription());
 			} else {
 				updatedTask = new Deadline(taskToUpdate.getDescription(), processUpdate.getEndDate(),
 						processUpdate.getEndTime());
 			}
 		} else {
-			System.out.println(processUpdate.getDescription());
 			updatedTask = new Floating(processUpdate.getDescription());
-			System.out.println(processUpdate.getDescription());
-			System.out.println(updatedTask.toString());
+			logger.write(updatedTask.toString());
 		}
 		return updatedTask;
 	}
 
-	// @@author A0133869R
+	/**
+	 * manages the update of a Deadline task
+	 * 
+	 * @param processUpdate
+	 * @param taskToUpdate
+	 * @return returns the task just updated
+	 */
 	private Task updateDeadlineTask(UpdateTask processUpdate, Task taskToUpdate) {
 		Task updatedTask;
 		if (processUpdate.hasStartDate()) {
@@ -907,7 +1093,13 @@ public class Logic {
 		return updatedTask;
 	}
 
-	// @@author A0133869R
+	/**
+	 * manages the update of a event task
+	 * 
+	 * @param processUpdate
+	 * @param taskToUpdate
+	 * @return returns the task just updated
+	 */
 	private Task updateEventTask(UpdateTask processUpdate, Task taskToUpdate) {
 		Task updatedTask;
 		updatedTask = new Event(((Event) taskToUpdate).getDescription(), ((Event) taskToUpdate).getStartDate(),
@@ -926,7 +1118,12 @@ public class Logic {
 		return updatedTask;
 	}
 
-	// @@author A0133869R
+	/**
+	 * Handles the delete command
+	 * 
+	 * @param inputCommand
+	 * @return boolean success failure
+	 */
 	private boolean deleteTask(Command inputCommand) {
 		Delete deleteCommand = ((Delete) inputCommand);
 		ArrayList<Task> taskToDelete = new ArrayList<Task>();
@@ -934,7 +1131,7 @@ public class Logic {
 			for (Integer i : deleteCommand.getTaskIDs()) {
 				if (i > 0 && i <= (allEvents.size() + allDeadlines.size() + allFloatingTasks.size())) {
 					Task a = deleteSingleTask(i);
-					System.out.println(i + " " + a.toString() + " ");
+					logger.write(i + " " + a.toString() + " " + "from " + a.getClass().getName().substring(CLASSNAME_SUBSTRING));
 					taskToDelete.add(a);
 				} else {
 					return false;
@@ -942,6 +1139,7 @@ public class Logic {
 			}
 		} else if (deleteCommand.hasDeleteString()) {
 			if (deleteCommand.getDeleteString().equals("all")) {
+				logger.write("delete all");
 				return clearAllTask(new Clear());
 			} else {
 				Task taskDelete = fileStorage.absoluteSearch(deleteCommand.getDeleteString()).get(0);
@@ -967,7 +1165,13 @@ public class Logic {
 		}
 	}
 
-	// @@author A0133869R
+	/**
+	 * Deletes task based on the index given it handles the delete of task by
+	 * single index
+	 * 
+	 * @param taskIndex
+	 * @return returns the task that has been deleted
+	 */
 	private Task deleteSingleTask(int taskIndex) {
 		if (taskIndex <= allEvents.size()) {
 			deleteTaskFromCurrentView(allEvents.get(taskIndex - 1));
@@ -983,7 +1187,12 @@ public class Logic {
 		}
 	}
 
-	// @@author A0133869R
+	/**
+	 * Helps in updating the view and also the task list Fills up the task list
+	 * when a command is excuted or the view is changed
+	 * 
+	 * @param taskType
+	 */
 	private void updateRespectiveGUICol(String taskType) {
 		switch (taskType) {
 		case EVENTS:

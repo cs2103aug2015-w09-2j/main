@@ -18,7 +18,7 @@ public class LogicTest {
 	// myLogic.setMainApp(main);
 
 	@Test
-	public final void testAddCommand() {
+	public final void testSuite() {
 		// boundary case to detect if the function is able to detect that this
 		// is not a valid method
 		assertTrue(myLogic.processCommand("save ./"));
@@ -68,7 +68,7 @@ public class LogicTest {
 		assertTrue(myLogic.processCommand("update 5 -d proposal plan -e 10/11 2359"));
 		assertTrue(myLogic.processCommand("undo"));
 		assertTrue(myLogic.processCommand("redo"));
-		assertTrue(myLogic.processCommand("update 12 -d collect laundry from shop -e 9/11 2200"));
+		assertFalse(myLogic.processCommand("update 12 -d collect laundry from shop -e 9/11 2200"));
 		assertTrue(myLogic.processCommand("done 12"));
 		assertTrue(myLogic.processCommand("done 1"));
 		assertTrue(myLogic.processCommand("undo"));
@@ -95,6 +95,8 @@ public class LogicTest {
 		assertTrue(myLogic.processCommand("search m before 7/12"));
 		assertTrue(myLogic.processCommand("search m from 7/11 to 7/12"));
 		assertTrue(myLogic.processCommand("search m"));
+		
 		//assertTrue(myLogic.processCommand("save /Users/Ravi/Desktop/CS1010"));
 	}
+	
 }
