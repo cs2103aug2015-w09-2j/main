@@ -32,7 +32,6 @@ import main.ui.util.StatusHelper;
  *
  */
 public class Logic {
-	private String fileName;
 	private static Logic oneLogic = null;
 	private static final String ALLCOLLUMS = "ALL";
 	private static final String EVENTS = "main.Event";
@@ -83,7 +82,7 @@ public class Logic {
 	private static ArrayList<Task> allEvents;
 	private static ArrayList<Task> allDeadlines;
 	private static ArrayList<Task> allFloatingTasks;
-	private static ArrayList<Task> allTasks;
+	
 
 	// ------------------- To interact with GUI [added by teddy]
 	// ------------------
@@ -145,7 +144,7 @@ public class Logic {
 		Collections.sort(allEvents);
 		Collections.sort(allDeadlines);
 		Collections.sort(allFloatingTasks);
-		allTasks = fileStorage.readAllTask();
+		
 
 	}
 
@@ -1029,7 +1028,7 @@ public class Logic {
 
 	}
 
-	//@@author A0126518E
+	// @@author A0126518E
 	public void fillEvents() {
 		events.setAll(allEvents);
 	}

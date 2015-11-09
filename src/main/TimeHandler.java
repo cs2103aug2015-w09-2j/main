@@ -29,6 +29,7 @@ public class TimeHandler {
 		return intMinute;
 	}
 
+	@SuppressWarnings("unused")
 	private static int[] parseHourAndMin(String strHHMM){
 		String strHour = "" + strHHMM.charAt(0) + strHHMM.charAt(1);
 		String strMin = "" + strHHMM.charAt(2) + strHHMM.charAt(3);
