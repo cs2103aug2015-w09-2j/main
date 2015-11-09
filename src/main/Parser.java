@@ -882,7 +882,7 @@ public class Parser {
 		// String command = "update new swimming -d swimming";
 		Command t;
 		String command;
-		command = "update 1 -s 0700";
+		command = "add asdasd by 1631";
 		t = p.parse(command);
 
 		System.out.println(((Event) t.getTask()).getEndTime().to12HourFormat());
