@@ -841,6 +841,7 @@ public class Parser {
 	public Command parse(String strCommand) {
 		Command parsedCommand;
 
+		strCommand = strCommand.trim();
 		if (strCommand.equals("")) {
 			parsedCommand = null;
 		} else if (isAnAddCommand(strCommand)) {
